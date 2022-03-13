@@ -1,0 +1,57 @@
+import { UserService } from '@app/user';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { constants, privateDecrypt } from 'crypto';
+import { LoginArgs } from './dto/login.args';
+import { RegisterArgs } from './dto/register.args';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  getValidatedUser(payload: LoginArgs) {
+    return this.userService.getUser(payload.keyword);
+  }
+
+  sign(id: number) {
+    return this.jwtService.sign({
+      id,
+    });
+  }
+
+  async login(login: LoginArgs) {
+    // 匹配用户信息
+    const user = await this.getValidatedUser(login);
+    // 用户信息不存在，抛出一场
+    if (!user) throw new UnauthorizedException();
+    // 加密
+    return this.sign(user.id);
+  }
+
+  async register(register: RegisterArgs) {
+    // 注册密码解密
+    register.password = this.decryptByRsaPrivateKey(
+      register.password,
+      this.configService.get<string>('rsa.privateKey'),
+    );
+    // 创建用户
+    const user = await this.userService.create(register);
+    // 加密
+    return this.sign(user.id);
+  }
+
+  /**
+   * 利用RSA公钥私钥解密前端传输过来的密文密码
+   */
+  decryptByRsaPrivateKey(encoding: string, privateKey: string): string {
+    return privateDecrypt(
+      { key: privateKey, padding: constants.RSA_PKCS1_PADDING },
+      Buffer.from(encoding, 'base64'),
+    ).toString();
+  }
+}

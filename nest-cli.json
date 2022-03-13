@@ -1,0 +1,51 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/boomemory/src",
+  "generateOptions": {
+    "spec": false
+  },
+  "monorepo": true,
+  "root": "apps/boomemory",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/boomemory/tsconfig.app.json"
+  },
+  "projects": {
+    "boomemory": {
+      "type": "application",
+      "root": "apps/boomemory",
+      "entryFile": "main",
+      "sourceRoot": "apps/boomemory/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/boomemory/tsconfig.app.json"
+      }
+    },
+    "boomart": {
+      "type": "application",
+      "root": "apps/boomart",
+      "entryFile": "main",
+      "sourceRoot": "apps/boomart/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/boomart/tsconfig.app.json"
+      }
+    },
+    "data-base": {
+      "type": "library",
+      "root": "libs/data-base",
+      "entryFile": "index",
+      "sourceRoot": "libs/data-base/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/data-base/tsconfig.lib.json"
+      }
+    },
+    "user": {
+      "type": "library",
+      "root": "libs/user",
+      "entryFile": "index",
+      "sourceRoot": "libs/user/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/user/tsconfig.lib.json"
+      }
+    }
+  }
+}
