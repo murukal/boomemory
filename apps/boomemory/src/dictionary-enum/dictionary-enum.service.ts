@@ -1,26 +1,67 @@
+import { CONNECTION_BOOMEMORY } from '@app/data-base/entities';
+import { DictionaryEnum } from '@app/data-base/entities/boomemory/dictionary-enum.entity';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateDictionaryEnumInput } from './dto/create-dictionary-enum.input';
 import { UpdateDictionaryEnumInput } from './dto/update-dictionary-enum.input';
 
 @Injectable()
 export class DictionaryEnumService {
-  create(createDictionaryEnumInput: CreateDictionaryEnumInput) {
-    return 'This action adds a new dictionaryEnum';
+  constructor(
+    @InjectRepository(DictionaryEnum, CONNECTION_BOOMEMORY)
+    private readonly dictionaryEnumRepository: Repository<DictionaryEnum>,
+  ) {}
+
+  /**
+   * 创建字典枚举
+   */
+  create(dictionaryEnum: CreateDictionaryEnumInput) {
+    return this.dictionaryEnumRepository.save(
+      this.dictionaryEnumRepository.create(dictionaryEnum),
+    );
   }
 
-  findAll() {
-    return `This action returns all dictionaryEnum`;
+  /**
+   * 查询多个字典枚举
+   */
+  getDictionaryEnums() {
+    return this.dictionaryEnumRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} dictionaryEnum`;
+  /**
+   * 查询单个字典枚举
+   */
+  getDictionaryEnum(id: number) {
+    return this.dictionaryEnumRepository.findOne(id);
   }
 
-  update(id: number, updateDictionaryEnumInput: UpdateDictionaryEnumInput) {
-    return `This action updates a #${id} dictionaryEnum`;
+  /**
+   * 更新单个字典枚举
+   */
+  async update(id: number, dictionaryEnum: UpdateDictionaryEnumInput) {
+    return !!(
+      await this.dictionaryEnumRepository
+        .createQueryBuilder()
+        .update()
+        .set({
+          ...dictionaryEnum,
+        })
+        .whereInIds(id)
+        .execute()
+    ).affected;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} dictionaryEnum`;
+  /**
+   * 删除单个字典枚举
+   */
+  async remove(id: number) {
+    return !!(
+      await this.dictionaryEnumRepository
+        .createQueryBuilder()
+        .delete()
+        .whereInIds(id)
+        .execute()
+    ).affected;
   }
 }

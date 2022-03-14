@@ -1,6 +1,6 @@
+import { Dictionary } from '@app/data-base/entities';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { DictionaryService } from './dictionary.service';
-import { Dictionary } from '../../../../libs/data-base/src/entities/boomemory/dictionary.entity';
 import { CreateDictionaryInput } from './dto/create-dictionary.input';
 import { UpdateDictionaryInput } from './dto/update-dictionary.input';
 

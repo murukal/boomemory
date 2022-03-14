@@ -1,34 +1,41 @@
+import { DictionaryEnum } from '@app/data-base/entities/boomemory/dictionary-enum.entity';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { DictionaryEnumService } from './dictionary-enum.service';
-import { DictionaryEnum } from './entities/dictionary-enum.entity';
 import { CreateDictionaryEnumInput } from './dto/create-dictionary-enum.input';
 import { UpdateDictionaryEnumInput } from './dto/update-dictionary-enum.input';
 
-@Resolver(() => DictionaryEnum)
+@Resolver()
 export class DictionaryEnumResolver {
   constructor(private readonly dictionaryEnumService: DictionaryEnumService) {}
 
   @Mutation(() => DictionaryEnum)
-  createDictionaryEnum(@Args('createDictionaryEnumInput') createDictionaryEnumInput: CreateDictionaryEnumInput) {
-    return this.dictionaryEnumService.create(createDictionaryEnumInput);
+  createDictionaryEnum(
+    @Args('createDictionaryEnumInput')
+    dictionaryEnum: CreateDictionaryEnumInput,
+  ) {
+    return this.dictionaryEnumService.create(dictionaryEnum);
   }
 
-  @Query(() => [DictionaryEnum], { name: 'dictionaryEnum' })
-  findAll() {
-    return this.dictionaryEnumService.findAll();
+  @Query(() => [DictionaryEnum], { name: 'dictionaryEnums' })
+  getDictionaryEnums() {
+    return this.dictionaryEnumService.getDictionaryEnums();
   }
 
   @Query(() => DictionaryEnum, { name: 'dictionaryEnum' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.dictionaryEnumService.findOne(id);
+  getDictionaryEnum(@Args('id', { type: () => Int }) id: number) {
+    return this.dictionaryEnumService.getDictionaryEnum(id);
   }
 
-  @Mutation(() => DictionaryEnum)
-  updateDictionaryEnum(@Args('updateDictionaryEnumInput') updateDictionaryEnumInput: UpdateDictionaryEnumInput) {
-    return this.dictionaryEnumService.update(updateDictionaryEnumInput.id, updateDictionaryEnumInput);
+  @Mutation(() => Boolean)
+  updateDictionaryEnum(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('updateDictionaryEnumInput')
+    updateDictionaryEnumInput: UpdateDictionaryEnumInput,
+  ) {
+    return this.dictionaryEnumService.update(id, updateDictionaryEnumInput);
   }
 
-  @Mutation(() => DictionaryEnum)
+  @Mutation(() => Boolean)
   removeDictionaryEnum(@Args('id', { type: () => Int }) id: number) {
     return this.dictionaryEnumService.remove(id);
   }

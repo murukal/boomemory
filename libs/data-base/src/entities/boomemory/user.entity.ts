@@ -1,9 +1,17 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+} from 'typeorm';
 import { CoreEntity } from '../core.entity';
 import { hashSync } from 'bcrypt';
 import { IsEmail, MaxLength, MinLength, isURL } from 'class-validator';
 import { BadRequestException } from '@nestjs/common';
+import { Role } from './role.entity';
 
 @InputType({ isAbstract: true })
 @ObjectType()
@@ -36,6 +44,10 @@ export class User extends CoreEntity {
   @MaxLength(20)
   @MinLength(6)
   password: string;
+
+  @ManyToMany(() => Role, (role) => role.users)
+  @JoinTable()
+  roles: Role[];
 
   @BeforeInsert()
   @BeforeUpdate()
