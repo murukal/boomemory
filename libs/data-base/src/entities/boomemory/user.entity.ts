@@ -4,7 +4,6 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  JoinTable,
   ManyToMany,
 } from 'typeorm';
 import { CoreEntity } from '../core.entity';
@@ -46,7 +45,6 @@ export class User extends CoreEntity {
   password: string;
 
   @ManyToMany(() => Role, (role) => role.users)
-  @JoinTable()
   roles: Role[];
 
   @BeforeInsert()

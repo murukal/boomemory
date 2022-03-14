@@ -6,7 +6,6 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  JoinTable,
   ManyToMany,
 } from 'typeorm';
 import { CoreEntity } from '..';
@@ -26,7 +25,6 @@ export class Tag extends CoreEntity {
   image: string;
 
   @ManyToMany(() => Essay, (essay) => essay.tags)
-  @JoinTable()
   essays: Essay[];
 
   @BeforeInsert()
