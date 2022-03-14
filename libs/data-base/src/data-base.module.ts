@@ -1,11 +1,21 @@
 import { Global, Module } from '@nestjs/common';
 import { DataBaseService } from './data-base.service';
-import { boomemoryConnection, boomemoryFeatures } from './entities';
+import {
+  boomartConnection,
+  boomartFeatures,
+  boomemoryConnection,
+  boomemoryFeatures,
+} from './entities';
 
 @Global()
 @Module({
-  imports: [boomemoryConnection, boomemoryFeatures],
+  imports: [
+    boomemoryConnection,
+    boomartConnection,
+    boomemoryFeatures,
+    boomartFeatures,
+  ],
   providers: [DataBaseService],
-  exports: [DataBaseService, boomemoryFeatures],
+  exports: [DataBaseService, boomemoryFeatures, boomartFeatures],
 })
 export class DataBaseModule {}

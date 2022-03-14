@@ -3,12 +3,13 @@ import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOpti
 
 export * from './core.entity';
 export * from './boomemory';
-// export * from './boomart';
+export * from './boomart';
 
 import * as boomemory from './boomemory';
-// import * as boomartEntities from './boomart';
+import * as boomart from './boomart';
 
 const boomemoryEntities = Object.values(boomemory);
+const boomartEntities = Object.values(boomart);
 
 /** 生成数据库连接 */
 export const CONNECTION_BOOMART = 'boomart';
@@ -33,10 +34,16 @@ export const boomartConnection = TypeOrmModule.forRoot({
   ...baseConnectionOptions,
   database: CONNECTION_BOOMART,
   name: CONNECTION_BOOMART,
+  entities: boomartEntities,
 });
 
 /** 注册数据库表 */
 export const boomemoryFeatures = TypeOrmModule.forFeature(
   boomemoryEntities,
   CONNECTION_BOOMEMORY,
+);
+
+export const boomartFeatures = TypeOrmModule.forFeature(
+  boomartEntities,
+  CONNECTION_BOOMART,
 );
