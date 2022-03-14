@@ -54,4 +54,11 @@ export class AuthService {
       Buffer.from(encoding, 'base64'),
     ).toString();
   }
+
+  /**
+   * 查询多个用户
+   */
+  getUsers() {
+    return this.userService.getUsers();
+  }
 }

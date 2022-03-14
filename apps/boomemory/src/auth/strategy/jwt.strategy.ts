@@ -27,8 +27,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: Authentication): Promise<User> {
-    console.log('123123213');
-
     // token有效
     // 获取数据库中的user信息
     const user = await this.userService.getUser(payload.id);

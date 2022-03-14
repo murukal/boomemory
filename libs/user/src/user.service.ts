@@ -11,6 +11,9 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  /**
+   * 获取单个用户
+   */
   getUser(keyword: number | string) {
     return this.userRepository.findOne({
       where: [
@@ -27,7 +30,17 @@ export class UserService {
     });
   }
 
+  /**
+   * 创建用户
+   */
   create(register: RegisterInput) {
     return this.userRepository.save(this.userRepository.create(register));
+  }
+
+  /**
+   * 查询多个用户
+   */
+  getUsers() {
+    return this.userRepository.find();
   }
 }

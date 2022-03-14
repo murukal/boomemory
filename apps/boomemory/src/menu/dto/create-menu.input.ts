@@ -7,9 +7,9 @@ export class CreateMenuInput extends PickType(
   ['name', 'sortBy', 'icon'],
   InputType,
 ) {
-  @Field(() => Int, { nullable: true })
-  tenant?: number;
+  @Field(() => Int)
+  tenantId: number;
 
   @Field(() => Int, { nullable: true })
-  parent?: number;
+  parentId?: number;
 }

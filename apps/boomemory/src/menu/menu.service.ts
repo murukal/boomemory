@@ -18,26 +18,16 @@ export class MenuService {
    * 创建菜单
    */
   async create(menu: CreateMenuInput) {
-    const createMenu = {
-      ...menu,
-      ...(menu.tenant && {
-        tenant: await this.tenantService.getTenant(menu.tenant),
-      }),
-      ...(menu.parent && {
-        parent: await this.getMenu(menu.parent),
-      }),
-    };
-
-    return await this.menuRepository.save(
-      this.menuRepository.create(createMenu),
-    );
+    return await this.menuRepository.save(this.menuRepository.create(menu));
   }
 
   /**
    * 查询多个菜单
    */
   getMenus() {
-    return this.menuRepository.find();
+    return this.menuRepository.find({
+      relations: ['children', 'parent', 'tenant'],
+    });
   }
 
   /**
@@ -45,7 +35,7 @@ export class MenuService {
    */
   getMenu(id: number) {
     return this.menuRepository.findOne(id, {
-      relations: ['children'],
+      relations: ['children', 'parent', 'tenant'],
     });
   }
 
@@ -53,22 +43,14 @@ export class MenuService {
    * 更新菜单
    */
   async update(id: number, menu: UpdateMenuInput) {
-    const updateMenu = {
-      ...menu,
-      ...(menu.tenant && {
-        tenant: await this.tenantService.getTenant(menu.tenant),
-      }),
-      ...(menu.parent && {
-        parent: await this.getMenu(menu.parent),
-      }),
-    };
-
     return !!(
       await this.menuRepository
         .createQueryBuilder()
         .update()
         .whereInIds(id)
-        .set(updateMenu)
+        .set({
+          ...menu,
+        })
         .execute()
     ).affected;
   }

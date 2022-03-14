@@ -31,11 +31,17 @@ export class Menu extends CoreEntity {
   })
   icon?: string;
 
+  @Column({ nullable: true })
+  tenantId: number;
+
   @Field(() => Tenant)
   @ManyToOne(() => Tenant, (tenant) => tenant.menus)
   tenant: Tenant;
 
-  @Field(() => Menu)
+  @Column({ nullable: true })
+  parentId: number;
+
+  @Field(() => Menu, { nullable: true })
   @ManyToOne(() => Menu, (menu) => menu.parent)
   parent: Menu;
 
