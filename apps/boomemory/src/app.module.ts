@@ -14,6 +14,7 @@ import { AppResolver } from './app.resolver';
 import { MenuModule } from './menu/menu.module';
 import { BoomartModule } from 'apps/boomart/src/boomart.module';
 import { DictionaryModule } from './dictionary/dictionary.module';
+import { DictionaryEnumModule } from './dictionary-enum/dictionary-enum.module';
 
 @Module({
   imports: [
@@ -39,6 +40,8 @@ import { DictionaryModule } from './dictionary/dictionary.module';
     BoomartModule,
 
     DictionaryModule,
+
+    DictionaryEnumModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

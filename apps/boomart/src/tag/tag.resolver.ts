@@ -4,7 +4,7 @@ import { CreateTagInput } from './dto/create-tag.input';
 import { UpdateTagInput } from './dto/update-tag.input';
 import { Tag } from '@app/data-base/entities/boomart/tag.entity';
 
-@Resolver(() => Tag)
+@Resolver()
 export class TagResolver {
   constructor(private readonly tagService: TagService) {}
 

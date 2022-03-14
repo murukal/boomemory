@@ -1,7 +1,7 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 
 @ObjectType()
-export class Dictionary {
+export class DictionaryEnum {
   @Field(() => Int, { description: 'Example field (placeholder)' })
   exampleField: number;
 }

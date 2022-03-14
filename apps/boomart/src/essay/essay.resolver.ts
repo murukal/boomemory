@@ -4,7 +4,7 @@ import { Essay } from '../../../../libs/data-base/src/entities/boomart/essay.ent
 import { CreateEssayInput } from './dto/create-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
 
-@Resolver(() => Essay)
+@Resolver()
 export class EssayResolver {
   constructor(private readonly essayService: EssayService) {}
 

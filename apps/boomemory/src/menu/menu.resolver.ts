@@ -4,7 +4,7 @@ import { Menu } from '../../../../libs/data-base/src/entities/boomemory/menu.ent
 import { CreateMenuInput } from './dto/create-menu.input';
 import { UpdateMenuInput } from './dto/update-menu.input';
 
-@Resolver(() => Menu)
+@Resolver()
 export class MenuResolver {
   constructor(private readonly menuService: MenuService) {}
 

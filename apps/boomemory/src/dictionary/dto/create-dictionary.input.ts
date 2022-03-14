@@ -1,7 +1,9 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { Dictionary } from '@app/data-base/entities';
+import { InputType, PickType } from '@nestjs/graphql';
 
 @InputType()
-export class CreateDictionaryInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
-}
+export class CreateDictionaryInput extends PickType(
+  Dictionary,
+  ['code', 'description', 'sortBy'],
+  InputType,
+) {}

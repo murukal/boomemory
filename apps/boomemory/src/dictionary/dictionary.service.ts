@@ -1,26 +1,51 @@
+import { CONNECTION_BOOMEMORY, Dictionary } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateDictionaryInput } from './dto/create-dictionary.input';
 import { UpdateDictionaryInput } from './dto/update-dictionary.input';
 
 @Injectable()
 export class DictionaryService {
-  create(createDictionaryInput: CreateDictionaryInput) {
-    return 'This action adds a new dictionary';
+  constructor(
+    @InjectRepository(Dictionary, CONNECTION_BOOMEMORY)
+    private readonly dictionaryRepository: Repository<Dictionary>,
+  ) {}
+
+  create(dictionary: CreateDictionaryInput) {
+    return this.dictionaryRepository.save(
+      this.dictionaryRepository.create(dictionary),
+    );
   }
 
-  findAll() {
-    return `This action returns all dictionary`;
+  getDictionaries() {
+    return this.dictionaryRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} dictionary`;
+  getDictionay(id: number) {
+    return this.dictionaryRepository.findOne(id);
   }
 
-  update(id: number, updateDictionaryInput: UpdateDictionaryInput) {
-    return `This action updates a #${id} dictionary`;
+  async update(id: number, dictionary: UpdateDictionaryInput) {
+    return !!(
+      await this.dictionaryRepository
+        .createQueryBuilder()
+        .update()
+        .set({
+          ...dictionary,
+        })
+        .whereInIds(id)
+        .execute()
+    ).affected;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} dictionary`;
+  async remove(id: number) {
+    return !!(
+      await this.dictionaryRepository
+        .createQueryBuilder()
+        .delete()
+        .whereInIds(id)
+        .execute()
+    ).affected;
   }
 }
