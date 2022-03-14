@@ -1,7 +1,7 @@
 import { CONNECTION_BOOMEMORY, User } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RegisterArgs } from 'apps/boomemory/src/auth/dto/register.args';
+import { RegisterInput } from 'apps/boomemory/src/auth/dto/register.input';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -27,7 +27,7 @@ export class UserService {
     });
   }
 
-  create(register: RegisterArgs) {
+  create(register: RegisterInput) {
     return this.userRepository.save(this.userRepository.create(register));
   }
 }

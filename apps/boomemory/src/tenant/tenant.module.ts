@@ -4,5 +4,6 @@ import { TenantResolver } from './tenant.resolver';
 
 @Module({
   providers: [TenantResolver, TenantService],
+  exports: [TenantService],
 })
 export class TenantModule {}

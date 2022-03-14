@@ -7,9 +7,9 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(3000);
+  await app.listen(9000);
 
-  console.log('http://localhost:3000');
+  console.log('http://localhost:9000');
 }
 
 bootstrap();

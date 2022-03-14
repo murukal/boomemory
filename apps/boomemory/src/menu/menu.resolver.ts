@@ -9,23 +9,26 @@ export class MenuResolver {
   constructor(private readonly menuService: MenuService) {}
 
   @Mutation(() => Menu)
-  createMenu(@Args() menu: CreateMenuInput) {
+  createMenu(@Args('createMenuInput') menu: CreateMenuInput) {
     return this.menuService.create(menu);
   }
 
-  @Query(() => [Menu], { name: 'menu' })
-  findAll() {
-    return this.menuService.findAll();
+  @Query(() => [Menu], { name: 'menus' })
+  getMenus() {
+    return this.menuService.getMenus();
   }
 
   @Query(() => Menu, { name: 'menu' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.menuService.findOne(id);
+  getMenu(@Args('id', { type: () => Int }) id: number) {
+    return this.menuService.getMenu(id);
   }
 
-  @Mutation(() => Menu)
-  updateMenu(@Args('updateMenuInput') updateMenuInput: UpdateMenuInput) {
-    return this.menuService.update(updateMenuInput.id, updateMenuInput);
+  @Mutation(() => Boolean)
+  updateMenu(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('updateMenuInput') menu: UpdateMenuInput,
+  ) {
+    return this.menuService.update(id, menu);
   }
 
   @Mutation(() => Menu)

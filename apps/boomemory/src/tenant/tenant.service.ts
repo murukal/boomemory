@@ -44,7 +44,7 @@ export class TenantService {
       await this.tenantRepository
         .createQueryBuilder()
         .delete()
-        .where('id = :id', { id })
+        .whereInIds(id)
         .execute()
     ).affected;
   }

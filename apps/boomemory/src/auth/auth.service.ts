@@ -3,8 +3,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { constants, privateDecrypt } from 'crypto';
-import { LoginArgs } from './dto/login.args';
-import { RegisterArgs } from './dto/register.args';
+import { LoginInput } from './dto/login.input';
+import { RegisterInput } from './dto/register.input';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +14,7 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  getValidatedUser(payload: LoginArgs) {
+  getValidatedUser(payload: LoginInput) {
     return this.userService.getUser(payload.keyword);
   }
 
@@ -24,7 +24,7 @@ export class AuthService {
     });
   }
 
-  async login(login: LoginArgs) {
+  async login(login: LoginInput) {
     // 匹配用户信息
     const user = await this.getValidatedUser(login);
     // 用户信息不存在，抛出一场
@@ -33,7 +33,7 @@ export class AuthService {
     return this.sign(user.id);
   }
 
-  async register(register: RegisterArgs) {
+  async register(register: RegisterInput) {
     // 注册密码解密
     register.password = this.decryptByRsaPrivateKey(
       register.password,
