@@ -12,6 +12,8 @@ import { jwtConfig } from './config';
 import { rsaConfig } from './config/rsa.config';
 import { AppResolver } from './app.resolver';
 import { MenuModule } from './menu/menu.module';
+import { BoomartModule } from 'apps/boomart/src/boomart.module';
+import { DictionaryModule } from './dictionary/dictionary.module';
 
 @Module({
   imports: [
@@ -30,10 +32,13 @@ import { MenuModule } from './menu/menu.module';
     }),
 
     TenantModule,
-
     AuthModule,
-
     MenuModule,
+
+    // 第三方服务
+    BoomartModule,
+
+    DictionaryModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],

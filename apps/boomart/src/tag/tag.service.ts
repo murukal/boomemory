@@ -1,4 +1,4 @@
-import { Tag } from '@app/data-base/entities';
+import { CONNECTION_BOOMART, Tag } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -8,7 +8,8 @@ import { UpdateTagInput } from './dto/update-tag.input';
 @Injectable()
 export class TagService {
   constructor(
-    @InjectRepository(Tag) private readonly tagRepository: Repository<Tag>,
+    @InjectRepository(Tag, CONNECTION_BOOMART)
+    private readonly tagRepository: Repository<Tag>,
   ) {}
 
   /**
