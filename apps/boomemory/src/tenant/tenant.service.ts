@@ -12,20 +12,41 @@ export class TenantService {
     private readonly tenantRepository: Repository<Tenant>,
   ) {}
 
+  /**
+   * 创建租户
+   */
   create(createTenantInput: CreateTenantInput) {
     return this.tenantRepository.save(
       this.tenantRepository.create(createTenantInput),
     );
   }
 
+  /**
+   * 查询多个租户
+   */
   getTenants() {
     return this.tenantRepository.find();
   }
 
-  getTenant(id: number) {
-    return this.tenantRepository.findOne(id);
+  /**
+   * 查询单个租户
+   */
+  getTenant(keyword: number | string) {
+    return this.tenantRepository.findOne({
+      where: [
+        {
+          id: keyword,
+        },
+        {
+          code: keyword,
+        },
+      ],
+    });
   }
 
+  /**
+   * 更新租户
+   */
   async update(id: number, updateTenantInput: UpdateTenantInput) {
     return !!(
       await this.tenantRepository
@@ -39,6 +60,9 @@ export class TenantService {
     ).affected;
   }
 
+  /**
+   * 删除租户
+   */
   async remove(id: number) {
     return !!(
       await this.tenantRepository
