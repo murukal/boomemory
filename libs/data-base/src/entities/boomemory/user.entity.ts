@@ -36,7 +36,6 @@ export class User extends CoreEntity {
   })
   avatar?: string;
 
-  @Field(() => String)
   @Column({
     select: false,
   })

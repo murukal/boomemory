@@ -26,7 +26,7 @@ export class AuthResolver {
     return this.authService.getUsers();
   }
 
-  @Query(() => User, { description: '用户认证', name: 'users' })
+  @Query(() => User, { description: '用户认证' })
   @UseGuards(JwtAuthGuard)
   whoAmI(@CurrentUser() user: User) {
     return user;
