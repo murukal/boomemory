@@ -1,59 +1,42 @@
-import { BadRequestException } from '@nestjs/common';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { IsString, isURL, MaxLength } from 'class-validator';
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { IsString, MaxLength } from 'class-validator';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { CoreEntity } from '../core.entity';
 import { Tenant } from './tenant.entity';
 
 @ObjectType()
 @Entity()
 export class Menu extends CoreEntity {
-  @Field(() => String)
+  @Field(() => String, { description: '名称' })
   @Column()
   @IsString()
   @MaxLength(10)
   name: string;
 
-  @Field(() => Int)
+  @Field(() => Int, { description: '排序码' })
   @Column()
   sortBy: number;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, description: '图标名称' })
   @Column({
     nullable: true,
   })
   icon?: string;
 
-  @Column({ nullable: true })
+  @Field(() => Int, { description: '所属租户ID' })
+  @Column()
   tenantId: number;
 
-  @Field(() => Tenant)
   @ManyToOne(() => Tenant, (tenant) => tenant.menus)
   tenant: Tenant;
 
+  @Field(() => Int, { nullable: true, description: '上级菜单ID' })
   @Column({ nullable: true })
-  parentId: number;
+  parentId?: number;
 
-  @Field(() => Menu, { nullable: true })
-  @ManyToOne(() => Menu, (menu) => menu.parent)
-  parent: Menu;
+  @ManyToOne(() => Menu, (menu) => menu.children)
+  parent?: Menu;
 
-  @Field(() => [Menu])
   @OneToMany(() => Menu, (menu) => menu.parent)
-  children: Menu[];
-
-  @BeforeInsert()
-  @BeforeUpdate()
-  private validateIcon() {
-    if (!this.icon) return;
-    if (!isURL(this.icon))
-      throw new BadRequestException('icon must be an URL address');
-  }
+  children?: Menu[];
 }

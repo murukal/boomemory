@@ -1,15 +1,9 @@
 import { Menu } from '@app/data-base/entities';
-import { PickType, InputType, Field, Int } from '@nestjs/graphql';
+import { PickType, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateMenuInput extends PickType(
   Menu,
-  ['name', 'sortBy', 'icon'],
+  ['name', 'sortBy', 'icon', 'tenantId', 'parentId'],
   InputType,
-) {
-  @Field(() => Int)
-  tenantId: number;
-
-  @Field(() => Int, { nullable: true })
-  parentId?: number;
-}
+) {}

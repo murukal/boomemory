@@ -45,7 +45,7 @@ export class User extends CoreEntity {
   password: string;
 
   @ManyToMany(() => Role, (role) => role.users)
-  roles: Role[];
+  roles?: Role[];
 
   @BeforeInsert()
   @BeforeUpdate()

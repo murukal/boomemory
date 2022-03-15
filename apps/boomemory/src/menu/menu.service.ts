@@ -25,18 +25,14 @@ export class MenuService {
    * 查询多个菜单
    */
   getMenus() {
-    return this.menuRepository.find({
-      relations: ['children', 'parent', 'tenant'],
-    });
+    return this.menuRepository.find();
   }
 
   /**
    * 查询单个菜单
    */
   getMenu(id: number) {
-    return this.menuRepository.findOne(id, {
-      relations: ['children', 'parent', 'tenant'],
-    });
+    return this.menuRepository.findOne(id);
   }
 
   /**

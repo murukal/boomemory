@@ -25,25 +25,22 @@ import { RoleModule } from './role/role.module';
       load: [jwtConfig, rsaConfig],
     }),
 
-    DataBaseModule,
-    UserModule,
-
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
     }),
 
-    TenantModule,
-    AuthModule,
-    MenuModule,
-
     // 第三方服务
     BoomartModule,
 
+    // 公用服务模块
+    DataBaseModule,
+    UserModule,
+    TenantModule,
+    AuthModule,
+    MenuModule,
     DictionaryModule,
-
     DictionaryEnumModule,
-
     RoleModule,
   ],
   controllers: [AppController],

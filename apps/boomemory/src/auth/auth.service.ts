@@ -1,14 +1,19 @@
+import { Authorization, CONNECTION_BOOMEMORY } from '@app/data-base/entities';
 import { UserService } from '@app/user';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
 import { constants, privateDecrypt } from 'crypto';
+import { Repository } from 'typeorm';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(Authorization, CONNECTION_BOOMEMORY)
+    private readonly authorizationRepository: Repository<Authorization>,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
@@ -60,5 +65,12 @@ export class AuthService {
    */
   getUsers() {
     return this.userService.getUsers();
+  }
+
+  /**
+   * 查询多个权限
+   */
+  getAuthorizations() {
+    return this.authorizationRepository.find();
   }
 }
