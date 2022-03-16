@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RegisterInput } from 'apps/boomemory/src/auth/dto/register.input';
 import { Repository } from 'typeorm';
+import { QueryParams } from 'typings';
+import { paginateQuery } from 'utils';
 
 @Injectable()
 export class UserService {
@@ -40,7 +42,7 @@ export class UserService {
   /**
    * 查询多个用户
    */
-  getUsers() {
-    return this.userRepository.find();
+  getUsers(query?: QueryParams) {
+    return paginateQuery(this.userRepository, query);
   }
 }

@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { constants, privateDecrypt } from 'crypto';
 import { Repository } from 'typeorm';
+import { QueryParams } from 'typings';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 
@@ -63,8 +64,8 @@ export class AuthService {
   /**
    * 查询多个用户
    */
-  getUsers() {
-    return this.userService.getUsers();
+  getUsers(query?: QueryParams) {
+    return this.userService.getUsers(query);
   }
 
   /**

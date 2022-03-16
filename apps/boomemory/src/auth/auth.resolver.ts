@@ -2,6 +2,7 @@ import { Authorization, User } from '@app/data-base/entities';
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
+import { PaginateInput } from 'utils/dto/paginate.input';
 import { AuthService } from './auth.service';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
@@ -21,9 +22,11 @@ export class AuthResolver {
     return this.authService.register(register);
   }
 
-  @Query(() => [User], { description: '查询多个用户' })
-  getUsers() {
-    return this.authService.getUsers();
+  @Query(() => [User], { description: '查询多个用户', name: 'users' })
+  getUsers(@Args('paginateInput') paginateInput: PaginateInput) {
+    return this.authService.getUsers({
+      paginateInput,
+    });
   }
 
   @Query(() => User, { description: '用户认证' })
