@@ -1,5 +1,4 @@
-import { User } from '@app/data-base/entities';
-import { Field, ObjectType, PickType } from '@nestjs/graphql';
+import { Field, Int, ObjectType, PickType } from '@nestjs/graphql';
 import { PaginateInput } from './paginate.input';
 
 @ObjectType()
@@ -8,6 +7,9 @@ export class PaginateOutput extends PickType(
   ['page', 'limit'],
   ObjectType,
 ) {
-  @Field(() => [User])
-  items: User[];
+  @Field(() => Int, { description: '总条目数' })
+  total: number;
+
+  @Field(() => Int, { description: '总页数' })
+  pageCount: number;
 }

@@ -2,6 +2,8 @@ import { CONNECTION_BOOMEMORY, Menu } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { QueryParams } from 'typings';
+import { paginateQuery } from 'utils';
 import { TenantService } from '../tenant/tenant.service';
 import { CreateMenuInput } from './dto/create-menu.input';
 import { UpdateMenuInput } from './dto/update-menu.input';
@@ -24,8 +26,8 @@ export class MenuService {
   /**
    * 查询多个菜单
    */
-  getMenus() {
-    return this.menuRepository.find();
+  getMenus(query?: QueryParams) {
+    return paginateQuery(this.menuRepository, query);
   }
 
   /**

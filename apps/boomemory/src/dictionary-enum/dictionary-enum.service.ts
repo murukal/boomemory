@@ -3,6 +3,8 @@ import { DictionaryEnum } from '@app/data-base/entities/boomemory/dictionary-enu
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { QueryParams } from 'typings';
+import { paginateQuery } from 'utils';
 import { CreateDictionaryEnumInput } from './dto/create-dictionary-enum.input';
 import { UpdateDictionaryEnumInput } from './dto/update-dictionary-enum.input';
 
@@ -25,8 +27,8 @@ export class DictionaryEnumService {
   /**
    * 查询多个字典枚举
    */
-  getDictionaryEnums() {
-    return this.dictionaryEnumRepository.find();
+  getDictionaryEnums(query?: QueryParams) {
+    return paginateQuery(this.dictionaryEnumRepository, query);
   }
 
   /**

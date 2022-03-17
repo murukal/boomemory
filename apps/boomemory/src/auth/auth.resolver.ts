@@ -6,6 +6,7 @@ import { PaginateInput } from 'utils/dto/paginate.input';
 import { AuthService } from './auth.service';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
+import { UserPaginateOutput } from './dto/user-paginate.output';
 import { JwtAuthGuard } from './guard';
 
 @Resolver()
@@ -22,8 +23,13 @@ export class AuthResolver {
     return this.authService.register(register);
   }
 
-  @Query(() => [User], { description: '查询多个用户', name: 'users' })
-  getUsers(@Args('paginateInput') paginateInput: PaginateInput) {
+  @Query(() => UserPaginateOutput, {
+    description: '查询多个用户',
+    name: 'users',
+  })
+  getUsers(
+    @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
+  ) {
     return this.authService.getUsers({
       paginateInput,
     });

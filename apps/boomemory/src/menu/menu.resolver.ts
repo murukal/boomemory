@@ -11,6 +11,8 @@ import { MenuService } from './menu.service';
 import { Menu } from '../../../../libs/data-base/src/entities/boomemory/menu.entity';
 import { CreateMenuInput } from './dto/create-menu.input';
 import { UpdateMenuInput } from './dto/update-menu.input';
+import { PaginateInput } from 'utils/dto';
+import { MenuPaginateOutput } from './dto/menu-paginate.output';
 
 @Resolver(() => Menu)
 export class MenuResolver {
@@ -21,9 +23,16 @@ export class MenuResolver {
     return this.menuService.create(menu);
   }
 
-  @Query(() => [Menu], { name: 'menus', description: '查询多个租户' })
-  getMenus() {
-    return this.menuService.getMenus();
+  @Query(() => MenuPaginateOutput, {
+    name: 'menus',
+    description: '查询多个租户',
+  })
+  getMenus(
+    @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
+  ) {
+    return this.menuService.getMenus({
+      paginateInput,
+    });
   }
 
   @Query(() => Menu, { name: 'menu', description: '查询单个租户' })

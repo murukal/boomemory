@@ -3,6 +3,8 @@ import { TenantService } from './tenant.service';
 import { CreateTenantInput } from './dto/create-tenant.input';
 import { UpdateTenantInput } from './dto/update-tenant.input';
 import { Tenant } from '@app/data-base/entities';
+import { PaginateInput } from 'utils/dto';
+import { TenantPaginateOutput } from './dto/tenant-paginate.output';
 
 @Resolver()
 export class TenantResolver {
@@ -15,9 +17,14 @@ export class TenantResolver {
     return this.tenantService.create(createTenantInput);
   }
 
-  @Query(() => [Tenant], { name: 'tenants', description: '查询多个租户' })
-  getTenants() {
-    return this.tenantService.getTenants();
+  @Query(() => TenantPaginateOutput, {
+    name: 'tenants',
+    description: '查询多个租户',
+  })
+  getTenants(
+    @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
+  ) {
+    return this.tenantService.getTenants({ paginateInput });
   }
 
   @Query(() => Tenant, {
