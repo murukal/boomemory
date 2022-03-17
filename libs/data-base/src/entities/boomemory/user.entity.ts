@@ -16,21 +16,25 @@ import { Role } from './role.entity';
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
-  @Field(() => String)
+  @Field(() => String, {
+    description: '用户名',
+  })
   @Column({
     unique: true,
   })
   @MaxLength(20)
   username: string;
 
-  @Field(() => String)
+  @Field(() => String, {
+    description: '邮箱',
+  })
   @Column({
     unique: true,
   })
   @IsEmail()
   email: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, description: '头像' })
   @Column({
     nullable: true,
   })

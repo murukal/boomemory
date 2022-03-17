@@ -26,7 +26,6 @@ export class Tenant extends CoreEntity {
   @IsBoolean()
   isAuthorizate: boolean;
 
-  @Field(() => [Menu])
   @OneToMany(() => Menu, (menu) => menu.tenant)
   menus: Menu[];
 }

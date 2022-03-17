@@ -7,15 +7,21 @@ import {
 
 @ObjectType()
 export class CoreEntity {
-  @Field(() => Int)
+  @Field(() => Int, {
+    description: 'id唯一键',
+  })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field(() => Date)
+  @Field(() => Date, {
+    description: '创建日期',
+  })
   @CreateDateColumn()
   createdAt: Date;
 
-  @Field(() => Date)
+  @Field(() => Date, {
+    description: '上次更新日期',
+  })
   @UpdateDateColumn()
   updatedAt: Date;
 }

@@ -2,6 +2,8 @@ import { CONNECTION_BOOMART, Essay } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { QueryParams } from 'typings';
+import { paginateQuery } from 'utils';
 import { CreateEssayInput } from './dto/create-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
 
@@ -22,8 +24,8 @@ export class EssayService {
   /**
    * 查询多个文章
    */
-  getEssays() {
-    return this.essayRepository.find();
+  getEssays(query?: QueryParams) {
+    return paginateQuery(this.essayRepository, query);
   }
 
   /**

@@ -2,6 +2,8 @@ import { CONNECTION_BOOMART, Tag } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { QueryParams } from 'typings';
+import { paginateQuery } from 'utils';
 import { CreateTagInput } from './dto/create-tag.input';
 import { UpdateTagInput } from './dto/update-tag.input';
 
@@ -22,8 +24,8 @@ export class TagService {
   /**
    * 查询多个标签
    */
-  getTags() {
-    return this.tagRepository.find();
+  getTags(query?: QueryParams) {
+    return paginateQuery(this.tagRepository, query);
   }
 
   /**

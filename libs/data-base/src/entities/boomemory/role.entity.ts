@@ -7,7 +7,7 @@ import { User } from './user.entity';
 @Entity()
 @ObjectType()
 export class Role extends CoreEntity {
-  @Field(() => String)
+  @Field(() => String, { description: '角色名称' })
   @Column()
   name: string;
 
