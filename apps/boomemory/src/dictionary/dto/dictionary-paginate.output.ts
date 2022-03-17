@@ -1,9 +1,9 @@
 import { Dictionary } from '@app/data-base/entities';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { PaginateOutput } from 'utils/dto';
+import { PaginateOptionsOutput } from 'utils/dto';
 
 @ObjectType()
-export class DictionaryPaginateOutput extends PaginateOutput {
+export class DictionaryPaginateOutput extends PaginateOptionsOutput {
   @Field(() => [Dictionary], {
     description: '字典列表',
   })

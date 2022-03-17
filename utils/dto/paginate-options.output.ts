@@ -2,7 +2,7 @@ import { Field, Int, ObjectType, PickType } from '@nestjs/graphql';
 import { PaginateInput } from './paginate.input';
 
 @ObjectType()
-export class PaginateOutput extends PickType(
+export class PaginateOptionsOutput extends PickType(
   PaginateInput,
   ['page', 'limit'],
   ObjectType,

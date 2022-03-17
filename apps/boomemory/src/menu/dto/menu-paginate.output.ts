@@ -1,9 +1,9 @@
 import { Menu } from '@app/data-base/entities';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { PaginateOutput } from 'utils/dto';
+import { PaginateOptionsOutput } from 'utils/dto';
 
 @ObjectType()
-export class MenuPaginateOutput extends PaginateOutput {
+export class MenuPaginateOutput extends PaginateOptionsOutput {
   @Field(() => [Menu], {
     description: '菜单列表',
   })

@@ -1,2 +1,2 @@
 export * from './paginate.input';
-export * from './paginate.output';
+export * from './paginate-options.output';

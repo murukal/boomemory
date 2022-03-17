@@ -1,15 +1,15 @@
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
-import { PaginateOutput } from './dto';
+import { PaginateOptionsOutput } from './dto';
 
-export class PaginateResult<T> extends PaginateOutput {
+export class PaginateOutput<T> extends PaginateOptionsOutput {
   items: T[];
 }
 
 export const paginateQuery = async <T>(
   repository: Repository<T>,
   query?: QueryParams,
-): Promise<PaginateResult<T>> => {
+): Promise<PaginateOutput<T>> => {
   // 入参存在分页需求，计算 skip 值
   // 入参不存在分页需求，以第一条开始取值 skip = 0
   const skip = query?.paginateInput

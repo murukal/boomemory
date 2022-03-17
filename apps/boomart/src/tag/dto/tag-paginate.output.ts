@@ -1,9 +1,9 @@
 import { Tag } from '@app/data-base/entities';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { PaginateOutput } from 'utils/dto';
+import { PaginateOptionsOutput } from 'utils/dto';
 
 @ObjectType()
-export class TagPaginateOutput extends PaginateOutput {
+export class TagPaginateOutput extends PaginateOptionsOutput {
   @Field(() => [Tag], {
     description: '标签列表',
   })

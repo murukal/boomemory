@@ -1,9 +1,9 @@
 import { Tenant } from '@app/data-base/entities';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { PaginateOutput } from 'utils/dto';
+import { PaginateOptionsOutput } from 'utils/dto';
 
 @ObjectType()
-export class TenantPaginateOutput extends PaginateOutput {
+export class TenantPaginateOutput extends PaginateOptionsOutput {
   @Field(() => [Tenant], {
     description: '租户列表',
   })
