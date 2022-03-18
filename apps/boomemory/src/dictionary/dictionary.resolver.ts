@@ -3,7 +3,7 @@ import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { PaginateInput } from 'utils/dto';
 import { DictionaryService } from './dictionary.service';
 import { CreateDictionaryInput } from './dto/create-dictionary.input';
-import { DictionaryPaginateOutput } from './dto/dictionary-paginate.output';
+import { PaginatedDictionaries } from './dto/paginated-dictionaries';
 import { UpdateDictionaryInput } from './dto/update-dictionary.input';
 
 @Resolver()
@@ -17,7 +17,7 @@ export class DictionaryResolver {
     return this.dictionaryService.create(dictionary);
   }
 
-  @Query(() => DictionaryPaginateOutput, {
+  @Query(() => PaginatedDictionaries, {
     name: 'dictionaries',
     description: '查询多个字典',
   })

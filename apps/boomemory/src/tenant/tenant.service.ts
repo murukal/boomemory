@@ -1,9 +1,10 @@
 import { CONNECTION_BOOMEMORY, Tenant } from '@app/data-base/entities';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { MenuService } from '../menu/menu.service';
 import { CreateTenantInput } from './dto/create-tenant.input';
 import { UpdateTenantInput } from './dto/update-tenant.input';
 
@@ -12,6 +13,9 @@ export class TenantService {
   constructor(
     @InjectRepository(Tenant, CONNECTION_BOOMEMORY)
     private readonly tenantRepository: Repository<Tenant>,
+
+    @Inject(forwardRef(() => MenuService))
+    private readonly menuService: MenuService,
   ) {}
 
   /**
@@ -73,5 +77,16 @@ export class TenantService {
         .whereInIds(id)
         .execute()
     ).affected;
+  }
+
+  /** 查询租户id对应的菜单 */
+  async getTenantMenus(tenantId: number) {
+    return (
+      await this.menuService.getMenus({
+        filterInput: {
+          tenantId,
+        },
+      })
+    ).items;
   }
 }

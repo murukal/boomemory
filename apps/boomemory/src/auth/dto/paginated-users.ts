@@ -1,9 +1,9 @@
 import { User } from '@app/data-base/entities';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { PaginateOptionsOutput } from 'utils/dto';
+import { PaginatedOptions } from 'utils/dto';
 
 @ObjectType()
-export class UserPaginateOutput extends PaginateOptionsOutput {
+export class PaginatedUsers extends PaginatedOptions {
   @Field(() => [User])
   items: User[];
 }

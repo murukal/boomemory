@@ -3,7 +3,7 @@ import { EssayService } from './essay.service';
 import { Essay } from '../../../../libs/data-base/src/entities/boomart/essay.entity';
 import { CreateEssayInput } from './dto/create-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
-import { EssayPaginateOutput } from './dto/essay-paginate.output';
+import { PaginatedEssays } from './dto/paginated-essays';
 import { PaginateInput } from 'utils/dto';
 
 @Resolver()
@@ -17,7 +17,7 @@ export class EssayResolver {
     return this.essayService.create(essay);
   }
 
-  @Query(() => EssayPaginateOutput, {
+  @Query(() => PaginatedEssays, {
     name: 'essays',
     description: '查询多个文章',
   })

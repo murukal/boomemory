@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { constants, privateDecrypt } from 'crypto';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
+import { paginateQuery } from 'utils';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 
@@ -71,7 +72,20 @@ export class AuthService {
   /**
    * 查询多个权限
    */
-  getAuthorizations() {
-    return this.authorizationRepository.find();
+  getAuthorizations(query?: QueryParams) {
+    return paginateQuery(this.authorizationRepository, query);
+  }
+
+  /**
+   * 查询权限树
+   */
+  async getAuthorizationTree() {
+    // 权限表查询
+    const authorizations = await this.authorizationRepository.find();
+
+    // 生成树
+    authorizations.reduce((previous, authorization) => {
+      return [];
+    }, []);
   }
 }

@@ -23,6 +23,18 @@ export class Menu extends CoreEntity {
   })
   icon?: string;
 
+  @Field(() => String, { nullable: true, description: '路由' })
+  @Column({
+    nullable: true,
+  })
+  to?: string;
+
+  @Field(() => String, { nullable: true, description: '前端组件' })
+  @Column({
+    nullable: true,
+  })
+  component?: string;
+
   @Field(() => Int, { description: '所属租户ID' })
   @Column()
   tenantId: number;

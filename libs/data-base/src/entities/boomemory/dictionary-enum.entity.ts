@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { CoreEntity } from '../core.entity';
 import { Dictionary } from './dictionary.entity';
@@ -18,10 +18,10 @@ export class DictionaryEnum extends CoreEntity {
   @Column()
   sortBy: number;
 
+  @Field(() => Int, { description: '所属字典ID' })
   @Column()
   parentId: number;
 
-  @Field(() => Dictionary)
   @ManyToOne(() => Dictionary, (dictionary) => dictionary.children)
   parent: Dictionary;
 }

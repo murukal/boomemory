@@ -9,7 +9,6 @@ import {
   JoinTable,
   ManyToMany,
 } from 'typeorm';
-import { User } from '../boomemory';
 import { CoreEntity } from '../core.entity';
 import { Tag } from './tag.entity';
 
@@ -24,13 +23,12 @@ export class Essay extends CoreEntity {
   @Column()
   content: string;
 
-  @Field(() => User)
-  @Column()
-  createdby: number;
-
   @Field(() => String)
   @Column()
   cover: string;
+
+  @Column()
+  createdby: number;
 
   @ManyToMany(() => Tag, (tag) => tag.essays)
   @JoinTable()

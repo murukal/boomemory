@@ -1,6 +1,7 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { IsEnum } from 'class-validator';
-import { Column, Entity, Unique } from 'typeorm';
+import { Column, Entity, ManyToOne, Unique } from 'typeorm';
+import { Tenant } from '.';
 import { CoreEntity } from '..';
 
 enum Resource {
@@ -23,6 +24,12 @@ registerEnumType(Operation, { name: 'Operation', description: '操作' });
   description: '权限',
 })
 export class Authorization extends CoreEntity {
+  @Column()
+  tenantId: number;
+
+  @ManyToOne(() => Tenant)
+  tenant: Tenant;
+
   @Field(() => Resource, {
     description: '资源',
   })

@@ -1,12 +1,21 @@
-import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ID,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { TenantService } from './tenant.service';
 import { CreateTenantInput } from './dto/create-tenant.input';
 import { UpdateTenantInput } from './dto/update-tenant.input';
-import { Tenant } from '@app/data-base/entities';
+import { Menu, Tenant } from '@app/data-base/entities';
 import { PaginateInput } from 'utils/dto';
-import { TenantPaginateOutput } from './dto/tenant-paginate.output';
+import { PaginatedTenants } from './dto/paginated-tenants';
 
-@Resolver()
+@Resolver(() => Tenant)
 export class TenantResolver {
   constructor(private readonly tenantService: TenantService) {}
 
@@ -17,7 +26,7 @@ export class TenantResolver {
     return this.tenantService.create(createTenantInput);
   }
 
-  @Query(() => TenantPaginateOutput, {
+  @Query(() => PaginatedTenants, {
     name: 'tenants',
     description: '查询多个租户',
   })
@@ -52,5 +61,12 @@ export class TenantResolver {
   @Mutation(() => Boolean, { description: '删除租户' })
   removeTenant(@Args('id', { type: () => Int }) id: number) {
     return this.tenantService.remove(id);
+  }
+
+  @ResolveField(() => [Menu], {
+    name: 'menus',
+  })
+  getMenus(@Parent() tenant: Tenant) {
+    return this.tenantService.getTenantMenus(tenant.id);
   }
 }

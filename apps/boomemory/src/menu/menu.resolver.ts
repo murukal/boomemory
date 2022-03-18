@@ -12,7 +12,8 @@ import { Menu } from '../../../../libs/data-base/src/entities/boomemory/menu.ent
 import { CreateMenuInput } from './dto/create-menu.input';
 import { UpdateMenuInput } from './dto/update-menu.input';
 import { PaginateInput } from 'utils/dto';
-import { MenuPaginateOutput } from './dto/menu-paginate.output';
+import { PaginatedMenus } from './dto/paginated-menus';
+import { FilterInput } from './dto/filter.input';
 
 @Resolver(() => Menu)
 export class MenuResolver {
@@ -23,15 +24,17 @@ export class MenuResolver {
     return this.menuService.create(menu);
   }
 
-  @Query(() => MenuPaginateOutput, {
+  @Query(() => PaginatedMenus, {
     name: 'menus',
     description: '查询多个租户',
   })
   getMenus(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
+    @Args('filterInput', { nullable: true }) filterInput: FilterInput,
   ) {
     return this.menuService.getMenus({
       paginateInput,
+      filterInput,
     });
   }
 
@@ -48,17 +51,32 @@ export class MenuResolver {
     return this.menuService.update(id, menu);
   }
 
-  @Mutation(() => Menu, { description: '删除租户' })
+  @Mutation(() => Boolean, { description: '删除租户' })
   removeMenu(@Args('id', { type: () => Int }) id: number) {
     return this.menuService.remove(id);
   }
 
   @ResolveField(() => Menu, {
-    description: '上级菜单信息',
+    description: '上级菜单',
     name: 'parent',
     nullable: true,
   })
   getParent(@Parent() parent: Menu) {
     return parent.parentId && this.menuService.getMenu(parent.parentId);
+  }
+
+  @ResolveField(() => [Menu], {
+    description: '下级菜单',
+    name: 'children',
+    nullable: true,
+  })
+  async getChildren(@Parent() parent: Menu) {
+    return (
+      await this.menuService.getMenus({
+        filterInput: {
+          parentId: parent.id,
+        },
+      })
+    ).items;
   }
 }

@@ -1,5 +1,5 @@
 import { CONNECTION_BOOMEMORY, Menu } from '@app/data-base/entities';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
@@ -13,6 +13,8 @@ export class MenuService {
   constructor(
     @InjectRepository(Menu, CONNECTION_BOOMEMORY)
     private readonly menuRepository: Repository<Menu>,
+
+    @Inject(forwardRef(() => TenantService))
     private readonly tenantService: TenantService,
   ) {}
 

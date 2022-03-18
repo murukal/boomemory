@@ -4,7 +4,7 @@ import { CreateTagInput } from './dto/create-tag.input';
 import { UpdateTagInput } from './dto/update-tag.input';
 import { Tag } from '@app/data-base/entities/boomart/tag.entity';
 import { PaginateInput } from 'utils/dto';
-import { TagPaginateOutput } from './dto/tag-paginate.output';
+import { PaginatedTags } from './dto/paginated-tags';
 
 @Resolver()
 export class TagResolver {
@@ -17,7 +17,7 @@ export class TagResolver {
     return this.tagService.create(createTagInput);
   }
 
-  @Query(() => TagPaginateOutput, { name: 'tags', description: '查询多个标签' })
+  @Query(() => PaginatedTags, { name: 'tags', description: '查询多个标签' })
   getTags(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
   ) {

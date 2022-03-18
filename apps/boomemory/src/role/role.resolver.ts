@@ -4,7 +4,7 @@ import { CreateRoleInput } from './dto/create-role.input';
 import { UpdateRoleInput } from './dto/update-role.input';
 import { Role } from '@app/data-base/entities';
 import { PaginateInput } from 'utils/dto';
-import { RolePaginateOutput } from './dto/role-paginate.output';
+import { PaginatedRole } from './dto/paginated-roles';
 
 @Resolver()
 export class RoleResolver {
@@ -17,7 +17,7 @@ export class RoleResolver {
     return this.roleService.create(role);
   }
 
-  @Query(() => RolePaginateOutput, {
+  @Query(() => PaginatedRole, {
     name: 'roles',
     description: '查询多个角色',
   })

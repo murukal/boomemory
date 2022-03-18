@@ -20,7 +20,6 @@ export class Dictionary extends CoreEntity {
   @Column()
   sortBy: number;
 
-  @Field(() => [DictionaryEnum])
   @OneToMany(() => DictionaryEnum, (dictionaryEnum) => dictionaryEnum.parent)
   children: DictionaryEnum[];
 }

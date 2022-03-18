@@ -3,7 +3,7 @@ import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { PaginateInput } from 'utils/dto';
 import { DictionaryEnumService } from './dictionary-enum.service';
 import { CreateDictionaryEnumInput } from './dto/create-dictionary-enum.input';
-import { DictionaryEnumPaginateOutput } from './dto/dictionary-enum-paginate.output';
+import { PaginatedDictionaryEnum } from './dto/paginated-dictionary-enums';
 import { UpdateDictionaryEnumInput } from './dto/update-dictionary-enum.input';
 
 @Resolver()
@@ -20,7 +20,7 @@ export class DictionaryEnumResolver {
     return this.dictionaryEnumService.create(dictionaryEnum);
   }
 
-  @Query(() => DictionaryEnumPaginateOutput, {
+  @Query(() => PaginatedDictionaryEnum, {
     name: 'dictionaryEnums',
     description: '查询多个字典枚举',
   })

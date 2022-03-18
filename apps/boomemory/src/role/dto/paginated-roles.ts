@@ -1,9 +1,9 @@
 import { Role } from '@app/data-base/entities';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { PaginateOptionsOutput } from 'utils/dto';
+import { PaginatedOptions } from 'utils/dto';
 
 @ObjectType()
-export class RolePaginateOutput extends PaginateOptionsOutput {
+export class PaginatedRole extends PaginatedOptions {
   @Field(() => [Role], {
     description: '角色列表',
   })
