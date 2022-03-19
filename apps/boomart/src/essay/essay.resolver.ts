@@ -1,12 +1,21 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { EssayService } from './essay.service';
 import { Essay } from '../../../../libs/data-base/src/entities/boomart/essay.entity';
 import { CreateEssayInput } from './dto/create-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
 import { PaginatedEssays } from './dto/paginated-essays';
 import { PaginateInput } from 'utils/dto';
+import { Tag } from '@app/data-base/entities';
 
-@Resolver()
+@Resolver(() => Essay)
 export class EssayResolver {
   constructor(private readonly essayService: EssayService) {}
 
@@ -52,5 +61,21 @@ export class EssayResolver {
   })
   removeEssay(@Args('id', { type: () => Int }) id: number) {
     return this.essayService.remove(id);
+  }
+
+  @ResolveField(() => [Tag], {
+    name: 'tags',
+    description: '文章对应的tag',
+  })
+  getTags(@Parent() essay: Essay) {
+    return this.essayService.getTags(essay.id);
+  }
+
+  @ResolveField(() => [Int], {
+    name: 'tagIds',
+    description: '文章对应的tagIds',
+  })
+  getTagIds(@Parent() essay: Essay) {
+    return this.essayService.getTagIds(essay.id);
   }
 }

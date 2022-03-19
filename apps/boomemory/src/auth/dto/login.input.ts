@@ -1,8 +1,10 @@
-import { User } from '@app/data-base/entities';
-import { Field, InputType, PickType } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
-export class LoginInput extends PickType(User, ['password'], InputType) {
+export class LoginInput {
   @Field(() => String)
   keyword: string;
+
+  @Field(() => String)
+  password: string;
 }

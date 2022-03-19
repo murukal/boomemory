@@ -5,7 +5,7 @@ import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { PaginateInput } from 'utils/dto/paginate.input';
 import { AuthService } from './auth.service';
 import { PaginatedAuthorizations } from './dto/paginated-authorizations';
-import { AuthorizationTree } from './dto/authorization-tree';
+import { AuthorizationNode } from './dto/authorization-node';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 import { PaginatedUsers } from './dto/paginated-users';
@@ -51,11 +51,11 @@ export class AuthResolver {
     return this.authService.getAuthorizations();
   }
 
-  @Query(() => AuthorizationTree, {
+  @Query(() => [AuthorizationNode], {
     description: '查询权限树',
     name: 'authorizationTree',
   })
   getAuthorizationTree() {
-    return this.authService.getAuthorizations();
+    return this.authService.getAuthorizationTree();
   }
 }

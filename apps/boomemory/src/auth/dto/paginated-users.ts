@@ -4,6 +4,8 @@ import { PaginatedOptions } from 'utils/dto';
 
 @ObjectType()
 export class PaginatedUsers extends PaginatedOptions {
-  @Field(() => [User])
+  @Field(() => [User], {
+    description: '用户列表',
+  })
   items: User[];
 }

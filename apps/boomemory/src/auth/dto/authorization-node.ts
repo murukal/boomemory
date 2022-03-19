@@ -32,7 +32,7 @@ class ResourceNode {
 }
 
 @ObjectType()
-export class AuthorizationTree {
+export class AuthorizationNode {
   @Field(() => String, {
     description: '租户key',
   })

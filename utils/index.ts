@@ -6,9 +6,9 @@ export class PaginatedItems<T> extends PaginatedOptions {
   items: T[];
 }
 
-export const paginateQuery = async <T>(
+export const paginateQuery = async <T, F>(
   repository: Repository<T>,
-  query?: QueryParams,
+  query?: QueryParams<F>,
 ): Promise<PaginatedItems<T>> => {
   // 入参存在分页需求，计算 skip 值
   // 入参不存在分页需求，以第一条开始取值 skip = 0

@@ -23,12 +23,12 @@ export class Essay extends CoreEntity {
   @Column()
   content: string;
 
-  @Field(() => String)
-  @Column()
-  cover: string;
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  cover?: string;
 
   @Column()
-  createdby: number;
+  createdBy: number;
 
   @ManyToMany(() => Tag, (tag) => tag.essays)
   @JoinTable()

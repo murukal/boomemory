@@ -8,6 +8,7 @@ import { constants, privateDecrypt } from 'crypto';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { AuthorizationNode } from './dto/authorization-node';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 
@@ -81,11 +82,58 @@ export class AuthService {
    */
   async getAuthorizationTree() {
     // 权限表查询
-    const authorizations = await this.authorizationRepository.find();
+    const authorizations = await this.authorizationRepository.find({
+      relations: ['tenant'],
+    });
 
     // 生成树
-    authorizations.reduce((previous, authorization) => {
-      return [];
-    }, []);
+    return authorizations.reduce<AuthorizationNode[]>(
+      (previous, authorization) => {
+        const operationNode = {
+          key: authorization.id,
+          description: authorization.operation,
+        };
+
+        // 查询租户 是否已经收集
+        const tenantNode = previous.find(
+          (tenant) => tenant.key === authorization.tenant.code,
+        );
+
+        if (!tenantNode) {
+          return previous.concat({
+            key: authorization.tenant.code,
+            description: authorization.tenant.name,
+            children: [
+              {
+                key: authorization.resource,
+                description: authorization.resource,
+                children: [operationNode],
+              },
+            ],
+          });
+        }
+
+        // 查询资源 是否已经收集
+        const resourceNode = tenantNode.children.find(
+          (resource) => resource.key === authorization.resource,
+        );
+
+        if (!resourceNode) {
+          tenantNode.children.push({
+            key: authorization.resource,
+            description: authorization.resource,
+            children: [operationNode],
+          });
+
+          return previous;
+        }
+
+        // 添加操作节点
+        resourceNode.children.push(operationNode);
+
+        return previous;
+      },
+      [],
+    );
   }
 }

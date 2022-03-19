@@ -1,4 +1,4 @@
-import { CONNECTION_BOOMART, Essay } from '@app/data-base/entities';
+import { CONNECTION_BOOMART, Essay, Tag } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -12,13 +12,27 @@ export class EssayService {
   constructor(
     @InjectRepository(Essay, CONNECTION_BOOMART)
     private readonly essayRepository: Repository<Essay>,
+
+    @InjectRepository(Tag, CONNECTION_BOOMART)
+    private readonly tagRepository: Repository<Tag>,
   ) {}
 
   /**
    * 创建文章
    */
-  create(essay: CreateEssayInput) {
-    return this.essayRepository.save(this.essayRepository.create(essay));
+  async create(essay: CreateEssayInput) {
+    const createEssayInput = {
+      ...essay,
+
+      // 关联的tags
+      ...(essay.tagIds && {
+        tags: await this.tagRepository.findByIds(essay.tagIds),
+      }),
+    };
+
+    return this.essayRepository.save(
+      this.essayRepository.create(createEssayInput),
+    );
   }
 
   /**
@@ -39,13 +53,20 @@ export class EssayService {
    * 更新文章
    */
   async update(id: number, essay: UpdateEssayInput) {
+    const updateEssayInput = {
+      ...essay,
+
+      // 关联的tags
+      ...(essay.tagIds && {
+        tags: await this.tagRepository.findByIds(essay.tagIds),
+      }),
+    };
+
     return !!(
       await this.essayRepository
         .createQueryBuilder()
         .update()
-        .set({
-          ...essay,
-        })
+        .set(updateEssayInput)
         .whereInIds(id)
         .execute()
     ).affected;
@@ -62,5 +83,23 @@ export class EssayService {
         .whereInIds(id)
         .execute()
     ).affected;
+  }
+
+  /**
+   * 查询文章的tags
+   */
+  async getTags(id: number) {
+    return (
+      await this.essayRepository.findOne(id, {
+        relations: ['tags'],
+      })
+    ).tags;
+  }
+
+  /**
+   * 查询文章的tagIds
+   */
+  async getTagIds(id: number) {
+    return (await this.getTags(id)).map((tag) => tag.id);
   }
 }

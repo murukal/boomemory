@@ -1,6 +1,6 @@
 import { PaginateInput } from 'utils/dto/paginate.input';
 
-export interface QueryParams {
+export interface QueryParams<F = Record<string, any>> {
   paginateInput?: PaginateInput;
-  filterInput?: Record<string, any>;
+  filterInput?: F;
 }
