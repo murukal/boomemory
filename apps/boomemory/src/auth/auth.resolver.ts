@@ -10,6 +10,7 @@ import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 import { PaginatedUsers } from './dto/paginated-users';
 import { JwtAuthGuard } from './guard';
+import { FilterUserInput } from './dto/filter-user.input';
 
 @Resolver()
 export class AuthResolver {
@@ -31,9 +32,11 @@ export class AuthResolver {
   })
   getUsers(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
+    @Args('filterInput', { nullable: true }) filterInput: FilterUserInput,
   ) {
     return this.authService.getUsers({
       paginateInput,
+      filterInput,
     });
   }
 

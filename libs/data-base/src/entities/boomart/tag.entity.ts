@@ -14,13 +14,17 @@ import { Essay } from './essay.entity';
 @ObjectType()
 @Entity()
 export class Tag extends CoreEntity {
-  @Field(() => String)
+  @Field(() => String, {
+    description: '名称',
+  })
   @Column()
   @IsString()
   @MaxLength(20)
   name: string;
 
-  @Field(() => String)
+  @Field(() => String, {
+    description: '图片地址',
+  })
   @Column()
   image: string;
 

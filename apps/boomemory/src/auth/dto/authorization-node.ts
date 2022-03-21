@@ -10,7 +10,7 @@ class OperationNode {
   @Field(() => String, {
     description: '操作描述',
   })
-  description: string;
+  title: string;
 }
 
 @ObjectType()
@@ -23,7 +23,12 @@ class ResourceNode {
   @Field(() => String, {
     description: '资源描述',
   })
-  description: string;
+  title: string;
+
+  @Field(() => Boolean, {
+    description: '是否展示 Checkbox',
+  })
+  checkable: false;
 
   @Field(() => [OperationNode], {
     description: '操作列表',
@@ -41,7 +46,12 @@ export class AuthorizationNode {
   @Field(() => String, {
     description: '租户描述',
   })
-  description: string;
+  title: string;
+
+  @Field(() => Boolean, {
+    description: '是否展示 Checkbox',
+  })
+  checkable: false;
 
   @Field(() => [ResourceNode], {
     description: '资源列表',

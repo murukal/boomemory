@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { AuthorizationNode } from './dto/authorization-node';
+import { FilterUserInput } from './dto/filter-user.input';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 
@@ -66,7 +67,7 @@ export class AuthService {
   /**
    * 查询多个用户
    */
-  getUsers(query?: QueryParams) {
+  getUsers(query?: QueryParams<FilterUserInput>) {
     return this.userService.getUsers(query);
   }
 
@@ -91,7 +92,7 @@ export class AuthService {
       (previous, authorization) => {
         const operationNode = {
           key: authorization.id,
-          description: authorization.operation,
+          title: authorization.operation,
         };
 
         // 查询租户 是否已经收集
@@ -102,11 +103,13 @@ export class AuthService {
         if (!tenantNode) {
           return previous.concat({
             key: authorization.tenant.code,
-            description: authorization.tenant.name,
+            title: authorization.tenant.name,
+            checkable: false,
             children: [
               {
                 key: authorization.resource,
-                description: authorization.resource,
+                title: authorization.resource,
+                checkable: false,
                 children: [operationNode],
               },
             ],
@@ -121,7 +124,8 @@ export class AuthService {
         if (!resourceNode) {
           tenantNode.children.push({
             key: authorization.resource,
-            description: authorization.resource,
+            title: authorization.resource,
+            checkable: false,
             children: [operationNode],
           });
 

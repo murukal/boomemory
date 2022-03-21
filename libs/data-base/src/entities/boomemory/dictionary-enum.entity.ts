@@ -6,15 +6,21 @@ import { Dictionary } from './dictionary.entity';
 @Entity()
 @ObjectType()
 export class DictionaryEnum extends CoreEntity {
-  @Field(() => String)
+  @Field(() => String, {
+    description: 'code',
+  })
   @Column()
   code: string;
 
-  @Field(() => String)
+  @Field(() => String, {
+    description: '描述',
+  })
   @Column()
   description: string;
 
-  @Field(() => String)
+  @Field(() => String, {
+    description: '排序码',
+  })
   @Column()
   sortBy: number;
 

@@ -1,7 +1,7 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
-export class FilterInput {
+export class FilterMenuInput {
   @Field(() => Int, { nullable: true, description: '上级菜单ID' })
   parentId?: number;
 

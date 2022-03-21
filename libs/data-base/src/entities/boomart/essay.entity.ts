@@ -15,15 +15,19 @@ import { Tag } from './tag.entity';
 @ObjectType()
 @Entity()
 export class Essay extends CoreEntity {
-  @Field(() => String)
+  @Field(() => String, {
+    description: '标题',
+  })
   @Column()
   title: string;
 
-  @Field(() => String)
+  @Field(() => String, {
+    description: '正文',
+  })
   @Column()
   content: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, description: '封面地址' })
   @Column({ nullable: true })
   cover?: string;
 

@@ -1,4 +1,12 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { RoleService } from './role.service';
 import { CreateRoleInput } from './dto/create-role.input';
 import { UpdateRoleInput } from './dto/update-role.input';
@@ -6,7 +14,7 @@ import { Role } from '@app/data-base/entities';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedRole } from './dto/paginated-roles';
 
-@Resolver()
+@Resolver(() => Role)
 export class RoleResolver {
   constructor(private readonly roleService: RoleService) {}
 
@@ -52,5 +60,21 @@ export class RoleResolver {
   })
   removeRole(@Args('id', { type: () => Int }) id: number) {
     return this.roleService.remove(id);
+  }
+
+  @ResolveField(() => [Int], {
+    name: 'userIds',
+    description: '关联的用户ids',
+  })
+  getUserIds(@Parent() role: Role) {
+    return this.roleService.getUserIds(role.id);
+  }
+
+  @ResolveField(() => [Int], {
+    name: 'authorizationIds',
+    description: '关联的权限ids',
+  })
+  getAuthorizationIds(@Parent() role: Role) {
+    return this.roleService.getAuthorizationIds(role.id);
   }
 }

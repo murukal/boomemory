@@ -13,7 +13,7 @@ import { CreateMenuInput } from './dto/create-menu.input';
 import { UpdateMenuInput } from './dto/update-menu.input';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedMenus } from './dto/paginated-menus';
-import { FilterInput } from './dto/filter.input';
+import { FilterMenuInput } from './dto/filter-menu.input';
 
 @Resolver(() => Menu)
 export class MenuResolver {
@@ -30,7 +30,7 @@ export class MenuResolver {
   })
   getMenus(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
-    @Args('filterInput', { nullable: true }) filterInput: FilterInput,
+    @Args('filterInput', { nullable: true }) filterInput: FilterMenuInput,
   ) {
     return this.menuService.getMenus({
       paginateInput,

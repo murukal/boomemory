@@ -1,8 +1,9 @@
 import { CONNECTION_BOOMEMORY, User } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FilterUserInput } from 'apps/boomemory/src/auth/dto/filter-user.input';
 import { RegisterInput } from 'apps/boomemory/src/auth/dto/register.input';
-import { Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 
@@ -42,7 +43,18 @@ export class UserService {
   /**
    * 查询多个用户
    */
-  getUsers(query?: QueryParams) {
-    return paginateQuery(this.userRepository, query);
+  getUsers(query?: QueryParams<FilterUserInput>) {
+    return paginateQuery(this.userRepository, {
+      paginateInput: query?.paginateInput,
+      filterInput: {
+        ...(query?.filterInput?.ids && {
+          id: In(query?.filterInput?.ids),
+        }),
+
+        ...(query?.filterInput?.excludeIds && {
+          id: Not(In(query?.filterInput?.excludeIds)),
+        }),
+      },
+    });
   }
 }

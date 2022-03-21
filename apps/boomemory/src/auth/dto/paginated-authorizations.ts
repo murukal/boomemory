@@ -4,6 +4,8 @@ import { PaginatedOptions } from 'utils/dto';
 
 @ObjectType()
 export class PaginatedAuthorizations extends PaginatedOptions {
-  @Field(() => [Authorization])
+  @Field(() => [Authorization], {
+    description: '权限列表',
+  })
   items: Authorization[];
 }

@@ -7,6 +7,8 @@ export class CreateDictionaryEnumInput extends PickType(
   ['code', 'description', 'sortBy'],
   InputType,
 ) {
-  @Field(() => Int)
+  @Field(() => Int, {
+    description: '字典ID',
+  })
   parentId: number;
 }

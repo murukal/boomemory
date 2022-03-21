@@ -7,6 +7,8 @@ export class RegisterInput extends PickType(
   ['avatar', 'email', 'username'],
   InputType,
 ) {
-  @Field(() => String)
+  @Field(() => String, {
+    description: '密码',
+  })
   password: string;
 }

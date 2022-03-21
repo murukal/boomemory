@@ -1,4 +1,9 @@
-import { CONNECTION_BOOMEMORY, Role } from '@app/data-base/entities';
+import {
+  Authorization,
+  CONNECTION_BOOMEMORY,
+  Role,
+  User,
+} from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -42,36 +47,34 @@ export class RoleService {
    * 更新角色
    */
   async update(id: number, role: UpdateRoleInput) {
-    const updateRoleInput = {
-      name: role.name,
+    const { userIds, authorizationIds, ...updateRoleInput } = role;
 
-      // 关联的用户
-      ...(role.userIds && {
-        users: (
-          await this.authService.getUsers({
-            filterInput: {
-              id: {
-                $in: role.userIds,
-              },
-            },
-          })
-        ).items,
-      }),
+    // 更新关联的用户
+    userIds?.length &&
+      (await this.roleRepository
+        .createQueryBuilder()
+        .relation('users')
+        .of(id)
+        .add(userIds));
 
-      // 关联的权限
-      ...(role.authorizationIds && {
-        authorizations: (
-          await this.authService.getAuthorizations({
-            filterInput: {
-              id: {
-                $in: role.authorizationIds,
-              },
-            },
-          })
-        ).items,
-      }),
-    };
+    // 更新关联的权限
+    if (authorizationIds) {
+      const removeAuthorizationIds = (
+        await this.roleRepository
+          .createQueryBuilder()
+          .relation('authorizations')
+          .of(id)
+          .loadMany<Authorization>()
+      ).map((auth) => auth.id);
 
+      await this.roleRepository
+        .createQueryBuilder()
+        .relation('authorizations')
+        .of(id)
+        .addAndRemove(authorizationIds, removeAuthorizationIds);
+    }
+
+    // 更新角色字段
     return !!(
       await this.roleRepository
         .createQueryBuilder()
@@ -93,5 +96,31 @@ export class RoleService {
         .whereInIds(id)
         .execute()
     ).affected;
+  }
+
+  /**
+   * 查询角色关联的用户ids
+   */
+  async getUserIds(id: number) {
+    return (
+      await this.roleRepository
+        .createQueryBuilder()
+        .relation('users')
+        .of(id)
+        .loadMany<User>()
+    ).map((user) => user.id);
+  }
+
+  /**
+   * 查询角色关联的权限ids
+   */
+  async getAuthorizationIds(id: number) {
+    return (
+      await this.roleRepository
+        .createQueryBuilder()
+        .relation('authorizations')
+        .of(id)
+        .loadMany<Authorization>()
+    ).map((authorization) => authorization.id);
   }
 }

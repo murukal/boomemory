@@ -6,7 +6,7 @@ import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { TenantService } from '../tenant/tenant.service';
 import { CreateMenuInput } from './dto/create-menu.input';
-import { FilterInput } from './dto/filter.input';
+import { FilterMenuInput } from './dto/filter-menu.input';
 import { UpdateMenuInput } from './dto/update-menu.input';
 
 @Injectable()
@@ -29,7 +29,7 @@ export class MenuService {
   /**
    * 查询多个菜单
    */
-  getMenus(query?: QueryParams<FilterInput>) {
+  getMenus(query?: QueryParams<FilterMenuInput>) {
     return paginateQuery(this.menuRepository, query);
   }
 
