@@ -29,6 +29,12 @@
       ],
       "@app/user/*": [
         "libs/user/src/*"
+      ],
+      "@app/object-storage": [
+        "libs/object-storage/src"
+      ],
+      "@app/object-storage/*": [
+        "libs/object-storage/src/*"
       ]
     }
   }

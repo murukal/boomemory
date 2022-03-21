@@ -16,6 +16,7 @@ import { BoomartModule } from 'apps/boomart/src/boomart.module';
 import { DictionaryModule } from './dictionary/dictionary.module';
 import { DictionaryEnumModule } from './dictionary-enum/dictionary-enum.module';
 import { RoleModule } from './role/role.module';
+import { ObjectStorageModule } from '@app/object-storage';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { RoleModule } from './role/role.module';
     // 公用服务模块
     DataBaseModule,
     UserModule,
+    ObjectStorageModule,
     TenantModule,
     AuthModule,
     MenuModule,
