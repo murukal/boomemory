@@ -30,7 +30,7 @@ export class EssayService {
   /**
    * 创建文章
    */
-  async create(essay: CreateEssayInput, createdBy: User) {
+  async create(essay: CreateEssayInput, createdById: number) {
     const { tagIds, ...createEssayInput } = essay;
 
     // 读取创建后的文章
@@ -38,7 +38,7 @@ export class EssayService {
       this.essayRepository.create({
         ...createEssayInput,
         // 创作者
-        createdById: createdBy.id,
+        createdById,
       }),
     );
 
@@ -68,8 +68,11 @@ export class EssayService {
       (
         await this.essayRepository
           .createQueryBuilder('essay')
-          .innerJoinAndSelect('essay.tags', 'tag')
-          .where('tag.id IN (' + tagIds.toString() + ')')
+          .select('essay.id')
+          .innerJoin('essay.tags', 'tag')
+          .where('tag.id IN (:...tagIds)', {
+            tagIds,
+          })
           .getMany()
       ).map((essay) => essay.id);
 

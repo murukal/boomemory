@@ -29,9 +29,9 @@ export class EssayResolver {
   @UseGuards(JwtAuthGuard)
   createEssay(
     @Args('createEssayInput') essay: CreateEssayInput,
-    @CurrentUser() createdBy: User,
+    @CurrentUser() user: User,
   ) {
-    return this.essayService.create(essay, createdBy);
+    return this.essayService.create(essay, user.id);
   }
 
   @Query(() => PaginatedEssays, {
