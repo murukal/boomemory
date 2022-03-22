@@ -7,10 +7,11 @@ import {
 } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { CreateEssayInput } from './dto/create-essay.input';
+import { FilterEssayInput } from './dto/filter-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
 
 @Injectable()
@@ -54,8 +55,34 @@ export class EssayService {
   /**
    * 查询多个文章
    */
-  getEssays(query?: QueryParams) {
-    return paginateQuery(this.essayRepository, query);
+  async getEssays(query?: QueryParams<FilterEssayInput>) {
+    const { paginateInput, filterInput } = query;
+    // 提取筛选条件
+    const { tagIds, ...filter } = filterInput || {};
+
+    /**
+     * 按照tagId进行筛选
+     */
+    const essayIds =
+      tagIds &&
+      (
+        await this.essayRepository
+          .createQueryBuilder('essay')
+          .innerJoinAndSelect('essay.tags', 'tag')
+          .where('tag.id IN (' + tagIds.toString() + ')')
+          .getMany()
+      ).map((essay) => essay.id);
+
+    // 执行分页
+    return paginateQuery(this.essayRepository, {
+      paginateInput,
+      filterInput: {
+        ...filter,
+        ...(essayIds && {
+          id: In(essayIds),
+        }),
+      },
+    });
   }
 
   /**

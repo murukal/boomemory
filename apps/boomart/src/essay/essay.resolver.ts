@@ -17,6 +17,7 @@ import { Tag, User } from '@app/data-base/entities';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
+import { FilterEssayInput } from './dto/filter-essay.input';
 
 @Resolver(() => Essay)
 export class EssayResolver {
@@ -39,9 +40,11 @@ export class EssayResolver {
   })
   getEssays(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
+    @Args('filterInput', { nullable: true }) filterInput: FilterEssayInput,
   ) {
     return this.essayService.getEssays({
       paginateInput,
+      filterInput,
     });
   }
 
