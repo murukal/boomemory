@@ -13,7 +13,10 @@ import { CreateEssayInput } from './dto/create-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
 import { PaginatedEssays } from './dto/paginated-essays';
 import { PaginateInput } from 'utils/dto';
-import { Tag } from '@app/data-base/entities';
+import { Tag, User } from '@app/data-base/entities';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
+import { CurrentUser } from 'utils/decorator/current-user.decorator';
 
 @Resolver(() => Essay)
 export class EssayResolver {
@@ -22,8 +25,12 @@ export class EssayResolver {
   @Mutation(() => Essay, {
     description: '创建文章',
   })
-  createEssay(@Args('createEssayInput') essay: CreateEssayInput) {
-    return this.essayService.create(essay);
+  @UseGuards(JwtAuthGuard)
+  createEssay(
+    @Args('createEssayInput') essay: CreateEssayInput,
+    @CurrentUser() createdBy: User,
+  ) {
+    return this.essayService.create(essay, createdBy);
   }
 
   @Query(() => PaginatedEssays, {
@@ -77,5 +84,13 @@ export class EssayResolver {
   })
   getTagIds(@Parent() essay: Essay) {
     return this.essayService.getTagIds(essay.id);
+  }
+
+  @ResolveField(() => User, {
+    name: 'createdBy',
+    description: '创作者',
+  })
+  getCreatedBy(@Parent() essay: Essay) {
+    return this.essayService.getCreatedBy(essay.id);
   }
 }

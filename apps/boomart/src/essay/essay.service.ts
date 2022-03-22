@@ -1,4 +1,10 @@
-import { CONNECTION_BOOMART, Essay, Tag } from '@app/data-base/entities';
+import {
+  CONNECTION_BOOMART,
+  CONNECTION_BOOMEMORY,
+  Essay,
+  Tag,
+  User,
+} from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -15,24 +21,34 @@ export class EssayService {
 
     @InjectRepository(Tag, CONNECTION_BOOMART)
     private readonly tagRepository: Repository<Tag>,
+
+    @InjectRepository(User, CONNECTION_BOOMEMORY)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   /**
    * 创建文章
    */
-  async create(essay: CreateEssayInput) {
-    const createEssayInput = {
-      ...essay,
+  async create(essay: CreateEssayInput, createdBy: User) {
+    const { tagIds, ...createEssayInput } = essay;
 
-      // 关联的tags
-      ...(essay.tagIds && {
-        tags: await this.tagRepository.findByIds(essay.tagIds),
+    // 读取创建后的文章
+    const createdEssay = await this.essayRepository.save(
+      this.essayRepository.create({
+        ...createEssayInput,
+        // 创作者
+        createdById: createdBy.id,
       }),
-    };
-
-    return this.essayRepository.save(
-      this.essayRepository.create(createEssayInput),
     );
+
+    // 对已经创建的文章设置标签
+    await this.essayRepository
+      .createQueryBuilder()
+      .relation('tags')
+      .of(createdEssay.id)
+      .add(tagIds);
+
+    return createdEssay;
   }
 
   /**
@@ -101,5 +117,14 @@ export class EssayService {
    */
   async getTagIds(id: number) {
     return (await this.getTags(id)).map((tag) => tag.id);
+  }
+
+  /**
+   * 查询创作者
+   */
+  async getCreatedBy(id: number) {
+    return this.userRepository.findOne(
+      (await this.essayRepository.findOne(id)).createdById,
+    );
   }
 }

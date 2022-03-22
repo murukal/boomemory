@@ -32,7 +32,7 @@ export class Essay extends CoreEntity {
   cover?: string;
 
   @Column()
-  createdBy: number;
+  createdById: number;
 
   @ManyToMany(() => Tag, (tag) => tag.essays)
   @JoinTable()
