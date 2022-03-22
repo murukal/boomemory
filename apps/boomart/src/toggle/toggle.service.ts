@@ -42,11 +42,16 @@ export class ToggleService {
    * 获取榜单
    */
   getTopTargets(targetType: TargetType, topInput: TopInput) {
-    this.toggleRepository
+    const top = this.toggleRepository
       .createQueryBuilder()
       .select('targetId')
       .addSelect('COUNT(*)', 'count')
-      .where('targetType = :targetType', { targetType });
+      .where('targetType = :targetType', { targetType })
+      .andWhere('type = :type', {
+        type: topInput.type,
+      })
+      .take(topInput.limit)
+      .execute();
 
     return [];
   }
