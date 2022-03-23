@@ -59,7 +59,7 @@ export class ToggleService {
   /**
    * 获取榜单ids
    */
-  async getTargetTopIds(topInput: TopInput) {
+  async getTopTargetIds(topInput: TopInput) {
     return (
       await this.toggleRepository
         .createQueryBuilder()
@@ -69,10 +69,18 @@ export class ToggleService {
         .andWhere('type = :type', {
           type: topInput.type,
         })
+        .andWhere('createdAt >= :from', {
+          from: topInput.from,
+        })
+        .andWhere('createdAt <= :to', {
+          to: topInput.to,
+        })
         .groupBy('targetId')
         .orderBy('count', 'DESC')
         .take(topInput.limit)
         .execute()
-    ).map((item: { targetId: number; count: string }) => item.targetId);
+    ).map((item: { targetId: number; count: string }) => {
+      return item.targetId;
+    });
   }
 }

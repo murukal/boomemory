@@ -58,11 +58,9 @@ export class EssayService {
   async getEssays(query?: QueryParams<FilterEssayInput>) {
     const { paginateInput, filterInput } = query;
     // 提取筛选条件
-    const { tagIds, ...filter } = filterInput || {};
+    const { tagIds, ids, ...filter } = filterInput || {};
 
-    /**
-     * 按照tagId进行筛选
-     */
+    // 按照tagId进行筛选
     const essayIds =
       tagIds &&
       (
@@ -75,6 +73,9 @@ export class EssayService {
           })
           .getMany()
       ).map((essay) => essay.id);
+
+    // 文章ids
+    // const essayIds = ids ?
 
     // 执行分页
     return paginateQuery(this.essayRepository, {

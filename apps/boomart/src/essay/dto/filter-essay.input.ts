@@ -4,4 +4,7 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 export class FilterEssayInput {
   @Field(() => [Int], { nullable: true, description: '标签Ids' })
   tagIds?: number[];
+
+  @Field(() => [Int], { nullable: true, description: '文章ids' })
+  ids?: number[];
 }

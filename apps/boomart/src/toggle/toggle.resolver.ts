@@ -33,10 +33,10 @@ export class ToggleResolver {
   }
 
   @Query(() => [Int], {
-    name: 'essayTopIds',
+    name: 'topEssayIds',
     description: '查询文章榜单ids',
   })
-  getTargetTopIds(@Args('topInput') topInput: TopInput) {
-    return this.toggleService.getTargetTopIds(topInput);
+  getTopTargetIds(@Args('topInput') topInput: TopInput) {
+    return this.toggleService.getTopTargetIds(topInput);
   }
 }
