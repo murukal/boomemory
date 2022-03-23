@@ -8,7 +8,6 @@ import {
   Parent,
 } from '@nestjs/graphql';
 import { EssayService } from './essay.service';
-import { Essay } from '../../../../libs/data-base/src/entities/boomart/essay.entity';
 import { CreateEssayInput } from './dto/create-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
 import { PaginatedEssays } from './dto/paginated-essays';
@@ -18,10 +17,16 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { FilterEssayInput } from './dto/filter-essay.input';
+import { ToggleService } from '../toggle/toggle.service';
+import { TargetType, Type } from 'utils/dto/toggle-enum';
+import { Essay } from '@app/data-base/entities';
 
 @Resolver(() => Essay)
 export class EssayResolver {
-  constructor(private readonly essayService: EssayService) {}
+  constructor(
+    private readonly essayService: EssayService,
+    private readonly toggleService: ToggleService,
+  ) {}
 
   @Mutation(() => Essay, {
     description: '创建文章',
@@ -95,5 +100,33 @@ export class EssayResolver {
   })
   getCreatedBy(@Parent() essay: Essay) {
     return this.essayService.getCreatedBy(essay.id);
+  }
+
+  @ResolveField(() => Int, {
+    name: `${Type.browse}Clout`,
+    description: '浏览量',
+  })
+  getBrowseClout(@Parent() essay: Essay) {
+    return this.toggleService.getClout(Type.browse, TargetType.essay, essay.id);
+  }
+
+  @ResolveField(() => Int, {
+    name: `${Type.like}Clout`,
+    description: '点赞量',
+  })
+  getLikeClout(@Parent() essay: Essay) {
+    return this.toggleService.getClout(Type.like, TargetType.essay, essay.id);
+  }
+
+  @ResolveField(() => Int, {
+    name: `${Type.collect}Clout`,
+    description: '收藏量',
+  })
+  getCollectClout(@Parent() essay: Essay) {
+    return this.toggleService.getClout(
+      Type.collect,
+      TargetType.essay,
+      essay.id,
+    );
   }
 }

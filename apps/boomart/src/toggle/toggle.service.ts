@@ -2,9 +2,9 @@ import { CONNECTION_BOOMART, Toggle } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TargetType } from 'utils/dto/toggle-enum';
+import { TargetType, Type } from 'utils/dto/toggle-enum';
 import { CreateToggleInput } from './dto/create-toggle.input';
-import { TopInput } from './dto/top-essays.input';
+import { TopInput } from './dto/top.input';
 
 @Injectable()
 export class ToggleService {
@@ -39,20 +39,40 @@ export class ToggleService {
   }
 
   /**
-   * 获取榜单
+   * 获取流量
    */
-  getTopTargets(targetType: TargetType, topInput: TopInput) {
-    const top = this.toggleRepository
+  getClout(type: Type, targetType: TargetType, targetId: number) {
+    return this.toggleRepository
       .createQueryBuilder()
-      .select('targetId')
-      .addSelect('COUNT(*)', 'count')
-      .where('targetType = :targetType', { targetType })
-      .andWhere('type = :type', {
-        type: topInput.type,
+      .where('type = :type', {
+        type,
       })
-      .take(topInput.limit)
-      .execute();
+      .andWhere('targetType = :targetType', {
+        targetType,
+      })
+      .andWhere('targetId = :targetId', {
+        targetId,
+      })
+      .getCount();
+  }
 
-    return [];
+  /**
+   * 获取榜单ids
+   */
+  async getTargetTopIds(topInput: TopInput) {
+    return (
+      await this.toggleRepository
+        .createQueryBuilder()
+        .select('targetId')
+        .addSelect('COUNT(id)', 'count')
+        .where('targetType = :targetType', { targetType: topInput.targetType })
+        .andWhere('type = :type', {
+          type: topInput.type,
+        })
+        .groupBy('targetId')
+        .orderBy('count', 'DESC')
+        .take(topInput.limit)
+        .execute()
+    ).map((item: { targetId: number; count: string }) => item.targetId);
   }
 }

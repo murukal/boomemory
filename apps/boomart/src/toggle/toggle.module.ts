@@ -4,5 +4,6 @@ import { ToggleResolver } from './toggle.resolver';
 
 @Module({
   providers: [ToggleResolver, ToggleService],
+  exports: [ToggleService],
 })
 export class ToggleModule {}
