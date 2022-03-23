@@ -61,7 +61,7 @@ export class EssayService {
     const { tagIds, ids, ...filter } = filterInput || {};
 
     // 按照tagId进行筛选
-    const essayIds =
+    const tagEssayIds =
       tagIds &&
       (
         await this.essayRepository
@@ -75,7 +75,12 @@ export class EssayService {
       ).map((essay) => essay.id);
 
     // 文章ids
-    // const essayIds = ids ?
+    // 存在取交集
+    const essayIds = ids
+      ? tagEssayIds
+        ? tagEssayIds.filter((id) => ids.includes(id))
+        : ids
+      : tagEssayIds;
 
     // 执行分页
     return paginateQuery(this.essayRepository, {
