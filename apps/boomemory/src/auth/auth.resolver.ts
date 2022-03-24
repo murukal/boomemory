@@ -1,6 +1,14 @@
 import { User } from '@app/data-base/entities';
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { PaginateInput } from 'utils/dto/paginate.input';
 import { AuthService } from './auth.service';
@@ -12,7 +20,7 @@ import { PaginatedUsers } from './dto/paginated-users';
 import { JwtAuthGuard } from './guard';
 import { FilterUserInput } from './dto/filter-user.input';
 
-@Resolver()
+@Resolver(() => User)
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
@@ -60,5 +68,12 @@ export class AuthResolver {
   })
   getAuthorizationTree() {
     return this.authService.getAuthorizationTree();
+  }
+
+  @ResolveField('creationCount', () => Int, {
+    description: '作品个数',
+  })
+  getCreationCount(@Parent() user: User) {
+    return this.authService.getCreationCount(user.id);
   }
 }

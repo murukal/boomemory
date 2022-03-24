@@ -94,8 +94,7 @@ export class EssayResolver {
     return this.essayService.getTagIds(essay.id);
   }
 
-  @ResolveField(() => User, {
-    name: 'createdBy',
+  @ResolveField('createdBy', () => User, {
     description: '创作者',
   })
   getCreatedBy(@Parent() essay: Essay) {

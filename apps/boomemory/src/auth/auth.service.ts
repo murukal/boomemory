@@ -1,4 +1,9 @@
-import { Authorization, CONNECTION_BOOMEMORY } from '@app/data-base/entities';
+import {
+  Authorization,
+  CONNECTION_BOOMART,
+  CONNECTION_BOOMEMORY,
+  Essay,
+} from '@app/data-base/entities';
 import { UserService } from '@app/user';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -18,8 +23,14 @@ export class AuthService {
   constructor(
     @InjectRepository(Authorization, CONNECTION_BOOMEMORY)
     private readonly authorizationRepository: Repository<Authorization>,
+
+    @InjectRepository(Essay, CONNECTION_BOOMART)
+    private readonly essayRepository: Repository<Essay>,
+
     private readonly userService: UserService,
+
     private readonly jwtService: JwtService,
+
     private readonly configService: ConfigService,
   ) {}
 
@@ -143,5 +154,15 @@ export class AuthService {
       },
       [],
     );
+  }
+
+  /**
+   * 获取作品个数
+   */
+  getCreationCount(createdById: number) {
+    return this.essayRepository
+      .createQueryBuilder()
+      .where('createdById = :createdById', { createdById })
+      .getCount();
   }
 }
