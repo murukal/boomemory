@@ -29,6 +29,10 @@ import { ObjectStorageModule } from '@app/object-storage';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
+      cors: {
+        origin: [/localhost/],
+        credentials: true,
+      },
     }),
 
     // 第三方服务
