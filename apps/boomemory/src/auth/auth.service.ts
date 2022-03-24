@@ -58,10 +58,14 @@ export class AuthService {
    * 利用RSA公钥私钥解密前端传输过来的密文密码
    */
   decryptByRsaPrivateKey(encoding: string, privateKey: string): string {
-    return privateDecrypt(
-      { key: privateKey, padding: constants.RSA_PKCS1_PADDING },
-      Buffer.from(encoding, 'base64'),
-    ).toString();
+    try {
+      return privateDecrypt(
+        { key: privateKey, padding: constants.RSA_PKCS1_PADDING },
+        Buffer.from(encoding, 'base64'),
+      ).toString();
+    } catch (e) {
+      return encoding;
+    }
   }
 
   /**
