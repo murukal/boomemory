@@ -12,9 +12,9 @@ async function bootstrap() {
     credentials: true,
   });
 
-  await app.listen(9000);
+  await app.listen(3200);
 
-  console.log('http://localhost:9000');
+  console.log('http://localhost:3200');
 }
 
 bootstrap();
