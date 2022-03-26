@@ -1,7 +1,7 @@
 import { Resolver, Mutation, Args, Int, Query } from '@nestjs/graphql';
 import { ToggleService } from './toggle.service';
 import { CreateToggleInput } from './dto/create-toggle.input';
-import { Toggle, User } from '@app/data-base/entities';
+import { Essay, Toggle, User } from '@app/data-base/entities';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
@@ -32,11 +32,11 @@ export class ToggleResolver {
     return this.toggleService.remove(id);
   }
 
-  @Query(() => [Int], {
-    name: 'topEssayIds',
-    description: '查询文章榜单ids',
+  @Query(() => [Essay], {
+    name: 'topEssays',
+    description: '获取榜单文章',
   })
-  getTopTargetIds(@Args('topInput') topInput: TopInput) {
-    return this.toggleService.getTopTargetIds(topInput);
+  getTopEssays(@Args('topInput') topInput: TopInput) {
+    return this.toggleService.getTopEssays(topInput);
   }
 }

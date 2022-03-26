@@ -1,5 +1,5 @@
 import { CONNECTION_BOOMEMORY, Tenant } from '@app/data-base/entities';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
@@ -14,7 +14,6 @@ export class TenantService {
     @InjectRepository(Tenant, CONNECTION_BOOMEMORY)
     private readonly tenantRepository: Repository<Tenant>,
 
-    @Inject(forwardRef(() => MenuService))
     private readonly menuService: MenuService,
   ) {}
 

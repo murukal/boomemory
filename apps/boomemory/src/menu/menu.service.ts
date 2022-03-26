@@ -1,10 +1,9 @@
 import { CONNECTION_BOOMEMORY, Menu, Tenant } from '@app/data-base/entities';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
-import { TenantService } from '../tenant/tenant.service';
 import { CreateMenuInput } from './dto/create-menu.input';
 import { FilterMenuInput } from './dto/filter-menu.input';
 import { UpdateMenuInput } from './dto/update-menu.input';
@@ -17,9 +16,6 @@ export class MenuService {
 
     @InjectRepository(Tenant, CONNECTION_BOOMEMORY)
     private readonly tenantRepository: Repository<Tenant>,
-
-    @Inject(forwardRef(() => TenantService))
-    private readonly tenantService: TenantService,
   ) {}
 
   /**

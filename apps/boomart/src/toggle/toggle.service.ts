@@ -1,8 +1,9 @@
 import { CONNECTION_BOOMART, Toggle } from '@app/data-base/entities';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TargetType, Type } from 'utils/dto/toggle-enum';
+import { EssayService } from '../essay/essay.service';
 import { CreateToggleInput } from './dto/create-toggle.input';
 import { TopInput } from './dto/top.input';
 
@@ -11,6 +12,9 @@ export class ToggleService {
   constructor(
     @InjectRepository(Toggle, CONNECTION_BOOMART)
     private readonly toggleRepository: Repository<Toggle>,
+
+    @Inject(forwardRef(() => EssayService))
+    private readonly essayService: EssayService,
   ) {}
 
   /**
@@ -59,13 +63,13 @@ export class ToggleService {
   /**
    * 获取榜单ids
    */
-  async getTopTargetIds(topInput: TopInput) {
+  async getTopTargetIds(targetType: TargetType, topInput: TopInput) {
     return (
       await this.toggleRepository
         .createQueryBuilder()
         .select('targetId')
         .addSelect('COUNT(id)', 'count')
-        .where('targetType = :targetType', { targetType: topInput.targetType })
+        .where('targetType = :targetType', { targetType })
         .andWhere('type = :type', {
           type: topInput.type,
         })
@@ -82,5 +86,20 @@ export class ToggleService {
     ).map((item: { targetId: number; count: string }) => {
       return item.targetId;
     });
+  }
+
+  /**
+   * 获取榜单目标
+   */
+  async getTopEssays(topInput: TopInput) {
+    const ids = await this.getTopTargetIds(TargetType.essay, topInput);
+
+    return (
+      await this.essayService.getEssays({
+        filterInput: {
+          ids,
+        },
+      })
+    ).items;
   }
 }

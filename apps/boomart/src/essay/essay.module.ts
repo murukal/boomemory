@@ -6,5 +6,6 @@ import { ToggleModule } from '../toggle/toggle.module';
 @Module({
   imports: [ToggleModule],
   providers: [EssayResolver, EssayService],
+  exports: [EssayService],
 })
 export class EssayModule {}
