@@ -1,7 +1,7 @@
-import { CONNECTION_BOOMEMORY, Menu } from '@app/data-base/entities';
+import { CONNECTION_BOOMEMORY, Menu, Tenant } from '@app/data-base/entities';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { TenantService } from '../tenant/tenant.service';
@@ -14,6 +14,9 @@ export class MenuService {
   constructor(
     @InjectRepository(Menu, CONNECTION_BOOMEMORY)
     private readonly menuRepository: Repository<Menu>,
+
+    @InjectRepository(Tenant, CONNECTION_BOOMEMORY)
+    private readonly tenantRepository: Repository<Tenant>,
 
     @Inject(forwardRef(() => TenantService))
     private readonly tenantService: TenantService,
@@ -29,8 +32,33 @@ export class MenuService {
   /**
    * 查询多个菜单
    */
-  getMenus(query?: QueryParams<FilterMenuInput>) {
-    return paginateQuery(this.menuRepository, query);
+  async getMenus(query?: QueryParams<FilterMenuInput>) {
+    const { tenantCode, tenantId, ...filterInput } = query?.filterInput || {};
+
+    const tenantIds = (
+      await this.tenantRepository.find({
+        where: {
+          ...(tenantId && {
+            id: tenantId,
+          }),
+
+          ...(tenantCode && {
+            code: tenantCode,
+          }),
+        },
+      })
+    ).map((tenant) => tenant.id);
+
+    return paginateQuery(this.menuRepository, {
+      ...query,
+      filterInput: {
+        ...filterInput,
+        tenantId: In(tenantIds),
+      },
+      sortInput: {
+        sortBy: 'ASC',
+      },
+    });
   }
 
   /**

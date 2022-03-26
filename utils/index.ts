@@ -22,6 +22,7 @@ export const paginateQuery = async <T, F>(
     .where(query?.filterInput || {})
     .skip(skip)
     .limit(query?.paginateInput?.limit)
+    .orderBy(query?.sortInput)
     .getManyAndCount();
 
   // 计算 limit

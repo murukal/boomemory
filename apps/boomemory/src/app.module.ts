@@ -30,7 +30,7 @@ import { ObjectStorageModule } from '@app/object-storage';
       driver: ApolloDriver,
       autoSchemaFile: true,
       cors: {
-        origin: [/localhost/],
+        origin: [/localhost/, /fantufantu/],
         credentials: true,
       },
     }),
