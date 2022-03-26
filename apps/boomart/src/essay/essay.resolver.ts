@@ -54,6 +54,7 @@ export class EssayResolver {
   }
 
   @Query(() => Essay, { name: 'essay', description: '查询单个文章' })
+  @UseGuards(new JwtAuthGuard(false))
   getEssay(@Args('id', { type: () => Int }) id: number) {
     return this.essayService.getEssay(id);
   }
@@ -127,5 +128,21 @@ export class EssayResolver {
       TargetType.essay,
       essay.id,
     );
+  }
+
+  @ResolveField(() => Boolean, {
+    name: 'isLiked',
+    description: '是否被当前用户点赞',
+  })
+  getIsLiked(@CurrentUser() user: User) {
+    return this.essayService.getIsToggled(user, Type.like);
+  }
+
+  @ResolveField(() => Boolean, {
+    name: 'isCollected',
+    description: '是否被当前用户收藏',
+  })
+  getIsCollected(@CurrentUser() user: User) {
+    return this.essayService.getIsToggled(user, Type.collect);
   }
 }

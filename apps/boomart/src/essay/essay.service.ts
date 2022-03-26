@@ -3,6 +3,7 @@ import {
   CONNECTION_BOOMEMORY,
   Essay,
   Tag,
+  Toggle,
   User,
 } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
@@ -10,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { Type } from 'utils/dto/toggle-enum';
 import { CreateEssayInput } from './dto/create-essay.input';
 import { FilterEssayInput } from './dto/filter-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
@@ -25,6 +27,9 @@ export class EssayService {
 
     @InjectRepository(User, CONNECTION_BOOMEMORY)
     private readonly userRepository: Repository<User>,
+
+    @InjectRepository(Toggle, CONNECTION_BOOMART)
+    private readonly toggleRepository: Repository<Toggle>,
   ) {}
 
   /**
@@ -162,5 +167,19 @@ export class EssayService {
     return this.userRepository.findOne(
       (await this.essayRepository.findOne(id)).createdById,
     );
+  }
+
+  /**
+   * 获取状态
+   */
+  async getIsToggled(user: User, type: Type) {
+    if (!user) return false;
+
+    return !!(await this.toggleRepository.count({
+      where: {
+        createdById: user.id,
+        type,
+      },
+    }));
   }
 }

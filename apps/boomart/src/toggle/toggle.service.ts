@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { TargetType, Type } from 'utils/dto/toggle-enum';
 import { EssayService } from '../essay/essay.service';
 import { CreateToggleInput } from './dto/create-toggle.input';
+import { RemoveToggleInput } from './dto/remove-toggle.input';
 import { TopInput } from './dto/top.input';
 
 @Injectable()
@@ -20,24 +21,29 @@ export class ToggleService {
   /**
    * 创建触发事件
    */
-  create(toggle: CreateToggleInput, createdById) {
-    return this.toggleRepository.save(
+  async create(toggle: CreateToggleInput, createdById: number) {
+    return !!(await this.toggleRepository.save(
       this.toggleRepository.create({
         ...toggle,
         createdById,
       }),
-    );
+    ));
   }
 
   /**
    * 删除触发事件
    */
-  async remove(id: number) {
+  async remove(removeToggleInput: RemoveToggleInput, createdById: number) {
     return !!(
       await this.toggleRepository
         .createQueryBuilder()
         .delete()
-        .whereInIds(id)
+        .where('targetId = :targetId', { targetId: removeToggleInput.targetId })
+        .andWhere('targetType = :targetType', {
+          targetType: removeToggleInput.targetType,
+        })
+        .andWhere('type = :type', { type: removeToggleInput.type })
+        .andWhere('createdById = :createdById', { createdById })
         .execute()
     ).affected;
   }
