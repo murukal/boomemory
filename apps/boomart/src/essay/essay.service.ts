@@ -110,15 +110,25 @@ export class EssayService {
    * 更新文章
    */
   async update(id: number, essay: UpdateEssayInput) {
-    const updateEssayInput = {
-      ...essay,
+    const { tagIds, ...updateEssayInput } = essay;
 
-      // 关联的tags
-      ...(essay.tagIds && {
-        tags: await this.tagRepository.findByIds(essay.tagIds),
-      }),
-    };
+    // 更新关联的tags
+    await this.essayRepository
+      .createQueryBuilder()
+      .relation('tags')
+      .of(id)
+      .addAndRemove(
+        tagIds,
+        (
+          await this.essayRepository
+            .createQueryBuilder()
+            .relation('tags')
+            .of(id)
+            .loadMany()
+        ).map((tag) => tag.id),
+      );
 
+    // 更新文章
     return !!(
       await this.essayRepository
         .createQueryBuilder()
