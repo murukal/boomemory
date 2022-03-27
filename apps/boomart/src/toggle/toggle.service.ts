@@ -22,6 +22,15 @@ export class ToggleService {
    * 创建触发事件
    */
   async create(toggle: CreateToggleInput, createdById: number) {
+    // 触发事件已经存在，直接返回true
+    const isExisted = !!(await this.toggleRepository.count({
+      ...toggle,
+      createdById,
+    }));
+
+    if (isExisted) return true;
+
+    // 不存在，创建
     return !!(await this.toggleRepository.save(
       this.toggleRepository.create({
         ...toggle,
