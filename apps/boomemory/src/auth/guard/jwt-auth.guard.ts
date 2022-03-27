@@ -8,11 +8,13 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  isStrict = false;
+  // 是否为宽松模式
+  // 宽松模式的场景下，不会抛出异常
+  isLoose = false;
 
-  constructor(isStrict?: boolean) {
+  constructor(isLoose?: boolean) {
     super();
-    this.isStrict = !!isStrict;
+    this.isLoose = !!isLoose;
   }
 
   getRequest(context: ExecutionContext) {
@@ -21,7 +23,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   handleRequest<TUser = any>(err: any, user: any): TUser {
-    if (this.isStrict && (err || !user)) {
+    if (!this.isLoose && (err || !user)) {
       throw err || new UnauthorizedException();
     }
 
