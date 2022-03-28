@@ -2,17 +2,14 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser = require('cookie-parser');
+import { getDynamicCorsOptions } from 'utils/cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
 
-  app.enableCors({
-    // /localhost/,
-    origin: [/fantufantu/],
-    credentials: true,
-  });
+  app.enableCors(getDynamicCorsOptions);
 
   app.use(cookieParser());
 

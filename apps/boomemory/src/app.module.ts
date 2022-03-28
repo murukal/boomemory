@@ -17,6 +17,7 @@ import { DictionaryModule } from './dictionary/dictionary.module';
 import { DictionaryEnumModule } from './dictionary-enum/dictionary-enum.module';
 import { RoleModule } from './role/role.module';
 import { ObjectStorageModule } from '@app/object-storage';
+import { getDynamicCorsOptions } from 'utils/cors';
 
 @Module({
   imports: [
@@ -29,14 +30,7 @@ import { ObjectStorageModule } from '@app/object-storage';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      cors: (req) => {
-        console.log('req=====', req);
-
-        return {
-          origin: [/fantufantu/],
-          credentials: true,
-        };
-      },
+      cors: getDynamicCorsOptions,
     }),
 
     // 公用服务模块
