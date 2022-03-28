@@ -54,7 +54,7 @@ export class EssayResolver {
   }
 
   @Query(() => Essay, { name: 'essay', description: '查询单个文章' })
-  @UseGuards(new JwtAuthGuard(false))
+  @UseGuards(new JwtAuthGuard(true))
   getEssay(@Args('id', { type: () => Int }) id: number) {
     return this.essayService.getEssay(id);
   }

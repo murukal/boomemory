@@ -29,14 +29,15 @@ import { ObjectStorageModule } from '@app/object-storage';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      cors: {
-        origin: [/localhost/, /fantufantu/],
-        credentials: true,
+      cors: (req) => {
+        console.log('req=====', req);
+
+        return {
+          origin: [/fantufantu/],
+          credentials: true,
+        };
       },
     }),
-
-    // 第三方服务
-    BoomartModule,
 
     // 公用服务模块
     DataBaseModule,
@@ -48,6 +49,9 @@ import { ObjectStorageModule } from '@app/object-storage';
     DictionaryModule,
     DictionaryEnumModule,
     RoleModule,
+
+    // 第三方服务
+    BoomartModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
