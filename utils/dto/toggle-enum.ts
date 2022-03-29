@@ -8,6 +8,7 @@ export enum Type {
 
 export enum TargetType {
   essay = 'essay',
+  comment = 'comment',
 }
 
 registerEnumType(Type, {
