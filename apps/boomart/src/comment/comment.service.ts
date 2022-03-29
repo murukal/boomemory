@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCommentInput } from './dto/create-comment.input';
+import { FilterCommentInput } from './dto/filter-comment.input';
 
 @Injectable()
 export class CommentService {
@@ -30,5 +31,18 @@ export class CommentService {
         .whereInIds(id)
         .execute()
     ).affected;
+  }
+
+  /** 查询多个评论 */
+  async getComments(filterInput: FilterCommentInput) {
+    return await this.commentRepository
+      .createQueryBuilder()
+      .where('targetType = :targetType', {
+        targetType: filterInput.targetType,
+      })
+      .andWhere('targetId = :targetId', {
+        targetId: filterInput.targetId,
+      })
+      .getMany();
   }
 }
