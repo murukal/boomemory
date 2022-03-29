@@ -12,13 +12,13 @@ export class CommentService {
   ) {}
 
   /** 创建评论 */
-  create(comment: CreateCommentInput, createdById: number) {
-    return this.commentRepository.save(
+  async create(comment: CreateCommentInput, createdById: number) {
+    return !!(await this.commentRepository.save(
       this.commentRepository.create({
         ...comment,
         createdById,
       }),
-    );
+    ));
   }
 
   /** 删除评论 */

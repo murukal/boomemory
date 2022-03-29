@@ -10,7 +10,7 @@ import { CreateCommentInput } from './dto/create-comment.input';
 export class CommentResolver {
   constructor(private readonly commentService: CommentService) {}
 
-  @Mutation(() => Comment, {
+  @Mutation(() => Boolean, {
     description: '创建评论',
   })
   @UseGuards(JwtAuthGuard)
