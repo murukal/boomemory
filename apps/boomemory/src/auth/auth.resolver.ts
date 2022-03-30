@@ -76,4 +76,11 @@ export class AuthResolver {
   getCreationCount(@Parent() user: User) {
     return this.authService.getCreationCount(user.id);
   }
+
+  @ResolveField('isSelf', () => Boolean, {
+    description: '是否为当前人',
+  })
+  getIsSelf(@Parent() user: User, @CurrentUser() current: User) {
+    return !!current?.id && current?.id === user?.id;
+  }
 }

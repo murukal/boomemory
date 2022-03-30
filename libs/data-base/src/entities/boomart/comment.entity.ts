@@ -30,4 +30,11 @@ export class Comment extends CoreEntity {
   })
   @Column()
   content: string;
+
+  @Field(() => Boolean, {
+    description: '删除标识',
+    defaultValue: false,
+  })
+  @Column()
+  isDeleted: boolean;
 }

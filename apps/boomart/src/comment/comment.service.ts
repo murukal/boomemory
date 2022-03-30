@@ -27,7 +27,10 @@ export class CommentService {
     return !!(
       await this.commentRepository
         .createQueryBuilder()
-        .delete()
+        .update()
+        .set({
+          isDeleted: true,
+        })
         .whereInIds(id)
         .execute()
     ).affected;
@@ -42,6 +45,9 @@ export class CommentService {
       })
       .andWhere('targetId = :targetId', {
         targetId: filterInput.targetId,
+      })
+      .andWhere('isDeleted = :isDeleted', {
+        isDeleted: false,
       })
       .getMany();
   }

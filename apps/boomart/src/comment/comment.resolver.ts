@@ -46,6 +46,7 @@ export class CommentResolver {
     name: 'comments',
     description: '查询多个评论',
   })
+  @UseGuards(new JwtAuthGuard(true))
   getComments(
     @Args('filterInput', { type: () => FilterCommentInput })
     filterInput: FilterCommentInput,
