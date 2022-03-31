@@ -24,7 +24,7 @@ export class Essay extends CoreEntity {
   @Field(() => String, {
     description: '正文',
   })
-  @Column()
+  @Column('longtext')
   content: string;
 
   @Field(() => String, { nullable: true, description: '封面地址' })
