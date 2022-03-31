@@ -1,8 +1,9 @@
 import { BadRequestException } from '@nestjs/common';
 import { ObjectType, Field } from '@nestjs/graphql';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import isURL from 'validator/lib/isURL';
 import { CoreEntity } from '..';
+// import { Collection } from '.';
 
 @ObjectType()
 @Entity()

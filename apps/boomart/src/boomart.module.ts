@@ -6,10 +6,10 @@ import { EssayModule } from './essay/essay.module';
 import { ToggleModule } from './toggle/toggle.module';
 import { CommentModule } from './comment/comment.module';
 import { AlbumModule } from './album/album.module';
-import { CollectionModule } from './collection/collection.module';
+import { GroupModule } from './group/group.module';
 
 @Module({
-  imports: [TagModule, EssayModule, ToggleModule, CommentModule, AlbumModule, CollectionModule],
+  imports: [TagModule, EssayModule, ToggleModule, CommentModule, AlbumModule, GroupModule],
   controllers: [BoomartController],
   providers: [BoomartService],
 })
