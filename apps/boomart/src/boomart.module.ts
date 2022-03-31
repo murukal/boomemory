@@ -9,7 +9,14 @@ import { AlbumModule } from './album/album.module';
 import { GroupModule } from './group/group.module';
 
 @Module({
-  imports: [TagModule, EssayModule, ToggleModule, CommentModule, AlbumModule, GroupModule],
+  imports: [
+    TagModule,
+    EssayModule,
+    ToggleModule,
+    CommentModule,
+    AlbumModule,
+    GroupModule,
+  ],
   controllers: [BoomartController],
   providers: [BoomartService],
 })
