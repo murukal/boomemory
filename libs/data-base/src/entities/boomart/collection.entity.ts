@@ -1,10 +1,12 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { CoreEntity } from '..';
 import { Album } from '.';
 
 @ObjectType()
-export class Group extends CoreEntity {
+@Entity()
+export class Collection extends CoreEntity {
   @Field(() => String, { description: '合辑名称' })
+  @Column()
   name: string;
 }
