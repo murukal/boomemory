@@ -24,14 +24,6 @@ export class AppController {
   }
 
   /**
-   * 后台管理界面
-   */
-  @Get()
-  go2Admin(@Res() res: Response) {
-    return res.redirect('http://admin.fantufantu.com');
-  }
-
-  /**
    * 上传文件
    */
   @Post('api/upload')
