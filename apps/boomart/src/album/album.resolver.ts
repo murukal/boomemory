@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { AlbumService } from './album.service';
-import { Album } from './entities/album.entity';
+import { Album } from '../../../../libs/data-base/src/entities/boomart/album.entity';
 import { CreateAlbumInput } from './dto/create-album.input';
 import { UpdateAlbumInput } from './dto/update-album.input';
 
