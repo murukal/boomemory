@@ -21,7 +21,7 @@ export const paginateQuery = async <T, F>(
     .createQueryBuilder()
     .where(query?.filterInput || {})
     .skip(skip)
-    .limit(query?.paginateInput?.limit)
+    .take(query?.paginateInput?.limit)
     .orderBy(query?.sortInput)
     .getManyAndCount();
 
