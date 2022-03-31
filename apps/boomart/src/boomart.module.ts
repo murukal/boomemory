@@ -6,7 +6,6 @@ import { EssayModule } from './essay/essay.module';
 import { ToggleModule } from './toggle/toggle.module';
 import { CommentModule } from './comment/comment.module';
 import { AlbumModule } from './album/album.module';
-import { GroupModule } from './group/group.module';
 import { CollectionModule } from './collection/collection.module';
 
 @Module({
@@ -16,7 +15,6 @@ import { CollectionModule } from './collection/collection.module';
     ToggleModule,
     CommentModule,
     AlbumModule,
-    GroupModule,
     CollectionModule,
   ],
   controllers: [BoomartController],
