@@ -134,15 +134,23 @@ export class EssayResolver {
     name: 'isLiked',
     description: '是否被当前用户点赞',
   })
-  getIsLiked(@CurrentUser() user: User) {
-    return this.essayService.getIsToggled(user, Type.like);
+  getIsLiked(@CurrentUser() user: User, @Parent() essay: Essay) {
+    return this.essayService.getIsToggled(user.id, {
+      type: Type.like,
+      targetType: TargetType.essay,
+      targetId: essay.id,
+    });
   }
 
   @ResolveField(() => Boolean, {
     name: 'isCollected',
     description: '是否被当前用户收藏',
   })
-  getIsCollected(@CurrentUser() user: User) {
-    return this.essayService.getIsToggled(user, Type.collect);
+  getIsCollected(@CurrentUser() user: User, @Parent() essay: Essay) {
+    return this.essayService.getIsToggled(user.id, {
+      type: Type.collect,
+      targetType: TargetType.essay,
+      targetId: essay.id,
+    });
   }
 }
