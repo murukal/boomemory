@@ -1,2 +1,2 @@
 export * from './paginate.input';
-export * from './paginated-options';
+export * from './paginated';

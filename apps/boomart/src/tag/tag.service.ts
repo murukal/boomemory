@@ -63,4 +63,20 @@ export class TagService {
         .execute()
     ).affected;
   }
+
+  /**
+   * 查询榜单标签
+   */
+  getTopTags() {
+    return this.tagRepository
+      .createQueryBuilder('tag')
+      .innerJoin('tag.essays', 'essay')
+      .select('tag.id', 'id')
+      .addSelect('tag.name', 'name')
+      .addSelect('COUNT(*)', 'creationCount')
+      .groupBy('tag.id')
+      .orderBy('creationCount', 'DESC')
+      .limit(5)
+      .execute();
+  }
 }

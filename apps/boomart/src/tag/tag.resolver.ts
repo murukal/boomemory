@@ -5,6 +5,7 @@ import { UpdateTagInput } from './dto/update-tag.input';
 import { Tag } from '@app/data-base/entities/boomart/tag.entity';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedTags } from './dto/paginated-tags';
+import { TopTag } from './dto/top-tag';
 
 @Resolver()
 export class TagResolver {
@@ -42,5 +43,13 @@ export class TagResolver {
   @Mutation(() => Boolean, { description: '删除标签' })
   removeTag(@Args('id', { type: () => Int }) id: number) {
     return this.tagService.remove(id);
+  }
+
+  @Query(() => [TopTag], {
+    name: 'topTags',
+    description: '标签榜单',
+  })
+  getTopTags() {
+    return this.tagService.getTopTags();
   }
 }

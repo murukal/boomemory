@@ -1,11 +1,6 @@
 import { Menu } from '@app/data-base/entities';
-import { Field, ObjectType } from '@nestjs/graphql';
-import { PaginatedOptions } from 'utils/dto';
+import { ObjectType } from '@nestjs/graphql';
+import { Paginated } from 'utils/dto';
 
 @ObjectType()
-export class PaginatedMenus extends PaginatedOptions {
-  @Field(() => [Menu], {
-    description: '菜单列表',
-  })
-  items: Menu[];
-}
+export class PaginatedMenus extends Paginated(Menu) {}
