@@ -14,12 +14,21 @@ import { UpdateMenuInput } from './dto/update-menu.input';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedMenus } from './dto/paginated-menus';
 import { FilterMenuInput } from './dto/filter-menu.input';
+import { Permission } from 'utils/decorator/permission.decorator';
+import {
+  Action,
+  Resource,
+} from '@app/data-base/entities/boomemory/authorization.entity';
 
 @Resolver(() => Menu)
 export class MenuResolver {
   constructor(private readonly menuService: MenuService) {}
 
   @Mutation(() => Menu, { description: '创建租户' })
+  @Permission({
+    resource: Resource.Menu,
+    action: Action.Create,
+  })
   createMenu(@Args('createMenuInput') menu: CreateMenuInput) {
     return this.menuService.create(menu);
   }
@@ -27,6 +36,10 @@ export class MenuResolver {
   @Query(() => PaginatedMenus, {
     name: 'menus',
     description: '查询多个租户',
+  })
+  @Permission({
+    resource: Resource.Menu,
+    action: Action.Retrieve,
   })
   getMenus(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
@@ -39,11 +52,19 @@ export class MenuResolver {
   }
 
   @Query(() => Menu, { name: 'menu', description: '查询单个租户' })
+  @Permission({
+    resource: Resource.Menu,
+    action: Action.Retrieve,
+  })
   getMenu(@Args('id', { type: () => Int }) id: number) {
     return this.menuService.getMenu(id);
   }
 
   @Mutation(() => Boolean, { description: '更新租户' })
+  @Permission({
+    resource: Resource.Menu,
+    action: Action.Update,
+  })
   updateMenu(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateMenuInput') menu: UpdateMenuInput,
@@ -52,6 +73,10 @@ export class MenuResolver {
   }
 
   @Mutation(() => Boolean, { description: '删除租户' })
+  @Permission({
+    resource: Resource.Menu,
+    action: Action.Delete,
+  })
   removeMenu(@Args('id', { type: () => Int }) id: number) {
     return this.menuService.remove(id);
   }

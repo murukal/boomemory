@@ -1,12 +1,37 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { IsEnum } from 'class-validator';
 import { Column, Entity, ManyToOne, Unique } from 'typeorm';
-import { Operation, Resource } from 'utils/dto/authorization-enum';
 import { Tenant } from '.';
 import { CoreEntity } from '..';
+import { registerEnumType } from '@nestjs/graphql';
+
+export enum Resource {
+  Menu = 'menu',
+  Tenant = 'tenant',
+  Role = 'role',
+  Dictionary = 'dictionary',
+  DictionaryEnum = 'dictionary-enum',
+}
+
+export enum Action {
+  Create = 'create',
+  Retrieve = 'retrieve',
+  Update = 'update',
+  Delete = 'delete',
+}
+
+registerEnumType(Resource, {
+  name: 'AuthorizationResource',
+  description: '权限资源',
+});
+
+registerEnumType(Action, {
+  name: 'AuthorizationAction',
+  description: '权限操作',
+});
 
 @Entity()
-@Unique(['resource', 'operation'])
+@Unique(['resource', 'action'])
 @ObjectType({
   description: '权限',
 })
@@ -27,13 +52,13 @@ export class Authorization extends CoreEntity {
   @IsEnum(Resource)
   resource: Resource;
 
-  @Field(() => Operation, {
+  @Field(() => Action, {
     description: '操作',
   })
   @Column({
     type: 'enum',
-    enum: Operation,
+    enum: Action,
   })
-  @IsEnum(Operation)
-  operation: Operation;
+  @IsEnum(Action)
+  action: Action;
 }

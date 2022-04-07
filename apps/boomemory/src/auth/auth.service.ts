@@ -107,7 +107,7 @@ export class AuthService {
       (previous, authorization) => {
         const operationNode = {
           key: authorization.id,
-          title: authorization.operation,
+          title: authorization.action,
         };
 
         // 查询租户 是否已经收集

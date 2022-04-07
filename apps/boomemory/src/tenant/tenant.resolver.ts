@@ -14,12 +14,21 @@ import { UpdateTenantInput } from './dto/update-tenant.input';
 import { Menu, Tenant } from '@app/data-base/entities';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedTenants } from './dto/paginated-tenants';
+import { Permission } from 'utils/decorator/permission.decorator';
+import {
+  Action,
+  Resource,
+} from '@app/data-base/entities/boomemory/authorization.entity';
 
 @Resolver(() => Tenant)
 export class TenantResolver {
   constructor(private readonly tenantService: TenantService) {}
 
   @Mutation(() => Tenant, { description: '创建租户' })
+  @Permission({
+    resource: Resource.Tenant,
+    action: Action.Create,
+  })
   createTenant(
     @Args('createTenantInput') createTenantInput: CreateTenantInput,
   ) {
@@ -29,6 +38,10 @@ export class TenantResolver {
   @Query(() => PaginatedTenants, {
     name: 'tenants',
     description: '查询多个租户',
+  })
+  @Permission({
+    resource: Resource.Tenant,
+    action: Action.Retrieve,
   })
   getTenants(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
@@ -41,6 +54,10 @@ export class TenantResolver {
     description: '查询单个租户',
     nullable: true,
   })
+  @Permission({
+    resource: Resource.Tenant,
+    action: Action.Retrieve,
+  })
   getTenant(
     @Args('keyword', {
       type: () => ID,
@@ -51,6 +68,10 @@ export class TenantResolver {
   }
 
   @Mutation(() => Boolean, { description: '更新租户' })
+  @Permission({
+    resource: Resource.Tenant,
+    action: Action.Update,
+  })
   updateTenant(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateTenantInput') updateTenantInput: UpdateTenantInput,
@@ -59,6 +80,10 @@ export class TenantResolver {
   }
 
   @Mutation(() => Boolean, { description: '删除租户' })
+  @Permission({
+    resource: Resource.Tenant,
+    action: Action.Delete,
+  })
   removeTenant(@Args('id', { type: () => Int }) id: number) {
     return this.tenantService.remove(id);
   }

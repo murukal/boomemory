@@ -5,11 +5,13 @@ import {
   Post,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { AppService } from './app.service';
+import { JwtAuthGuard } from './auth/guard';
 
 @Controller()
 export class AppController {
@@ -27,6 +29,7 @@ export class AppController {
    * 上传文件
    */
   @Post('api/upload')
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   upload(@UploadedFile() file: Express.Multer.File) {
     return this.objectStorageService.upload2COS({

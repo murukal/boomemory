@@ -4,4 +4,4 @@ export * from './menu.entity';
 export * from './dictionary.entity';
 export * from './dictionary-enum.entity';
 export * from './role.entity';
-export * from './authorization.entity';
+export { Authorization } from './authorization.entity';

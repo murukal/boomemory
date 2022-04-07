@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { Option } from 'utils/decorator/permission.decorator';
 import { AuthService } from '../auth/auth.service';
 import { CreateRoleInput } from './dto/create-role.input';
 import { UpdateRoleInput } from './dto/update-role.input';
@@ -122,5 +123,25 @@ export class RoleService {
         .of(id)
         .loadMany<Authorization>()
     ).map((authorization) => authorization.id);
+  }
+
+  /**
+   * 鉴权
+   */
+  async isPermitted(userId: number, option: Option) {
+    return !!(await this.roleRepository
+      .createQueryBuilder('role')
+      .innerJoin('role.users', 'user')
+      .innerJoin('role.authorizations', 'authorization')
+      .where('user.id = :userId', {
+        userId,
+      })
+      .andWhere('authorization.resource = :resource', {
+        resource: option.resource,
+      })
+      .andWhere('authorization.action = :action', {
+        action: option.action,
+      })
+      .getCount());
   }
 }

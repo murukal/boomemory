@@ -13,7 +13,8 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  await app.listen(3200);
+  // await app.listen(3200);
+  await app.listen(9000);
 
   console.log('http://localhost:3200');
 }
