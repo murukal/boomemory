@@ -37,10 +37,6 @@ export class TenantResolver {
     name: 'tenants',
     description: '查询多个租户',
   })
-  @Permission({
-    resource: Resource.Tenant,
-    action: Action.Retrieve,
-  })
   getTenants(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
   ) {
