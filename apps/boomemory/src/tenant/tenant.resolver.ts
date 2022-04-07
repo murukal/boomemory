@@ -93,6 +93,6 @@ export class TenantResolver {
     description: '租户对应的菜单',
   })
   getMenus(@Parent() tenant: Tenant) {
-    return this.tenantService.getTenantMenus(tenant.id);
+    return this.tenantService.getTenantMenus(tenant.code);
   }
 }

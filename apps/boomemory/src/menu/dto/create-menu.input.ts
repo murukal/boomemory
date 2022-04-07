@@ -4,6 +4,6 @@ import { PickType, InputType } from '@nestjs/graphql';
 @InputType()
 export class CreateMenuInput extends PickType(
   Menu,
-  ['name', 'sortBy', 'icon', 'tenantId', 'parentId', 'component', 'to'],
+  ['name', 'sortBy', 'icon', 'tenantCode', 'parentId', 'component', 'to'],
   InputType,
 ) {}

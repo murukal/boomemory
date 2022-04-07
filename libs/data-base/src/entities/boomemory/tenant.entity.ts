@@ -1,6 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, OneToMany } from 'typeorm';
-import { CoreEntity } from '../core.entity';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { IsBoolean, MaxLength } from 'class-validator';
 import { Menu } from './menu.entity';
 
@@ -8,9 +7,9 @@ import { Menu } from './menu.entity';
   description: '租户',
 })
 @Entity()
-export class Tenant extends CoreEntity {
+export class Tenant {
   @Field(() => String, { description: '租户代码' })
-  @Column()
+  @PrimaryColumn()
   @MaxLength(10)
   code: string;
 

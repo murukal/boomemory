@@ -24,7 +24,7 @@ import {
 export class MenuResolver {
   constructor(private readonly menuService: MenuService) {}
 
-  @Mutation(() => Menu, { description: '创建租户' })
+  @Mutation(() => Menu, { description: '创建菜单' })
   @Permission({
     resource: Resource.Menu,
     action: Action.Create,
@@ -35,11 +35,7 @@ export class MenuResolver {
 
   @Query(() => PaginatedMenus, {
     name: 'menus',
-    description: '查询多个租户',
-  })
-  @Permission({
-    resource: Resource.Menu,
-    action: Action.Retrieve,
+    description: '查询多个菜单',
   })
   getMenus(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
@@ -48,10 +44,13 @@ export class MenuResolver {
     return this.menuService.getMenus({
       paginateInput,
       filterInput,
+      sortInput: {
+        sortBy: 'ASC',
+      },
     });
   }
 
-  @Query(() => Menu, { name: 'menu', description: '查询单个租户' })
+  @Query(() => Menu, { name: 'menu', description: '查询单个菜单' })
   @Permission({
     resource: Resource.Menu,
     action: Action.Retrieve,
@@ -60,7 +59,7 @@ export class MenuResolver {
     return this.menuService.getMenu(id);
   }
 
-  @Mutation(() => Boolean, { description: '更新租户' })
+  @Mutation(() => Boolean, { description: '更新菜单' })
   @Permission({
     resource: Resource.Menu,
     action: Action.Update,
@@ -72,7 +71,7 @@ export class MenuResolver {
     return this.menuService.update(id, menu);
   }
 
-  @Mutation(() => Boolean, { description: '删除租户' })
+  @Mutation(() => Boolean, { description: '删除菜单' })
   @Permission({
     resource: Resource.Menu,
     action: Action.Delete,

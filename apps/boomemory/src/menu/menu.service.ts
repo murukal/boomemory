@@ -1,7 +1,7 @@
 import { CONNECTION_BOOMEMORY, Menu, Tenant } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { CreateMenuInput } from './dto/create-menu.input';
@@ -29,32 +29,7 @@ export class MenuService {
    * 查询多个菜单
    */
   async getMenus(query?: QueryParams<FilterMenuInput>) {
-    const { tenantCode, tenantId, ...filterInput } = query?.filterInput || {};
-
-    const tenantIds = (
-      await this.tenantRepository.find({
-        where: {
-          ...(tenantId && {
-            id: tenantId,
-          }),
-
-          ...(tenantCode && {
-            code: tenantCode,
-          }),
-        },
-      })
-    ).map((tenant) => tenant.id);
-
-    return paginateQuery(this.menuRepository, {
-      ...query,
-      filterInput: {
-        ...filterInput,
-        tenantId: In(tenantIds),
-      },
-      sortInput: {
-        sortBy: 'ASC',
-      },
-    });
+    return paginateQuery(this.menuRepository, query);
   }
 
   /**

@@ -79,11 +79,14 @@ export class TenantService {
   }
 
   /** 查询租户id对应的菜单 */
-  async getTenantMenus(tenantId: number) {
+  async getTenantMenus(tenantCode: string) {
     return (
       await this.menuService.getMenus({
         filterInput: {
-          tenantId,
+          tenantCode,
+        },
+        sortInput: {
+          sortBy: 'ASC',
         },
       })
     ).items;

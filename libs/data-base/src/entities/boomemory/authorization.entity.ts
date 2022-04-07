@@ -36,9 +36,6 @@ registerEnumType(Action, {
   description: '权限',
 })
 export class Authorization extends CoreEntity {
-  @Column()
-  tenantId: number;
-
   @ManyToOne(() => Tenant)
   tenant: Tenant;
 

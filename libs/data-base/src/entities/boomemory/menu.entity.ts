@@ -35,9 +35,9 @@ export class Menu extends CoreEntity {
   })
   component?: string;
 
-  @Field(() => Int, { description: '所属租户ID' })
+  @Field(() => String, { description: '所属租户code' })
   @Column()
-  tenantId: number;
+  tenantCode: string;
 
   @ManyToOne(() => Tenant, (tenant) => tenant.menus)
   tenant: Tenant;
