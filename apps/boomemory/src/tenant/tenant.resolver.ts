@@ -3,8 +3,6 @@ import {
   Query,
   Mutation,
   Args,
-  Int,
-  ID,
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
@@ -59,12 +57,12 @@ export class TenantResolver {
     action: Action.Retrieve,
   })
   getTenant(
-    @Args('keyword', {
-      type: () => ID,
+    @Args('code', {
+      type: () => String,
     })
-    keyword: number | string,
+    code: string,
   ) {
-    return this.tenantService.getTenant(keyword);
+    return this.tenantService.getTenant(code);
   }
 
   @Mutation(() => Boolean, { description: '更新租户' })
@@ -73,10 +71,10 @@ export class TenantResolver {
     action: Action.Update,
   })
   updateTenant(
-    @Args('id', { type: () => Int }) id: number,
+    @Args('code', { type: () => String }) code: string,
     @Args('updateTenantInput') updateTenantInput: UpdateTenantInput,
   ) {
-    return this.tenantService.update(id, updateTenantInput);
+    return this.tenantService.update(code, updateTenantInput);
   }
 
   @Mutation(() => Boolean, { description: '删除租户' })
@@ -84,8 +82,8 @@ export class TenantResolver {
     resource: Resource.Tenant,
     action: Action.Delete,
   })
-  removeTenant(@Args('id', { type: () => Int }) id: number) {
-    return this.tenantService.remove(id);
+  removeTenant(@Args('code', { type: () => String }) code: string) {
+    return this.tenantService.remove(code);
   }
 
   @ResolveField(() => [Menu], {

@@ -36,14 +36,11 @@ export class TenantService {
   /**
    * 查询单个租户
    */
-  getTenant(keyword: number | string) {
+  getTenant(code: string) {
     return this.tenantRepository.findOne({
       where: [
         {
-          id: keyword,
-        },
-        {
-          code: keyword,
+          code,
         },
       ],
     });
@@ -52,12 +49,12 @@ export class TenantService {
   /**
    * 更新租户
    */
-  async update(id: number, updateTenantInput: UpdateTenantInput) {
+  async update(code: string, updateTenantInput: UpdateTenantInput) {
     return !!(
       await this.tenantRepository
         .createQueryBuilder()
         .update()
-        .whereInIds(id)
+        .whereInIds(code)
         .set({
           ...updateTenantInput,
         })
@@ -68,12 +65,12 @@ export class TenantService {
   /**
    * 删除租户
    */
-  async remove(id: number) {
+  async remove(code: string) {
     return !!(
       await this.tenantRepository
         .createQueryBuilder()
         .delete()
-        .whereInIds(id)
+        .whereInIds(code)
         .execute()
     ).affected;
   }
