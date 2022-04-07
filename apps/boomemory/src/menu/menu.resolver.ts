@@ -60,10 +60,10 @@ export class MenuResolver {
   }
 
   @Mutation(() => Boolean, { description: '更新菜单' })
-  @Permission({
-    resource: Resource.Menu,
-    action: Action.Update,
-  })
+  // @Permission({
+  //   resource: Resource.Menu,
+  //   action: Action.Update,
+  // })
   updateMenu(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateMenuInput') menu: UpdateMenuInput,
