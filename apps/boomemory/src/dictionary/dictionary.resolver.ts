@@ -1,8 +1,6 @@
 import { Dictionary } from '@app/data-base/entities';
-import {
-  Action,
-  Resource,
-} from '@app/data-base/entities/boomemory/authorization.entity';
+import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
+import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { Permission } from 'utils/decorator/permission.decorator';
 import { PaginateInput } from 'utils/dto';
@@ -17,8 +15,8 @@ export class DictionaryResolver {
 
   @Mutation(() => Dictionary, { description: '创建字典' })
   @Permission({
-    resource: Resource.Dictionary,
-    action: Action.Create,
+    resource: AuthorizationResourceCode.Dictionary,
+    action: AuthorizationActionCode.Create,
   })
   createDictionary(
     @Args('createDictionaryInput') dictionary: CreateDictionaryInput,
@@ -31,8 +29,8 @@ export class DictionaryResolver {
     description: '查询多个字典',
   })
   @Permission({
-    resource: Resource.Dictionary,
-    action: Action.Retrieve,
+    resource: AuthorizationResourceCode.Dictionary,
+    action: AuthorizationActionCode.Retrieve,
   })
   getDictionaries(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
@@ -44,8 +42,8 @@ export class DictionaryResolver {
 
   @Query(() => Dictionary, { name: 'dictionary', description: '查询单个字典' })
   @Permission({
-    resource: Resource.Dictionary,
-    action: Action.Retrieve,
+    resource: AuthorizationResourceCode.Dictionary,
+    action: AuthorizationActionCode.Retrieve,
   })
   getDictionay(@Args('id', { type: () => Int }) id: number) {
     return this.dictionaryService.getDictionay(id);
@@ -53,8 +51,8 @@ export class DictionaryResolver {
 
   @Mutation(() => Boolean, { description: '更新字典' })
   @Permission({
-    resource: Resource.Dictionary,
-    action: Action.Update,
+    resource: AuthorizationResourceCode.Dictionary,
+    action: AuthorizationActionCode.Update,
   })
   updateDictionary(
     @Args('id', { type: () => Int }) id: number,
@@ -65,8 +63,8 @@ export class DictionaryResolver {
 
   @Mutation(() => Boolean, { description: '删除字典' })
   @Permission({
-    resource: Resource.Dictionary,
-    action: Action.Delete,
+    resource: AuthorizationResourceCode.Dictionary,
+    action: AuthorizationActionCode.Delete,
   })
   removeDictionary(@Args('id', { type: () => Int }) id: number) {
     return this.dictionaryService.remove(id);

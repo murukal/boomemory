@@ -13,10 +13,8 @@ import { Menu, Tenant } from '@app/data-base/entities';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedTenants } from './dto/paginated-tenants';
 import { Permission } from 'utils/decorator/permission.decorator';
-import {
-  Action,
-  Resource,
-} from '@app/data-base/entities/boomemory/authorization.entity';
+import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
+import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
 
 @Resolver(() => Tenant)
 export class TenantResolver {
@@ -24,8 +22,8 @@ export class TenantResolver {
 
   @Mutation(() => Tenant, { description: '创建租户' })
   @Permission({
-    resource: Resource.Tenant,
-    action: Action.Create,
+    resource: AuthorizationResourceCode.Tenant,
+    action: AuthorizationActionCode.Create,
   })
   createTenant(
     @Args('createTenantInput') createTenantInput: CreateTenantInput,
@@ -49,8 +47,8 @@ export class TenantResolver {
     nullable: true,
   })
   @Permission({
-    resource: Resource.Tenant,
-    action: Action.Retrieve,
+    resource: AuthorizationResourceCode.Tenant,
+    action: AuthorizationActionCode.Retrieve,
   })
   getTenant(
     @Args('code', {
@@ -63,8 +61,8 @@ export class TenantResolver {
 
   @Mutation(() => Boolean, { description: '更新租户' })
   @Permission({
-    resource: Resource.Tenant,
-    action: Action.Update,
+    resource: AuthorizationResourceCode.Tenant,
+    action: AuthorizationActionCode.Update,
   })
   updateTenant(
     @Args('code', { type: () => String }) code: string,
@@ -75,8 +73,8 @@ export class TenantResolver {
 
   @Mutation(() => Boolean, { description: '删除租户' })
   @Permission({
-    resource: Resource.Tenant,
-    action: Action.Delete,
+    resource: AuthorizationResourceCode.Tenant,
+    action: AuthorizationActionCode.Delete,
   })
   removeTenant(@Args('code', { type: () => String }) code: string) {
     return this.tenantService.remove(code);

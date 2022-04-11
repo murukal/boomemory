@@ -14,10 +14,8 @@ import { Role } from '@app/data-base/entities';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedRole } from './dto/paginated-roles';
 import { Permission } from 'utils/decorator/permission.decorator';
-import {
-  Action,
-  Resource,
-} from '@app/data-base/entities/boomemory/authorization.entity';
+import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
+import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
 
 @Resolver(() => Role)
 export class RoleResolver {
@@ -27,8 +25,8 @@ export class RoleResolver {
     description: '创建角色',
   })
   @Permission({
-    resource: Resource.Role,
-    action: Action.Create,
+    resource: AuthorizationResourceCode.Role,
+    action: AuthorizationActionCode.Create,
   })
   createRole(@Args('createRoleInput') role: CreateRoleInput) {
     return this.roleService.create(role);
@@ -39,8 +37,8 @@ export class RoleResolver {
     description: '查询多个角色',
   })
   @Permission({
-    resource: Resource.Role,
-    action: Action.Retrieve,
+    resource: AuthorizationResourceCode.Role,
+    action: AuthorizationActionCode.Retrieve,
   })
   getRoles(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
@@ -52,8 +50,8 @@ export class RoleResolver {
 
   @Query(() => Role, { name: 'role', description: '查询单个角色' })
   @Permission({
-    resource: Resource.Role,
-    action: Action.Retrieve,
+    resource: AuthorizationResourceCode.Role,
+    action: AuthorizationActionCode.Retrieve,
   })
   getRole(@Args('id', { type: () => Int }) id: number) {
     return this.roleService.getRole(id);
@@ -63,8 +61,8 @@ export class RoleResolver {
     description: '更新角色',
   })
   @Permission({
-    resource: Resource.Role,
-    action: Action.Update,
+    resource: AuthorizationResourceCode.Role,
+    action: AuthorizationActionCode.Update,
   })
   updateRole(
     @Args('id', {
@@ -80,8 +78,8 @@ export class RoleResolver {
     description: '删除角色',
   })
   @Permission({
-    resource: Resource.Role,
-    action: Action.Delete,
+    resource: AuthorizationResourceCode.Role,
+    action: AuthorizationActionCode.Delete,
   })
   removeRole(@Args('id', { type: () => Int }) id: number) {
     return this.roleService.remove(id);

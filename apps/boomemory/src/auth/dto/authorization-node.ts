@@ -1,16 +1,21 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-class OperationNode {
+class ActionNode {
   @Field(() => Int, {
     description: '操作节点key',
   })
-  key: number;
+  key: string;
 
   @Field(() => String, {
     description: '操作描述',
   })
   title: string;
+
+  @Field(() => String, {
+    description: '操作code',
+  })
+  code: string;
 }
 
 @ObjectType()
@@ -30,10 +35,15 @@ class ResourceNode {
   })
   checkable: false;
 
-  @Field(() => [OperationNode], {
+  @Field(() => [ActionNode], {
     description: '操作列表',
   })
-  children: OperationNode[];
+  children: ActionNode[];
+
+  @Field(() => String, {
+    description: '资源code',
+  })
+  code: string;
 }
 
 @ObjectType()
@@ -57,4 +67,9 @@ export class AuthorizationNode {
     description: '资源列表',
   })
   children: ResourceNode[];
+
+  @Field(() => String, {
+    description: '租户code',
+  })
+  code: string;
 }

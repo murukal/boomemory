@@ -8,17 +8,15 @@ import {
   Parent,
 } from '@nestjs/graphql';
 import { MenuService } from './menu.service';
-import { Menu } from '../../../../libs/data-base/src/entities/boomemory/menu.entity';
 import { CreateMenuInput } from './dto/create-menu.input';
 import { UpdateMenuInput } from './dto/update-menu.input';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedMenus } from './dto/paginated-menus';
 import { FilterMenuInput } from './dto/filter-menu.input';
 import { Permission } from 'utils/decorator/permission.decorator';
-import {
-  Action,
-  Resource,
-} from '@app/data-base/entities/boomemory/authorization.entity';
+import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
+import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
+import { Menu } from '@app/data-base/entities';
 
 @Resolver(() => Menu)
 export class MenuResolver {
@@ -26,8 +24,8 @@ export class MenuResolver {
 
   @Mutation(() => Menu, { description: '创建菜单' })
   @Permission({
-    resource: Resource.Menu,
-    action: Action.Create,
+    resource: AuthorizationResourceCode.Menu,
+    action: AuthorizationActionCode.Create,
   })
   createMenu(@Args('createMenuInput') menu: CreateMenuInput) {
     return this.menuService.create(menu);
@@ -52,8 +50,8 @@ export class MenuResolver {
 
   @Query(() => Menu, { name: 'menu', description: '查询单个菜单' })
   @Permission({
-    resource: Resource.Menu,
-    action: Action.Retrieve,
+    resource: AuthorizationResourceCode.Menu,
+    action: AuthorizationActionCode.Retrieve,
   })
   getMenu(@Args('id', { type: () => Int }) id: number) {
     return this.menuService.getMenu(id);
@@ -61,8 +59,8 @@ export class MenuResolver {
 
   @Mutation(() => Boolean, { description: '更新菜单' })
   // @Permission({
-  //   resource: Resource.Menu,
-  //   action: Action.Update,
+  //   resource: AuthorizationResourceCode.menu,
+  //   action: AuthorizationActionCode.Update,
   // })
   updateMenu(
     @Args('id', { type: () => Int }) id: number,
@@ -73,8 +71,8 @@ export class MenuResolver {
 
   @Mutation(() => Boolean, { description: '删除菜单' })
   @Permission({
-    resource: Resource.Menu,
-    action: Action.Delete,
+    resource: AuthorizationResourceCode.Menu,
+    action: AuthorizationActionCode.Delete,
   })
   removeMenu(@Args('id', { type: () => Int }) id: number) {
     return this.menuService.remove(id);

@@ -1,7 +1,5 @@
-import {
-  Action,
-  Resource,
-} from '@app/data-base/entities/boomemory/authorization.entity';
+import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
+import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
 import { DictionaryEnum } from '@app/data-base/entities/boomemory/dictionary-enum.entity';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { Permission } from 'utils/decorator/permission.decorator';
@@ -19,8 +17,8 @@ export class DictionaryEnumResolver {
     description: '创建字典枚举',
   })
   @Permission({
-    resource: Resource.DictionaryEnum,
-    action: Action.Create,
+    resource: AuthorizationResourceCode.DictionaryEnum,
+    action: AuthorizationActionCode.Create,
   })
   createDictionaryEnum(
     @Args('createDictionaryEnumInput')
@@ -34,8 +32,8 @@ export class DictionaryEnumResolver {
     description: '查询多个字典枚举',
   })
   @Permission({
-    resource: Resource.DictionaryEnum,
-    action: Action.Retrieve,
+    resource: AuthorizationResourceCode.DictionaryEnum,
+    action: AuthorizationActionCode.Retrieve,
   })
   getDictionaryEnums(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
@@ -50,8 +48,8 @@ export class DictionaryEnumResolver {
     description: '查询单个字典枚举',
   })
   @Permission({
-    resource: Resource.DictionaryEnum,
-    action: Action.Retrieve,
+    resource: AuthorizationResourceCode.DictionaryEnum,
+    action: AuthorizationActionCode.Retrieve,
   })
   getDictionaryEnum(@Args('id', { type: () => Int }) id: number) {
     return this.dictionaryEnumService.getDictionaryEnum(id);
@@ -61,8 +59,8 @@ export class DictionaryEnumResolver {
     description: '更新字典枚举',
   })
   @Permission({
-    resource: Resource.DictionaryEnum,
-    action: Action.Update,
+    resource: AuthorizationResourceCode.DictionaryEnum,
+    action: AuthorizationActionCode.Update,
   })
   updateDictionaryEnum(
     @Args('id', { type: () => Int }) id: number,
@@ -76,8 +74,8 @@ export class DictionaryEnumResolver {
     description: '删除字典枚举',
   })
   @Permission({
-    resource: Resource.DictionaryEnum,
-    action: Action.Delete,
+    resource: AuthorizationResourceCode.DictionaryEnum,
+    action: AuthorizationActionCode.Delete,
   })
   removeDictionaryEnum(@Args('id', { type: () => Int }) id: number) {
     return this.dictionaryEnumService.remove(id);

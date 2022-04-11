@@ -1,5 +1,7 @@
 import {
   Authorization,
+  AuthorizationAction,
+  AuthorizationResource,
   CONNECTION_BOOMART,
   CONNECTION_BOOMEMORY,
   Essay,
@@ -23,14 +25,14 @@ export class AuthService {
   constructor(
     @InjectRepository(Authorization, CONNECTION_BOOMEMORY)
     private readonly authorizationRepository: Repository<Authorization>,
-
     @InjectRepository(Essay, CONNECTION_BOOMART)
     private readonly essayRepository: Repository<Essay>,
-
+    @InjectRepository(AuthorizationResource, CONNECTION_BOOMEMORY)
+    private readonly authorizationResourceRepository: Repository<AuthorizationResource>,
+    @InjectRepository(AuthorizationAction, CONNECTION_BOOMEMORY)
+    private readonly authorizationActionRepository: Repository<AuthorizationAction>,
     private readonly userService: UserService,
-
     private readonly jwtService: JwtService,
-
     private readonly configService: ConfigService,
   ) {}
 
@@ -97,17 +99,21 @@ export class AuthService {
    * 查询权限树
    */
   async getAuthorizationTree() {
+    const getResourceKey = (tenantCode: string, resourceCode: string) =>
+      `${tenantCode}:${resourceCode}`;
+
     // 权限表查询
     const authorizations = await this.authorizationRepository.find({
-      relations: ['tenant'],
+      relations: ['tenant', 'resource', 'action'],
     });
 
     // 生成树
     return authorizations.reduce<AuthorizationNode[]>(
       (previous, authorization) => {
-        const operationNode = {
-          key: authorization.id,
-          title: authorization.action,
+        const actionNode = {
+          key: authorization.id.toString(),
+          title: authorization.action.name,
+          code: authorization.action.code,
         };
 
         // 查询租户 是否已经收集
@@ -116,39 +122,46 @@ export class AuthService {
         );
 
         if (!tenantNode) {
-          return previous.concat({
-            key: authorization.tenant.code,
-            title: authorization.tenant.name,
-            checkable: false,
-            children: [
-              {
-                key: authorization.resource,
-                title: authorization.resource,
-                checkable: false,
-                children: [operationNode],
-              },
-            ],
-          });
+          return previous.concat([
+            {
+              key: authorization.tenant.code,
+              title: authorization.tenant.name,
+              checkable: false,
+              code: authorization.tenant.code,
+              children: [
+                {
+                  key: `${authorization.tenant.code}:${authorization.resource.code}`,
+                  title: authorization.resource.name,
+                  checkable: false,
+                  children: [actionNode],
+                  code: authorization.resource.code,
+                },
+              ],
+            },
+          ]);
         }
 
         // 查询资源 是否已经收集
         const resourceNode = tenantNode.children.find(
-          (resource) => resource.key === authorization.resource,
+          (resource) =>
+            resource.key ===
+            getResourceKey(tenantNode.key, authorization.resource.code),
         );
 
         if (!resourceNode) {
           tenantNode.children.push({
-            key: authorization.resource,
-            title: authorization.resource,
+            key: getResourceKey(tenantNode.key, authorization.resource.code),
+            title: authorization.resource.name,
+            code: authorization.resource.code,
             checkable: false,
-            children: [operationNode],
+            children: [actionNode],
           });
 
           return previous;
         }
 
         // 添加操作节点
-        resourceNode.children.push(operationNode);
+        resourceNode.children.push(actionNode);
 
         return previous;
       },
@@ -164,5 +177,19 @@ export class AuthService {
       .createQueryBuilder()
       .where('createdById = :createdById', { createdById })
       .getCount();
+  }
+
+  /**
+   * 查询权限资源
+   */
+  getAuthorizationResources() {
+    return this.authorizationResourceRepository.find();
+  }
+
+  /**
+   * 查询权限操作
+   */
+  getAuthorizationActions() {
+    return this.authorizationActionRepository.find();
   }
 }

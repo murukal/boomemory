@@ -13,7 +13,6 @@ export class TenantService {
   constructor(
     @InjectRepository(Tenant, CONNECTION_BOOMEMORY)
     private readonly tenantRepository: Repository<Tenant>,
-
     private readonly menuService: MenuService,
   ) {}
 
@@ -75,7 +74,9 @@ export class TenantService {
     ).affected;
   }
 
-  /** 查询租户id对应的菜单 */
+  /**
+   * 查询租户对应的菜单
+   */
   async getTenantMenus(tenantCode: string) {
     return (
       await this.menuService.getMenus({

@@ -1,4 +1,8 @@
-import { User } from '@app/data-base/entities';
+import {
+  AuthorizationAction,
+  AuthorizationResource,
+  User,
+} from '@app/data-base/entities';
 import { UseGuards } from '@nestjs/common';
 import {
   Args,
@@ -82,5 +86,21 @@ export class AuthResolver {
   })
   getIsSelf(@Parent() user: User, @CurrentUser() current: User) {
     return !!current?.id && current?.id === user?.id;
+  }
+
+  @Query(() => [AuthorizationResource], {
+    name: 'authorizationResources',
+    description: '权限资源',
+  })
+  getAuthorizationResources() {
+    return this.authService.getAuthorizationResources();
+  }
+
+  @Query(() => [AuthorizationAction], {
+    name: 'authorizationActions',
+    description: '权限操作',
+  })
+  getAuthorizationActions() {
+    return this.authService.getAuthorizationActions();
   }
 }

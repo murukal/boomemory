@@ -1,15 +1,13 @@
-import {
-  Action,
-  Resource,
-} from '@app/data-base/entities/boomemory/authorization.entity';
+import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
+import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
 import { applyDecorators, UseGuards } from '@nestjs/common';
 import { SetMetadata } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
 import { PermissionGuard } from 'utils/guard';
 
 export interface Option {
-  resource: Resource;
-  action: Action;
+  resource: AuthorizationResourceCode;
+  action: AuthorizationActionCode;
 }
 
 export const PERMISSION_KEY = 'permission';
