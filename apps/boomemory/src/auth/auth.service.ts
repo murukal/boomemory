@@ -207,8 +207,11 @@ export class AuthService {
       },
     });
 
-    const authorizations = args.authorizations.flatMap((resource) => {
-      return resource.actionCodes.map((actionCode) => {
+    // 设置为删除
+    authorizeds.forEach((authorized) => (authorized.isDeleted = true));
+
+    args.authorizations.forEach((resource) => {
+      return resource.actionCodes.forEach((actionCode) => {
         const authorized = authorizeds.find(
           (authorized) =>
             authorized.actionCode === actionCode &&
@@ -219,18 +222,19 @@ export class AuthService {
         // 已存在，更新
         if (authorized) {
           authorized.isDeleted = false;
-          return authorized;
         }
 
         // 未存在，创建
-        return this.authorizationRepository.create({
-          tenantCode: args.tenantCode,
-          resourceCode: resource.resourceCode,
-          actionCode,
-        });
+        authorizeds.push(
+          this.authorizationRepository.create({
+            tenantCode: args.tenantCode,
+            resourceCode: resource.resourceCode,
+            actionCode,
+          }),
+        );
       });
     });
 
-    return !!(await this.authorizationRepository.save(authorizations)).length;
+    return !!(await this.authorizationRepository.save(authorizeds)).length;
   }
 }

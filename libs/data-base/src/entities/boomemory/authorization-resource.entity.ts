@@ -18,7 +18,7 @@ registerEnumType(AuthorizationResourceCode, {
 @ObjectType()
 @Entity()
 export class AuthorizationResource {
-  @Field(() => String, {
+  @Field(() => AuthorizationResourceCode, {
     description: '权限资源code',
   })
   @PrimaryColumn({
