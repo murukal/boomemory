@@ -16,6 +16,7 @@ import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { AuthorizationNode } from './dto/authorization-node';
+import { AuthorizationsArgs } from './dto/authorizations.args';
 import { FilterUserInput } from './dto/filter-user.input';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
@@ -105,6 +106,9 @@ export class AuthService {
     // 权限表查询
     const authorizations = await this.authorizationRepository.find({
       relations: ['tenant', 'resource', 'action'],
+      where: {
+        isDeleted: false,
+      },
     });
 
     // 生成树
@@ -191,5 +195,42 @@ export class AuthService {
    */
   getAuthorizationActions() {
     return this.authorizationActionRepository.find();
+  }
+
+  /**
+   * 分配权限
+   */
+  async setAuthorizations(args: AuthorizationsArgs) {
+    const authorizeds = await this.authorizationRepository.find({
+      where: {
+        tenantCode: args.tenantCode,
+      },
+    });
+
+    const authorizations = args.authorizations.flatMap((resource) => {
+      return resource.actionCodes.map((actionCode) => {
+        const authorized = authorizeds.find(
+          (authorized) =>
+            authorized.actionCode === actionCode &&
+            authorized.tenantCode === args.tenantCode &&
+            authorized.resourceCode === resource.resourceCode,
+        );
+
+        // 已存在，更新
+        if (authorized) {
+          authorized.isDeleted = false;
+          return authorized;
+        }
+
+        // 未存在，创建
+        return this.authorizationRepository.create({
+          tenantCode: args.tenantCode,
+          resourceCode: resource.resourceCode,
+          actionCode,
+        });
+      });
+    });
+
+    return !!(await this.authorizationRepository.save(authorizations)).length;
   }
 }

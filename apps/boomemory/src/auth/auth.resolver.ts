@@ -23,6 +23,7 @@ import { RegisterInput } from './dto/register.input';
 import { PaginatedUsers } from './dto/paginated-users';
 import { JwtAuthGuard } from './guard';
 import { FilterUserInput } from './dto/filter-user.input';
+import { AuthorizationsArgs } from './dto/authorizations.args';
 
 @Resolver(() => User)
 export class AuthResolver {
@@ -102,5 +103,12 @@ export class AuthResolver {
   })
   getAuthorizationActions() {
     return this.authService.getAuthorizationActions();
+  }
+
+  @Mutation(() => Boolean, {
+    description: '分配权限',
+  })
+  setAuthorizations(@Args() args: AuthorizationsArgs) {
+    return this.authService.setAuthorizations(args);
   }
 }
