@@ -1,10 +1,10 @@
 import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
 import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 class ActionNode {
-  @Field(() => Int, {
+  @Field(() => String, {
     description: '操作节点key',
   })
   key: string;
@@ -32,11 +32,6 @@ class ResourceNode {
   })
   title: string;
 
-  @Field(() => Boolean, {
-    description: '是否展示 Checkbox',
-  })
-  checkable: false;
-
   @Field(() => [ActionNode], {
     description: '操作列表',
   })
@@ -59,11 +54,6 @@ export class AuthorizationNode {
     description: '租户描述',
   })
   title: string;
-
-  @Field(() => Boolean, {
-    description: '是否展示 Checkbox',
-  })
-  checkable: false;
 
   @Field(() => [ResourceNode], {
     description: '资源列表',

@@ -15,6 +15,7 @@ import { constants, privateDecrypt } from 'crypto';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { TenantService } from '../tenant/tenant.service';
 import { AuthorizationNode } from './dto/authorization-node';
 import { AuthorizationsArgs } from './dto/authorizations.args';
 import { FilterUserInput } from './dto/filter-user.input';
@@ -35,6 +36,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly tenantService: TenantService,
   ) {}
 
   getValidatedUser(payload: LoginInput) {
@@ -100,8 +102,8 @@ export class AuthService {
    * 查询权限树
    */
   async getAuthorizationTree() {
-    const getResourceKey = (tenantCode: string, resourceCode: string) =>
-      `${tenantCode}:${resourceCode}`;
+    // 查询租户列表
+    const tenants = (await this.tenantService.getTenants()).items;
 
     // 权限表查询
     const authorizations = await this.authorizationRepository.find({
@@ -120,56 +122,43 @@ export class AuthService {
           code: authorization.action.code,
         };
 
-        // 查询租户 是否已经收集
+        // 查询租户
         const tenantNode = previous.find(
-          (tenant) => tenant.key === authorization.tenant.code,
+          (tenant) => tenant.code === authorization.tenant.code,
         );
 
-        if (!tenantNode) {
-          return previous.concat([
-            {
-              key: authorization.tenant.code,
-              title: authorization.tenant.name,
-              checkable: false,
-              code: authorization.tenant.code,
-              children: [
-                {
-                  key: `${authorization.tenant.code}:${authorization.resource.code}`,
-                  title: authorization.resource.name,
-                  checkable: false,
-                  children: [actionNode],
-                  code: authorization.resource.code,
-                },
-              ],
-            },
-          ]);
-        }
+        // 租户不存在，不生成权限
+        if (!tenantNode) return previous;
 
-        // 查询资源 是否已经收集
+        // 查询资源
         const resourceNode = tenantNode.children.find(
-          (resource) =>
-            resource.key ===
-            getResourceKey(tenantNode.key, authorization.resource.code),
+          (resource) => resource.code === authorization.resource.code,
         );
 
         if (!resourceNode) {
+          // 不存在：生成资源节点 and 添加操作节点
           tenantNode.children.push({
-            key: getResourceKey(tenantNode.key, authorization.resource.code),
+            // 生成唯一key
+            key: `${authorization.tenant.code}:${authorization.resource.code}`,
             title: authorization.resource.name,
             code: authorization.resource.code,
-            checkable: false,
             children: [actionNode],
           });
-
-          return previous;
+        } else {
+          // 存在：添加操作节点
+          resourceNode.children.push(actionNode);
         }
-
-        // 添加操作节点
-        resourceNode.children.push(actionNode);
 
         return previous;
       },
-      [],
+
+      // 初始化树
+      tenants.map((tenant) => ({
+        key: tenant.code,
+        title: tenant.name,
+        code: tenant.code,
+        children: [],
+      })),
     );
   }
 
