@@ -222,6 +222,7 @@ export class AuthService {
         // 已存在，更新
         if (authorized) {
           authorized.isDeleted = false;
+          return;
         }
 
         // 未存在，创建
