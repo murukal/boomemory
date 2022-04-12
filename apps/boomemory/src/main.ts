@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser = require('cookie-parser');
 import { getDynamicCorsOptions } from 'utils/cors';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,11 +14,11 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  await app.listen(3200);
-  console.log('http://localhost:3200');
+  const configService = app.get(ConfigService);
+  const port = configService.get('PORT') || 3200;
 
-  // await app.listen(9000);
-  // console.log('http://localhost:9000');
+  await app.listen(port);
+  console.log(`http://localhost:${port}`);
 }
 
 bootstrap();

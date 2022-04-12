@@ -25,6 +25,7 @@ import { getDynamicCorsOptions } from 'utils/cors';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [jwtConfig, rsaConfig],
+      envFilePath: ['.env.development.local'],
     }),
 
     GraphQLModule.forRoot<ApolloDriverConfig>({
