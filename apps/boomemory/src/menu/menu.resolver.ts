@@ -22,12 +22,12 @@ import { Menu } from '@app/data-base/entities';
 export class MenuResolver {
   constructor(private readonly menuService: MenuService) {}
 
-  @Mutation(() => Menu, { description: '创建菜单' })
+  @Mutation(() => Boolean, { description: '创建菜单' })
   @Permission({
     resource: AuthorizationResourceCode.Menu,
     action: AuthorizationActionCode.Create,
   })
-  createMenu(@Args('createMenuInput') menu: CreateMenuInput) {
+  createMenu(@Args('createMenuInput') menu: CreateMenuInput): Promise<boolean> {
     return this.menuService.create(menu);
   }
 
@@ -58,10 +58,10 @@ export class MenuResolver {
   }
 
   @Mutation(() => Boolean, { description: '更新菜单' })
-  // @Permission({
-  //   resource: AuthorizationResourceCode.menu,
-  //   action: AuthorizationActionCode.Update,
-  // })
+  @Permission({
+    resource: AuthorizationResourceCode.Menu,
+    action: AuthorizationActionCode.Update,
+  })
   updateMenu(
     @Args('id', { type: () => Int }) id: number,
     @Args('updateMenuInput') menu: UpdateMenuInput,
@@ -100,5 +100,13 @@ export class MenuResolver {
         },
       })
     ).items;
+  }
+
+  @ResolveField(() => [AuthorizationResourceCode], {
+    description: '关联的权限资源codes',
+    name: 'resourceCodes',
+  })
+  getResourceCodes(@Parent() parent: Menu) {
+    return this.menuService.getResourceCodes(parent.id);
   }
 }

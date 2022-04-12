@@ -112,31 +112,30 @@ export class EssayService {
   async update(id: number, essay: UpdateEssayInput) {
     const { tagIds, ...updateEssayInput } = essay;
 
-    // 更新关联的tags
-    await this.essayRepository
-      .createQueryBuilder()
-      .relation('tags')
-      .of(id)
-      .addAndRemove(
-        tagIds,
-        (
-          await this.essayRepository
-            .createQueryBuilder()
-            .relation('tags')
-            .of(id)
-            .loadMany()
-        ).map((tag) => tag.id),
-      );
-
     // 更新文章
-    return !!(
-      await this.essayRepository
+    !!Object.keys(updateEssayInput).length &&
+      (await this.essayRepository
         .createQueryBuilder()
         .update()
         .set(updateEssayInput)
         .whereInIds(id)
-        .execute()
-    ).affected;
+        .execute());
+
+    // 更新关联的tagIds
+    if (tagIds) {
+      const tagQueryBuild = this.essayRepository
+        .createQueryBuilder()
+        .relation('tags')
+        .of(id);
+
+      await tagQueryBuild.addAndRemove(
+        tagIds,
+        (await tagQueryBuild.loadMany<Tag>()).map((tag) => tag.id),
+      );
+    }
+
+    // 更新文章
+    return true;
   }
 
   /**

@@ -1,7 +1,15 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { IsString, MaxLength } from 'class-validator';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { CoreEntity } from '../core.entity';
+import { AuthorizationResource } from './authorization-resource.entity';
 import { Tenant } from './tenant.entity';
 
 @ObjectType()
@@ -51,4 +59,8 @@ export class Menu extends CoreEntity {
 
   @OneToMany(() => Menu, (menu) => menu.parent)
   children?: Menu[];
+
+  @ManyToMany(() => AuthorizationResource)
+  @JoinTable()
+  resources: AuthorizationResource[];
 }
