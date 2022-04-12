@@ -1,13 +1,13 @@
 import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
 import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 class ActionNode {
-  @Field(() => String, {
+  @Field(() => Int, {
     description: '操作节点key',
   })
-  key: string;
+  key: number;
 
   @Field(() => String, {
     description: '操作描述',

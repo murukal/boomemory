@@ -117,7 +117,7 @@ export class AuthService {
     return authorizations.reduce<AuthorizationNode[]>(
       (previous, authorization) => {
         const actionNode = {
-          key: authorization.id.toString(),
+          key: authorization.id,
           title: authorization.action.name,
           code: authorization.action.code,
         };
