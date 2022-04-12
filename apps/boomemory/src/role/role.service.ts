@@ -10,7 +10,6 @@ import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { Option } from 'utils/decorator/permission.decorator';
-import { AuthService } from '../auth/auth.service';
 import { CreateRoleInput } from './dto/create-role.input';
 import { UpdateRoleInput } from './dto/update-role.input';
 
@@ -19,8 +18,6 @@ export class RoleService {
   constructor(
     @InjectRepository(Role, CONNECTION_BOOMEMORY)
     private readonly roleRepository: Repository<Role>,
-
-    private readonly authService: AuthService,
   ) {}
 
   /**
@@ -143,5 +140,12 @@ export class RoleService {
         action: option.action,
       })
       .getCount());
+  }
+
+  /**
+   * 获取当前用户对应的权限
+   */
+  getAuthorizationsByUserId(id: number) {
+    return [];
   }
 }

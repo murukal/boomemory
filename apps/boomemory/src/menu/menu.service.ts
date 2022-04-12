@@ -43,6 +43,11 @@ export class MenuService {
    * 查询多个菜单
    */
   async getMenus(query?: QueryParams<FilterMenuInput>) {
+    // 角色权限
+    // if (tenant.isAuthorizate) {
+    //   this.roleService.getAuthorizationsByUserId(1);
+    // }
+
     return paginateQuery(this.menuRepository, query);
   }
 
