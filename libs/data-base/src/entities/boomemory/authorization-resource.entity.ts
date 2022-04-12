@@ -8,6 +8,11 @@ export enum AuthorizationResourceCode {
   Role = 'role',
   Dictionary = 'dictionary',
   DictionaryEnum = 'dictionary-enum',
+  User = 'user',
+  Essay = 'essay',
+  Tag = 'tag',
+  Toggle = 'toggle',
+  Comment = 'comment',
 }
 
 registerEnumType(AuthorizationResourceCode, {
