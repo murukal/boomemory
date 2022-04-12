@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { RoleService } from '../role/role.service';
 import { CreateMenuInput } from './dto/create-menu.input';
 import { FilterMenuInput } from './dto/filter-menu.input';
 import { UpdateMenuInput } from './dto/update-menu.input';
@@ -17,6 +18,7 @@ export class MenuService {
   constructor(
     @InjectRepository(Menu, CONNECTION_BOOMEMORY)
     private readonly menuRepository: Repository<Menu>,
+    private readonly roleService: RoleService,
   ) {}
 
   /**
@@ -42,11 +44,14 @@ export class MenuService {
   /**
    * 查询多个菜单
    */
-  async getMenus(query?: QueryParams<FilterMenuInput>) {
+  async getMenus(query?: QueryParams<FilterMenuInput>, userId?: number) {
     // 角色权限
-    // if (tenant.isAuthorizate) {
-    //   this.roleService.getAuthorizationsByUserId(1);
-    // }
+    if (userId) {
+      this.roleService.getAuthorizationsByUserId(
+        userId,
+        query?.filterInput?.tenantCode,
+      );
+    }
 
     return paginateQuery(this.menuRepository, query);
   }

@@ -16,7 +16,10 @@ import { FilterMenuInput } from './dto/filter-menu.input';
 import { Permission } from 'utils/decorator/permission.decorator';
 import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
 import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
-import { Menu } from '@app/data-base/entities';
+import { Menu, User } from '@app/data-base/entities';
+import { CurrentUser } from 'utils/decorator/current-user.decorator';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guard';
 
 @Resolver(() => Menu)
 export class MenuResolver {
@@ -35,17 +38,22 @@ export class MenuResolver {
     name: 'menus',
     description: '查询多个菜单',
   })
+  @UseGuards(new JwtAuthGuard(true))
   getMenus(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
     @Args('filterInput', { nullable: true }) filterInput: FilterMenuInput,
+    @CurrentUser() user: User,
   ) {
-    return this.menuService.getMenus({
-      paginateInput,
-      filterInput,
-      sortInput: {
-        sortBy: 'ASC',
+    return this.menuService.getMenus(
+      {
+        paginateInput,
+        filterInput,
+        sortInput: {
+          sortBy: 'ASC',
+        },
       },
-    });
+      user?.id,
+    );
   }
 
   @Query(() => Menu, { name: 'menu', description: '查询单个菜单' })

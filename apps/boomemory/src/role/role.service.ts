@@ -4,6 +4,8 @@ import {
   Role,
   User,
 } from '@app/data-base/entities';
+import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
+import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -145,7 +147,33 @@ export class RoleService {
   /**
    * 获取当前用户对应的权限
    */
-  getAuthorizationsByUserId(id: number) {
-    return [];
+  async getAuthorizationsByUserId(id: number, tenantCode?: string) {
+    console.log('id====', id);
+
+    // 获取当前用户对应的角色
+    const resourceCodes = (
+      (await this.roleRepository
+        .createQueryBuilder('role')
+        .innerJoinAndSelect('role.users', 'user')
+        .innerJoinAndSelect('role.authorizations', 'authorization')
+        .where('user.id = :userId', {
+          userId: id,
+        })
+        .andWhere('authorization.actionCode = :actionCode', {
+          actionCode: AuthorizationActionCode.Retrieve,
+        })
+        .andWhere(
+          tenantCode ? 'authorization.tenantCode = :tenantCode' : '1 = 1',
+          {
+            tenantCode,
+          },
+        )
+        .select('DISTINCT authorization.resourceCode')
+        .execute()) as { resourceCode: AuthorizationResourceCode }[]
+    ).map((item) => item.resourceCode);
+
+    console.log('roles====', resourceCodes);
+
+    return resourceCodes;
   }
 }
