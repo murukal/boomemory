@@ -32,7 +32,7 @@ export class TagService {
    * 查询单个标签
    */
   getTag(id: number) {
-    return this.tagRepository.findOne(id);
+    return this.tagRepository.findOneBy({ id });
   }
 
   /**

@@ -18,19 +18,17 @@ export class UserService {
    * 获取单个用户
    */
   getUser(keyword: number | string) {
-    return this.userRepository.findOne({
-      where: [
-        {
-          id: keyword,
-        },
-        {
-          username: keyword,
-        },
-        {
-          email: keyword,
-        },
-      ],
-    });
+    return this.userRepository.findOneBy([
+      {
+        id: keyword as number,
+      },
+      {
+        username: keyword as string,
+      },
+      {
+        email: keyword as string,
+      },
+    ]);
   }
 
   /**

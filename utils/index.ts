@@ -11,10 +11,20 @@ export const paginateQuery = async <T, F>(
     ? (query?.paginateInput?.page - 1) * query?.paginateInput?.limit
     : 0;
 
-  // 生成查询 sql
-  const [items, totalCount] = await repository
-    .createQueryBuilder()
-    .where(query?.filterInput || {})
+  // 生成查询 sql qb
+  const queryBuild = repository.createQueryBuilder();
+
+  // 注入where条件
+  const filterInput = query?.filterInput || {};
+
+  if (Array.isArray(filterInput)) {
+    filterInput.forEach((where) => queryBuild.andWhere(where || {}));
+  } else {
+    queryBuild.where(filterInput);
+  }
+
+  // 执行sql
+  const [items, totalCount] = await queryBuild
     .skip(skip)
     .take(query?.paginateInput?.limit)
     .orderBy(query?.sortInput)

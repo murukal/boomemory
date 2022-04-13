@@ -103,7 +103,7 @@ export class EssayService {
    * 查询单个文章
    */
   getEssay(id: number) {
-    return this.essayRepository.findOne(id);
+    return this.essayRepository.findOneBy({ id });
   }
 
   /**
@@ -156,7 +156,10 @@ export class EssayService {
    */
   async getTags(id: number) {
     return (
-      await this.essayRepository.findOne(id, {
+      await this.essayRepository.findOne({
+        where: {
+          id,
+        },
         relations: ['tags'],
       })
     ).tags;
@@ -173,9 +176,9 @@ export class EssayService {
    * 查询创作者
    */
   async getCreatedBy(id: number) {
-    return this.userRepository.findOne(
-      (await this.essayRepository.findOne(id)).createdById,
-    );
+    return this.userRepository.findOneBy({
+      id: (await this.essayRepository.findOneBy({ id })).createdById,
+    });
   }
 
   /**

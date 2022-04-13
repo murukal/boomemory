@@ -23,7 +23,7 @@ export class ToggleService {
    */
   async create(toggle: CreateToggleInput, createdById: number) {
     // 触发事件已经存在，直接返回true
-    const isExisted = !!(await this.toggleRepository.count({
+    const isExisted = !!(await this.toggleRepository.countBy({
       ...toggle,
       createdById,
     }));

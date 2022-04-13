@@ -5,7 +5,7 @@ import {
 } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { RoleService } from '../role/role.service';
@@ -45,22 +45,52 @@ export class MenuService {
    * 查询多个菜单
    */
   async getMenus(query?: QueryParams<FilterMenuInput>, userId?: number) {
+    const { filterInput, ...otherQuery } = query || {};
+    const filterInputs = [filterInput];
+
     // 角色权限
     if (userId) {
-      this.roleService.getAuthorizationsByUserId(
+      const resourceCodes = await this.roleService.getResourceCodesByUserId(
         userId,
         query?.filterInput?.tenantCode,
       );
+
+      const menuIds = (
+        (await this.menuRepository
+          .createQueryBuilder('menu')
+          .leftJoinAndSelect('menu.resources', 'resource')
+          .select('menu.id as id')
+          .where(
+            `${
+              resourceCodes.length
+                ? 'resource.code IN (:...resourceCodes) OR '
+                : ''
+            }resource.code IS NULL`,
+            {
+              resourceCodes,
+            },
+          )
+          .execute()) as {
+          id: number;
+        }[]
+      ).map((item) => item.id);
+
+      filterInputs.push({
+        id: In(menuIds),
+      });
     }
 
-    return paginateQuery(this.menuRepository, query);
+    return paginateQuery<Menu, FilterMenuInput[]>(this.menuRepository, {
+      ...otherQuery,
+      filterInput: filterInputs,
+    });
   }
 
   /**
    * 查询单个菜单
    */
   getMenu(id: number) {
-    return this.menuRepository.findOne(id);
+    return this.menuRepository.findOneBy({ id });
   }
 
   /**

@@ -35,7 +35,7 @@ export class DictionaryEnumService {
    * 查询单个字典枚举
    */
   getDictionaryEnum(id: number) {
-    return this.dictionaryEnumRepository.findOne(id);
+    return this.dictionaryEnumRepository.findOneBy({ id });
   }
 
   /**

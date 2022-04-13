@@ -1,4 +1,5 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
+import { FindOperator } from 'typeorm';
 
 @InputType()
 export class FilterMenuInput {
@@ -7,4 +8,6 @@ export class FilterMenuInput {
 
   @Field(() => String, { nullable: true, description: '租户Code' })
   tenantCode?: string;
+
+  id?: FindOperator<number>;
 }

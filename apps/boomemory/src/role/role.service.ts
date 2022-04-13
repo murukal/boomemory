@@ -40,7 +40,7 @@ export class RoleService {
    * 查询单个角色
    */
   getRole(id: number) {
-    return this.roleRepository.findOne(id);
+    return this.roleRepository.findOneBy({ id });
   }
 
   /**
@@ -145,12 +145,10 @@ export class RoleService {
   }
 
   /**
-   * 获取当前用户对应的权限
+   * 获取当前用户对应的权限资源
    */
-  async getAuthorizationsByUserId(id: number, tenantCode?: string) {
-    console.log('id====', id);
-
-    // 获取当前用户对应的角色
+  async getResourceCodesByUserId(id: number, tenantCode?: string) {
+    // 获取当前用户对应的角色 -> 根据角色获取角色关联的权限资源
     const resourceCodes = (
       (await this.roleRepository
         .createQueryBuilder('role')
@@ -171,8 +169,6 @@ export class RoleService {
         .select('DISTINCT authorization.resourceCode')
         .execute()) as { resourceCode: AuthorizationResourceCode }[]
     ).map((item) => item.resourceCode);
-
-    console.log('roles====', resourceCodes);
 
     return resourceCodes;
   }

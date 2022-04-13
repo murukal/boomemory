@@ -34,7 +34,7 @@ export class DictionaryService {
    * 查询单个字典
    */
   getDictionay(id: number) {
-    return this.dictionaryRepository.findOne(id);
+    return this.dictionaryRepository.findOneBy({ id });
   }
 
   /**
