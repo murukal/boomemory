@@ -17,8 +17,8 @@ export class UserService {
   /**
    * 获取单个用户
    */
-  getUser(keyword: number | string) {
-    return this.userRepository.findOneBy([
+  async getUser(keyword: number | string) {
+    const user = await this.userRepository.findOneBy([
       {
         id: keyword as number,
       },
@@ -29,6 +29,8 @@ export class UserService {
         email: keyword as string,
       },
     ]);
+
+    return user;
   }
 
   /**

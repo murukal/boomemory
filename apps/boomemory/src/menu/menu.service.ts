@@ -5,7 +5,7 @@ import {
 } from '@app/data-base/entities';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { RoleService } from '../role/role.service';
@@ -55,29 +55,28 @@ export class MenuService {
         query?.filterInput?.tenantCode,
       );
 
+      // 排除权限外的menu id
       const menuIds = (
         (await this.menuRepository
           .createQueryBuilder('menu')
           .leftJoinAndSelect('menu.resources', 'resource')
           .select('menu.id as id')
-          .where(
-            `${
-              resourceCodes.length
-                ? 'resource.code IN (:...resourceCodes) OR '
-                : ''
-            }resource.code IS NULL`,
+          .where(filterInput || {})
+          .andWhere(
+            resourceCodes.length
+              ? 'resource.code NOT IN (:...resourceCodes)'
+              : 'resource.code IS NOT NULL',
             {
               resourceCodes,
             },
           )
-          .execute()) as {
-          id: number;
-        }[]
+          .execute()) as { id: number }[]
       ).map((item) => item.id);
 
-      filterInputs.push({
-        id: In(menuIds),
-      });
+      menuIds.length &&
+        filterInputs.push({
+          id: Not(In([menuIds])),
+        });
     }
 
     return paginateQuery<Menu, FilterMenuInput[]>(this.menuRepository, {

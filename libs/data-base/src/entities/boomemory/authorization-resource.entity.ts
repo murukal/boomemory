@@ -13,6 +13,7 @@ export enum AuthorizationResourceCode {
   Tag = 'tag',
   Toggle = 'toggle',
   Comment = 'comment',
+  Authorization = 'authorization',
 }
 
 registerEnumType(AuthorizationResourceCode, {
