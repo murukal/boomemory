@@ -21,6 +21,7 @@ import { AuthorizationsArgs } from './dto/authorizations.args';
 import { FilterUserInput } from './dto/filter-user.input';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
+import { compareSync } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -39,8 +40,28 @@ export class AuthService {
     private readonly tenantService: TenantService,
   ) {}
 
-  getValidatedUser(payload: LoginInput) {
-    return this.userService.getUser(payload.keyword);
+  async getValidatedUser(payload: LoginInput) {
+    // 根据关键字获取用户
+    const user = await this.userService.getUser(payload.keyword, {
+      id: true,
+      password: true,
+    });
+
+    if (!user) throw new UnauthorizedException('用户名或者密码错误！');
+
+    // 校验密码
+    const isPasswordValidate = compareSync(
+      this.decryptByRsaPrivateKey(
+        payload.password,
+        this.configService.get<string>('rsa.privateKey'),
+      ),
+      user.password,
+    );
+
+    if (!isPasswordValidate)
+      throw new UnauthorizedException('用户名或者密码错误！');
+
+    return user;
   }
 
   sign(id: number) {

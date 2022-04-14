@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilterUserInput } from 'apps/boomemory/src/auth/dto/filter-user.input';
 import { RegisterInput } from 'apps/boomemory/src/auth/dto/register.input';
-import { In, Not, Repository } from 'typeorm';
+import { FindOptionsSelect, In, Not, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 
@@ -17,18 +17,21 @@ export class UserService {
   /**
    * 获取单个用户
    */
-  async getUser(keyword: number | string) {
-    const user = await this.userRepository.findOneBy([
-      {
-        id: keyword as number,
-      },
-      {
-        username: keyword as string,
-      },
-      {
-        email: keyword as string,
-      },
-    ]);
+  async getUser(keyword: number | string, select?: FindOptionsSelect<User>) {
+    const user = await this.userRepository.findOne({
+      select: select,
+      where: [
+        {
+          id: keyword as number,
+        },
+        {
+          username: keyword as string,
+        },
+        {
+          email: keyword as string,
+        },
+      ],
+    });
 
     return user;
   }
