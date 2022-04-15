@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { CreateTagInput } from './dto/create-tag.input';
+import { TopTag } from './dto/top-tag';
 import { UpdateTagInput } from './dto/update-tag.input';
 
 @Injectable()
@@ -67,16 +68,16 @@ export class TagService {
   /**
    * 查询榜单标签
    */
-  getTopTags() {
-    return this.tagRepository
+  async getTopTags(limit = 5) {
+    return (await this.tagRepository
       .createQueryBuilder('tag')
       .innerJoin('tag.essays', 'essay')
       .select('tag.id', 'id')
       .addSelect('tag.name', 'name')
-      .addSelect('COUNT(*)', 'creationCount')
+      .addSelect('COUNT(essay.id)', 'creationCount')
       .groupBy('tag.id')
       .orderBy('creationCount', 'DESC')
-      .limit(5)
-      .execute();
+      .limit(limit)
+      .execute()) as TopTag[];
   }
 }

@@ -93,7 +93,7 @@ export class ToggleService {
       (await this.toggleRepository
         .createQueryBuilder()
         .select('targetId')
-        .addSelect('COUNT( id )', 'count')
+        .addSelect('COUNT(id)', 'count')
         .where({ targetType, type: topInput.type })
         .andWhere({
           createdAt: MoreThanOrEqual(topInput.from),
@@ -142,8 +142,8 @@ export class ToggleService {
       .andWhere({
         createdAt: LessThanOrEqual(dailyCloutArgs.to),
       })
-      .select("DATE_FORMAT( createdAt, '%Y-%m-%d' )", 'createdAtDate')
-      .addSelect('COUNT( id )', 'clout')
+      .select("DATE_FORMAT(createdAt, '%Y-%m-%d')", 'createdAtDate')
+      .addSelect('COUNT(id)', 'clout')
       .groupBy('createdAtDate')
       .execute()) as DailyClout[];
   }

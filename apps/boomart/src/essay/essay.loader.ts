@@ -11,6 +11,9 @@ export class EssayLoader {
     private readonly essayRepository: Repository<Essay>,
   ) {}
 
+  /**
+   * 根据文章id读取文章对应的标签
+   */
   public readonly getTagsByEssayId = new DataLoader<number, Tag[]>(
     async (essayIds) => {
       const essays = await this.essayRepository

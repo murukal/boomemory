@@ -5,11 +5,15 @@ import { UpdateTagInput } from './dto/update-tag.input';
 import { Tag } from '@app/data-base/entities/boomart/tag.entity';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedTags } from './dto/paginated-tags';
-import { TopTag } from './dto/top-tag';
+import { TopTag, TopTagArgs } from './dto/top-tag';
+import { TagLoader } from './tag.loader';
 
 @Resolver()
 export class TagResolver {
-  constructor(private readonly tagService: TagService) {}
+  constructor(
+    private readonly tagService: TagService,
+    private readonly tagLoader: TagLoader,
+  ) {}
 
   @Mutation(() => Tag, {
     description: '创建标签',
@@ -49,7 +53,12 @@ export class TagResolver {
     name: 'topTags',
     description: '标签榜单',
   })
-  getTopTags() {
-    return this.tagService.getTopTags();
+  async getTopTags(@Args() topTagArgs: TopTagArgs): Promise<TopTag[]> {
+    return this.tagLoader.initializeGetDailyHeatByTagId(
+      topTagArgs.from,
+      topTagArgs.to,
+    )
+      ? this.tagService.getTopTags()
+      : [];
   }
 }
