@@ -1,10 +1,14 @@
 import { CONNECTION_BOOMART, Toggle } from '@app/data-base/entities';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  TargetType,
+  Type,
+} from '@app/data-base/entities/boomart/toggle.entity';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { TargetType, Type } from 'utils/dto/toggle-enum';
+import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { EssayService } from '../essay/essay.service';
 import { CreateToggleInput } from './dto/create-toggle.input';
+import { DailyClout, DailyCloutArgs } from './dto/daily-clout.args';
 import { RemoveToggleInput } from './dto/remove-toggle.input';
 import { TopInput } from './dto/top.input';
 
@@ -13,8 +17,6 @@ export class ToggleService {
   constructor(
     @InjectRepository(Toggle, CONNECTION_BOOMART)
     private readonly toggleRepository: Repository<Toggle>,
-
-    @Inject(forwardRef(() => EssayService))
     private readonly essayService: EssayService,
   ) {}
 
@@ -22,15 +24,23 @@ export class ToggleService {
    * 创建触发事件
    */
   async create(toggle: CreateToggleInput, createdById: number) {
-    // 触发事件已经存在，直接返回true
-    const isExisted = !!(await this.toggleRepository.countBy({
-      ...toggle,
-      createdById,
-    }));
+    // 事件类型需要鉴权
+    if (![Type.Browse].includes(toggle.type) && !createdById) {
+      throw new UnauthorizedException('用户未登录！');
+    }
 
-    if (isExisted) return true;
+    // 事件类型不可二次创建
+    if (
+      ![Type.Browse].includes(toggle.type) &&
+      (await this.toggleRepository.countBy({
+        ...toggle,
+        createdById,
+      }))
+    ) {
+      return true;
+    }
 
-    // 不存在，创建
+    // 创建事件
     return !!(await this.toggleRepository.save(
       this.toggleRepository.create({
         ...toggle,
@@ -58,9 +68,9 @@ export class ToggleService {
   }
 
   /**
-   * 获取流量
+   * 获取目标流量
    */
-  getClout(type: Type, targetType: TargetType, targetId: number) {
+  getClout4Target(type: Type, targetType: TargetType, targetId: number) {
     return this.toggleRepository
       .createQueryBuilder()
       .where('type = :type', {
@@ -80,26 +90,23 @@ export class ToggleService {
    */
   async getTopTargetIds(targetType: TargetType, topInput: TopInput) {
     return (
-      await this.toggleRepository
+      (await this.toggleRepository
         .createQueryBuilder()
         .select('targetId')
-        .addSelect('COUNT(id)', 'count')
-        .where('targetType = :targetType', { targetType })
-        .andWhere('type = :type', {
-          type: topInput.type,
+        .addSelect('COUNT( id )', 'count')
+        .where({ targetType, type: topInput.type })
+        .andWhere({
+          createdAt: MoreThanOrEqual(topInput.from),
         })
-        .andWhere('createdAt >= :from', {
-          from: topInput.from,
-        })
-        .andWhere('createdAt <= :to', {
-          to: topInput.to,
+        .andWhere({
+          createdAt: LessThanOrEqual(topInput.to),
         })
         .groupBy('targetId')
         .orderBy('count', 'DESC')
         .take(topInput.limit)
-        .execute()
-    ).map((item: { targetId: number; count: string }) => {
-      return item.targetId;
+        .execute()) as { targetId: number; count: string }[]
+    ).map((top) => {
+      return top.targetId;
     });
   }
 
@@ -107,7 +114,7 @@ export class ToggleService {
    * 获取榜单目标
    */
   async getTopEssays(topInput: TopInput) {
-    const ids = await this.getTopTargetIds(TargetType.essay, topInput);
+    const ids = await this.getTopTargetIds(TargetType.Essay, topInput);
 
     return (
       await this.essayService.getEssays({
@@ -116,5 +123,28 @@ export class ToggleService {
         },
       })
     ).items;
+  }
+
+  /**
+   * 获取指定时间范围内的流量
+   * 并按照日期进行分组
+   */
+  async getDailyClout(dailyCloutArgs?: DailyCloutArgs) {
+    return (await this.toggleRepository
+      .createQueryBuilder()
+      .where({
+        type: dailyCloutArgs.type,
+        targetType: dailyCloutArgs.targetType,
+      })
+      .andWhere({
+        createdAt: MoreThanOrEqual(dailyCloutArgs.from),
+      })
+      .andWhere({
+        createdAt: LessThanOrEqual(dailyCloutArgs.to),
+      })
+      .select("DATE_FORMAT( createdAt, '%Y-%m-%d' )", 'createdAtDate')
+      .addSelect('COUNT( id )', 'clout')
+      .groupBy('createdAtDate')
+      .execute()) as DailyClout[];
   }
 }

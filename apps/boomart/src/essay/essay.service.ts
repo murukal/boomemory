@@ -6,12 +6,15 @@ import {
   Toggle,
   User,
 } from '@app/data-base/entities';
+import {
+  TargetType,
+  Type,
+} from '@app/data-base/entities/boomart/toggle.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
-import { TargetType, Type } from 'utils/dto/toggle-enum';
 import { CreateEssayInput } from './dto/create-essay.input';
 import { FilterEssayInput } from './dto/filter-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
@@ -21,13 +24,8 @@ export class EssayService {
   constructor(
     @InjectRepository(Essay, CONNECTION_BOOMART)
     private readonly essayRepository: Repository<Essay>,
-
-    @InjectRepository(Tag, CONNECTION_BOOMART)
-    private readonly tagRepository: Repository<Tag>,
-
     @InjectRepository(User, CONNECTION_BOOMEMORY)
     private readonly userRepository: Repository<User>,
-
     @InjectRepository(Toggle, CONNECTION_BOOMART)
     private readonly toggleRepository: Repository<Toggle>,
   ) {}
@@ -149,27 +147,6 @@ export class EssayService {
         .whereInIds(id)
         .execute()
     ).affected;
-  }
-
-  /**
-   * 查询文章的tags
-   */
-  async getTags(id: number) {
-    return (
-      await this.essayRepository.findOne({
-        where: {
-          id,
-        },
-        relations: ['tags'],
-      })
-    ).tags;
-  }
-
-  /**
-   * 查询文章的tagIds
-   */
-  async getTagIds(id: number) {
-    return (await this.getTags(id)).map((tag) => tag.id);
   }
 
   /**

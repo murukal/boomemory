@@ -60,7 +60,7 @@ export class MenuService {
         (await this.menuRepository
           .createQueryBuilder('menu')
           .leftJoinAndSelect('menu.resources', 'resource')
-          .select('menu.id as id')
+          .select('menu.id', 'id')
           .where(filterInput || {})
           .andWhere(
             resourceCodes.length

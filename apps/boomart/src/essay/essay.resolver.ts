@@ -18,14 +18,19 @@ import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { FilterEssayInput } from './dto/filter-essay.input';
 import { ToggleService } from '../toggle/toggle.service';
-import { TargetType, Type } from 'utils/dto/toggle-enum';
 import { Essay } from '@app/data-base/entities';
+import {
+  TargetType,
+  Type,
+} from '@app/data-base/entities/boomart/toggle.entity';
+import { EssayLoader } from './essay.loader';
 
 @Resolver(() => Essay)
 export class EssayResolver {
   constructor(
     private readonly essayService: EssayService,
     private readonly toggleService: ToggleService,
+    private readonly essayLoader: EssayLoader,
   ) {}
 
   @Mutation(() => Essay, {
@@ -84,15 +89,17 @@ export class EssayResolver {
     description: '文章对应的tag',
   })
   getTags(@Parent() essay: Essay) {
-    return this.essayService.getTags(essay.id);
+    return this.essayLoader.getTagsByEssayId.load(essay.id);
   }
 
   @ResolveField(() => [Int], {
     name: 'tagIds',
     description: '文章对应的tagIds',
   })
-  getTagIds(@Parent() essay: Essay) {
-    return this.essayService.getTagIds(essay.id);
+  async getTagIds(@Parent() essay: Essay) {
+    return (await this.essayLoader.getTagsByEssayId.load(essay.id)).map(
+      (tag) => tag.id,
+    );
   }
 
   @ResolveField('createdBy', () => User, {
@@ -103,29 +110,37 @@ export class EssayResolver {
   }
 
   @ResolveField(() => Int, {
-    name: `${Type.browse}Clout`,
+    name: `${Type.Browse}Clout`,
     description: '浏览量',
   })
   getBrowseClout(@Parent() essay: Essay) {
-    return this.toggleService.getClout(Type.browse, TargetType.essay, essay.id);
+    return this.toggleService.getClout4Target(
+      Type.Browse,
+      TargetType.Essay,
+      essay.id,
+    );
   }
 
   @ResolveField(() => Int, {
-    name: `${Type.like}Clout`,
+    name: `${Type.Like}Clout`,
     description: '点赞量',
   })
   getLikeClout(@Parent() essay: Essay) {
-    return this.toggleService.getClout(Type.like, TargetType.essay, essay.id);
+    return this.toggleService.getClout4Target(
+      Type.Like,
+      TargetType.Essay,
+      essay.id,
+    );
   }
 
   @ResolveField(() => Int, {
-    name: `${Type.collect}Clout`,
+    name: `${Type.Collect}Clout`,
     description: '收藏量',
   })
   getCollectClout(@Parent() essay: Essay) {
-    return this.toggleService.getClout(
-      Type.collect,
-      TargetType.essay,
+    return this.toggleService.getClout4Target(
+      Type.Collect,
+      TargetType.Essay,
       essay.id,
     );
   }
@@ -136,8 +151,8 @@ export class EssayResolver {
   })
   getIsLiked(@CurrentUser() user: User, @Parent() essay: Essay) {
     return this.essayService.getIsToggled(user.id, {
-      type: Type.like,
-      targetType: TargetType.essay,
+      type: Type.Like,
+      targetType: TargetType.Essay,
       targetId: essay.id,
     });
   }
@@ -148,8 +163,8 @@ export class EssayResolver {
   })
   getIsCollected(@CurrentUser() user: User, @Parent() essay: Essay) {
     return this.essayService.getIsToggled(user.id, {
-      type: Type.collect,
-      targetType: TargetType.essay,
+      type: Type.Collect,
+      targetType: TargetType.Essay,
       targetId: essay.id,
     });
   }

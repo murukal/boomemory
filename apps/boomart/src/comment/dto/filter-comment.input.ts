@@ -1,5 +1,5 @@
+import { TargetType } from '@app/data-base/entities/boomart/toggle.entity';
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { TargetType } from 'utils/dto/toggle-enum';
 
 @InputType()
 export class FilterCommentInput {

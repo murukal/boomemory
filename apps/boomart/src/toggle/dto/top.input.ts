@@ -1,5 +1,5 @@
+import { Type } from '@app/data-base/entities/boomart/toggle.entity';
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { Type } from 'utils/dto/toggle-enum';
 
 @InputType()
 export class TopInput {

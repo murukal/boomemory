@@ -1,13 +1,35 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
-import { TargetType, Type } from 'utils/dto/toggle-enum';
 import { CoreEntity } from '../core.entity';
+
+export enum Type {
+  Browse = 'browse',
+  Like = 'like',
+  Collect = 'collect',
+}
+
+export enum TargetType {
+  Essay = 'essay',
+  Comment = 'comment',
+}
+
+registerEnumType(Type, {
+  name: 'ToggleType',
+  description: '事件类型',
+});
+
+registerEnumType(TargetType, {
+  name: 'ToggleTargetType',
+  description: '事件目标类型',
+});
 
 @ObjectType()
 @Entity()
 export class Toggle extends CoreEntity {
-  @Field(() => Int, { description: '创建人Id' })
-  @Column()
+  @Field(() => Int, { description: '创建人Id', nullable: true })
+  @Column({
+    nullable: true,
+  })
   createdById: number;
 
   @Field(() => Type, {
