@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { IsBoolean, MaxLength } from 'class-validator';
+import { MaxLength } from 'class-validator';
 import { Menu } from './menu.entity';
 
 @ObjectType({
@@ -17,13 +17,6 @@ export class Tenant {
   @Column()
   @MaxLength(20)
   name: string;
-
-  @Field(() => Boolean, { description: '租户鉴权' })
-  @Column({
-    default: false,
-  })
-  @IsBoolean()
-  isAuthorizate: boolean;
 
   @OneToMany(() => Menu, (menu) => menu.tenant)
   menus: Menu[];
