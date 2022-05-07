@@ -39,6 +39,11 @@ export class AuthResolver {
     return this.authService.register(register);
   }
 
+  @Mutation(() => User, { description: '获取验证用户' })
+  authorize(@Args('loginInput') login: LoginInput): Promise<User> {
+    return this.authService.authorize(login);
+  }
+
   @Query(() => PaginatedUsers, {
     description: '查询多个用户',
     name: 'users',

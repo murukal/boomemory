@@ -17,7 +17,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: (req: Request) => {
         // 先从cookie里面获取token
         const token =
-          req.cookies && req.cookies['__Secure-next-auth.session-token'];
+          req.cookies &&
+          (req.cookies['__Secure-next-auth.session-token'] ||
+            req.cookies['next-auth.session-token']);
 
         if (token) return token;
 

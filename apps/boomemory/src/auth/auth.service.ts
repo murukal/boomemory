@@ -40,6 +40,9 @@ export class AuthService {
     private readonly tenantService: TenantService,
   ) {}
 
+  /**
+   * 验证用户名/密码
+   */
   async getValidatedUser(payload: LoginInput) {
     // 根据关键字获取用户
     const user = await this.userService.getUser(payload.keyword, {
@@ -64,21 +67,40 @@ export class AuthService {
     return user;
   }
 
+  /**
+   * 对登录信息进行认证
+   */
+  async authorize(payload: LoginInput) {
+    // 认证
+    const { id } = await this.getValidatedUser(payload);
+    // 用户信息
+    return await this.userService.getUser(id);
+  }
+
+  /**
+   * jwt加签
+   */
   sign(id: number) {
     return this.jwtService.sign({
       id,
     });
   }
 
+  /**
+   * 登录
+   */
   async login(login: LoginInput) {
     // 匹配用户信息
     const user = await this.getValidatedUser(login);
-    // 用户信息不存在，抛出一场
+    // error: 用户信息不存在
     if (!user) throw new UnauthorizedException();
     // 加密
     return this.sign(user.id);
   }
 
+  /**
+   * 注册
+   */
   async register(register: RegisterInput) {
     // 注册密码解密
     register.password = this.decryptByRsaPrivateKey(
