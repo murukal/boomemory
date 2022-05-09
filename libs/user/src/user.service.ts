@@ -18,6 +18,12 @@ export class UserService {
    * 获取单个用户
    */
   async getUser(keyword: number | string, select?: FindOptionsSelect<User>) {
+    // keyword 为空：抛出异常
+    if (!keyword) {
+      throw new Error('用户关键字不能为初始值！');
+    }
+
+    // 查询指定用户
     const user = await this.userRepository.findOne({
       select: select,
       where: [
