@@ -5,11 +5,11 @@ import { CoreEntity } from '../core.entity';
 @ObjectType()
 @Entity()
 export class Billing extends CoreEntity {
-  @Field(() => String, { description: '账单名称' })
+  @Field(() => String, { description: '账本名称' })
   @Column()
   name: string;
 
-  @Field(() => Int, { description: '账单创建人id' })
+  @Field(() => Int, { description: '账本创建人id' })
   @Column()
   createdById: number;
 }

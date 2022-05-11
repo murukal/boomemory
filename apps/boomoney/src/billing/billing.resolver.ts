@@ -11,7 +11,7 @@ export class BillingResolver {
   constructor(private readonly billingService: BillingService) {}
 
   @Mutation(() => Billing, {
-    description: '创建账单',
+    description: '创建账本',
   })
   @UseGuards(JwtAuthGuard)
   createBilling(
@@ -20,20 +20,20 @@ export class BillingResolver {
     return this.billingService.create(createBillingInput);
   }
 
-  @Query(() => [Billing], { name: 'billings', description: '查询多个账单' })
+  @Query(() => [Billing], { name: 'billings', description: '查询多个账本' })
   @UseGuards(new JwtAuthGuard(true))
   getBillings() {
     return this.billingService.getBillings();
   }
 
-  @Query(() => Billing, { name: 'billing', description: '查询单个账单' })
+  @Query(() => Billing, { name: 'billing', description: '查询单个账本' })
   @UseGuards(new JwtAuthGuard(true))
   getBilling(@Args('id', { type: () => Int }) id: number) {
     return this.billingService.getBilling(id);
   }
 
   @Mutation(() => Billing, {
-    description: '更新账单',
+    description: '更新账本',
   })
   updateBilling(
     @Args('id', { type: () => Int }) id: number,
@@ -43,7 +43,7 @@ export class BillingResolver {
   }
 
   @Mutation(() => Billing, {
-    description: '删除账单',
+    description: '删除账本',
   })
   removeBilling(@Args('id', { type: () => Int }) id: number) {
     return this.billingService.remove(id);

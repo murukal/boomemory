@@ -13,7 +13,7 @@ export class BillingService {
   ) {}
 
   /**
-   * 创建账单
+   * 创建账本
    */
   create(createBillingInput: CreateBillingInput) {
     return this.billingRepository.save(
@@ -22,14 +22,14 @@ export class BillingService {
   }
 
   /**
-   * 查询多个账单
+   * 查询多个账本
    */
   getBillings() {
     return this.billingRepository.find();
   }
 
   /**
-   * 查询单个账单
+   * 查询单个账本
    */
   getBilling(id: number) {
     return this.billingRepository.findOneBy({
@@ -38,14 +38,14 @@ export class BillingService {
   }
 
   /**
-   * 更新账单信息
+   * 更新账本信息
    */
   update(id: number, updateBillingInput: UpdateBillingInput) {
     return this.billingRepository.update(id, updateBillingInput);
   }
 
   /**
-   * 删除账单信息
+   * 删除账本信息
    */
   remove(id: number) {
     return this.billingRepository.delete(id);
