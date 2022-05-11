@@ -5,6 +5,8 @@ import {
   boomartFeatures,
   boomemoryConnection,
   boomemoryFeatures,
+  boomoneyConnection,
+  boomoneyFeatures,
 } from './entities';
 
 @Global()
@@ -12,10 +14,17 @@ import {
   imports: [
     boomemoryConnection,
     boomartConnection,
+    boomoneyConnection,
     boomemoryFeatures,
     boomartFeatures,
+    boomoneyFeatures,
   ],
   providers: [DataBaseService],
-  exports: [DataBaseService, boomemoryFeatures, boomartFeatures],
+  exports: [
+    DataBaseService,
+    boomemoryFeatures,
+    boomartFeatures,
+    boomoneyFeatures,
+  ],
 })
 export class DataBaseModule {}

@@ -55,6 +55,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/object-storage/tsconfig.lib.json"
       }
+    },
+    "boomoney": {
+      "type": "application",
+      "root": "apps/boomoney",
+      "entryFile": "main",
+      "sourceRoot": "apps/boomoney/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/boomoney/tsconfig.app.json"
+      }
     }
   }
 }

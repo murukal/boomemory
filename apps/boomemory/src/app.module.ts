@@ -17,7 +17,7 @@ import { DictionaryModule } from './dictionary/dictionary.module';
 import { DictionaryEnumModule } from './dictionary-enum/dictionary-enum.module';
 import { RoleModule } from './role/role.module';
 import { ObjectStorageModule } from '@app/object-storage';
-import { getDynamicCorsOptions } from 'utils/cors';
+import { BoomoneyModule } from 'apps/boomoney/src/boomoney.module';
 
 @Module({
   imports: [
@@ -31,7 +31,6 @@ import { getDynamicCorsOptions } from 'utils/cors';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      cors: getDynamicCorsOptions,
     }),
 
     // 公用服务模块
@@ -47,6 +46,7 @@ import { getDynamicCorsOptions } from 'utils/cors';
 
     // 第三方服务
     BoomartModule,
+    BoomoneyModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
