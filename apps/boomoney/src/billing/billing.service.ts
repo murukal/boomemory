@@ -1,4 +1,5 @@
-import { Billing, CONNECTION_BOOMONEY } from '@app/data-base/entities';
+import { Billing, CONNECTION_BOOMONEY, Share } from '@app/data-base/entities';
+import { TargetType } from '@app/data-base/entities/boomoney/share.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -15,26 +16,57 @@ export class BillingService {
   /**
    * 创建账本
    */
-  create(createBillingInput: CreateBillingInput) {
+  create(createBillingInput: CreateBillingInput, createdById: number) {
     return this.billingRepository.save(
-      this.billingRepository.create(createBillingInput),
+      this.billingRepository.create({
+        ...createBillingInput,
+        createdById,
+      }),
     );
   }
 
   /**
    * 查询多个账本
    */
-  getBillings() {
-    return this.billingRepository.find();
+  async getBillings(userId: number) {
+    return await this.billingRepository
+      .createQueryBuilder('billing')
+      .leftJoinAndSelect(
+        Share,
+        'share',
+        'share.targetType = :targetType AND share.targetId = billing.id',
+        {
+          targetType: TargetType.Billing,
+        },
+      )
+      .where('billing.createdById = :userId OR share.sharedById = :userId', {
+        userId,
+      })
+      .getMany();
   }
 
   /**
    * 查询单个账本
    */
-  getBilling(id: number) {
-    return this.billingRepository.findOneBy({
-      id,
-    });
+  getBilling(billingId: number, userId: number) {
+    return this.billingRepository
+      .createQueryBuilder('billing')
+      .leftJoinAndSelect(
+        Share,
+        'share',
+        'share.targetType = :targetType AND share.targetId = billing.id',
+        {
+          targetType: TargetType.Billing,
+        },
+      )
+      .whereInIds(billingId)
+      .andWhere(
+        '( billing.createdById = :userId OR share.sharedById = :userId )',
+        {
+          userId,
+        },
+      )
+      .getOne();
   }
 
   /**
