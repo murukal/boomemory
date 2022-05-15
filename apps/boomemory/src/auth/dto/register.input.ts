@@ -1,4 +1,4 @@
-import { User } from '@app/data-base/entities';
+import { User } from '@app/data-base/entities/boomemory';
 import { Field, InputType, PickType } from '@nestjs/graphql';
 
 @InputType()

@@ -1,10 +1,6 @@
 import {
-  Authorization,
-  AuthorizationAction,
-  AuthorizationResource,
   CONNECTION_BOOMART,
   CONNECTION_BOOMEMORY,
-  Essay,
 } from '@app/data-base/entities';
 import { UserService } from '@app/user';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
@@ -22,6 +18,12 @@ import { FilterUserInput } from './dto/filter-user.input';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 import { compareSync } from 'bcrypt';
+import {
+  Authorization,
+  AuthorizationAction,
+  AuthorizationResource,
+} from '@app/data-base/entities/boomemory';
+import { Essay } from '@app/data-base/entities/boomart';
 
 @Injectable()
 export class AuthService {

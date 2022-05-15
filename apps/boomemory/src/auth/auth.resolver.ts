@@ -2,7 +2,7 @@ import {
   AuthorizationAction,
   AuthorizationResource,
   User,
-} from '@app/data-base/entities';
+} from '@app/data-base/entities/boomemory';
 import { UseGuards } from '@nestjs/common';
 import {
   Args,

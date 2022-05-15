@@ -16,10 +16,10 @@ import { FilterMenuInput } from './dto/filter-menu.input';
 import { Permission } from 'utils/decorator/permission.decorator';
 import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
 import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
-import { Menu, User } from '@app/data-base/entities';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guard';
+import { Menu, User } from '@app/data-base/entities/boomemory';
 
 @Resolver(() => Menu)
 export class MenuResolver {

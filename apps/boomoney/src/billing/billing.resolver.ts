@@ -4,8 +4,9 @@ import { CreateBillingInput } from './dto/create-billing.input';
 import { UpdateBillingInput } from './dto/update-billing.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
-import { Billing, User } from '@app/data-base/entities';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
+import { Billing } from '@app/data-base/entities/boomoney';
+import { User } from '@app/data-base/entities/boomemory';
 
 @Resolver(() => Billing)
 export class BillingResolver {

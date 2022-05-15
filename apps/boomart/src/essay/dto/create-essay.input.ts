@@ -1,4 +1,4 @@
-import { Essay } from '@app/data-base/entities';
+import { Essay } from '@app/data-base/entities/boomart';
 import { Field, InputType, Int, PickType } from '@nestjs/graphql';
 
 @InputType()

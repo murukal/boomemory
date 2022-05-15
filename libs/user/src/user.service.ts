@@ -1,4 +1,5 @@
-import { CONNECTION_BOOMEMORY, User } from '@app/data-base/entities';
+import { CONNECTION_BOOMEMORY } from '@app/data-base/entities';
+import { User } from '@app/data-base/entities/boomemory';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilterUserInput } from 'apps/boomemory/src/auth/dto/filter-user.input';

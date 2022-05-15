@@ -1,8 +1,5 @@
-import {
-  AuthorizationResource,
-  CONNECTION_BOOMEMORY,
-  Menu,
-} from '@app/data-base/entities';
+import { CONNECTION_BOOMEMORY } from '@app/data-base/entities';
+import { AuthorizationResource, Menu } from '@app/data-base/entities/boomemory';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Not, Repository } from 'typeorm';

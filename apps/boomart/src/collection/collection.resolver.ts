@@ -1,4 +1,4 @@
-import { Collection } from '@app/data-base/entities';
+import { Collection } from '@app/data-base/entities/boomart';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { CollectionService } from './collection.service';
 import { CreateCollectionInput } from './dto/create-collection.input';

@@ -1,13 +1,14 @@
 import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { ToggleService } from './toggle.service';
 import { CreateToggleInput } from './dto/create-toggle.input';
-import { Essay, Toggle, User } from '@app/data-base/entities';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { TopInput } from './dto/top.input';
 import { RemoveToggleInput } from './dto/remove-toggle.input';
 import { DailyClout, DailyCloutArgs } from './dto/daily-clout.args';
+import { Essay, Toggle } from '@app/data-base/entities/boomart';
+import { User } from '@app/data-base/entities/boomemory';
 
 @Resolver(() => Toggle)
 export class ToggleResolver {

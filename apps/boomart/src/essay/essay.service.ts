@@ -1,15 +1,13 @@
 import {
   CONNECTION_BOOMART,
   CONNECTION_BOOMEMORY,
-  Essay,
-  Tag,
-  Toggle,
-  User,
 } from '@app/data-base/entities';
+import { Essay, Tag } from '@app/data-base/entities/boomart';
 import {
   TargetType,
   Type,
 } from '@app/data-base/entities/boomart/toggle.entity';
+import { User } from '@app/data-base/entities/boomemory';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
@@ -18,6 +16,7 @@ import { paginateQuery } from 'utils';
 import { CreateEssayInput } from './dto/create-essay.input';
 import { FilterEssayInput } from './dto/filter-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
+import { Toggle } from '@app/data-base/entities/boomart';
 
 @Injectable()
 export class EssayService {

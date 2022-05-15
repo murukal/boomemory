@@ -1,4 +1,4 @@
-import { Menu } from '@app/data-base/entities';
+import { Menu } from '@app/data-base/entities/boomemory';
 import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
 import { PickType, InputType, Field } from '@nestjs/graphql';
 

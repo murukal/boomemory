@@ -9,12 +9,12 @@ import {
 import { TenantService } from './tenant.service';
 import { CreateTenantInput } from './dto/create-tenant.input';
 import { UpdateTenantInput } from './dto/update-tenant.input';
-import { Menu, Tenant } from '@app/data-base/entities';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedTenants } from './dto/paginated-tenants';
 import { Permission } from 'utils/decorator/permission.decorator';
 import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
 import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
+import { Menu, Tenant } from '@app/data-base/entities/boomemory';
 
 @Resolver(() => Tenant)
 export class TenantResolver {

@@ -1,9 +1,5 @@
-import {
-  Authorization,
-  CONNECTION_BOOMEMORY,
-  Role,
-  User,
-} from '@app/data-base/entities';
+import { CONNECTION_BOOMEMORY } from '@app/data-base/entities';
+import { Authorization, Role, User } from '@app/data-base/entities/boomemory';
 import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
 import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
 import { Injectable } from '@nestjs/common';

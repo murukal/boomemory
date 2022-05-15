@@ -12,18 +12,18 @@ import { CreateEssayInput } from './dto/create-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
 import { PaginatedEssays } from './dto/paginated-essays';
 import { PaginateInput } from 'utils/dto';
-import { Tag, User } from '@app/data-base/entities';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { FilterEssayInput } from './dto/filter-essay.input';
 import { ToggleService } from '../toggle/toggle.service';
-import { Essay } from '@app/data-base/entities';
 import {
   TargetType,
   Type,
 } from '@app/data-base/entities/boomart/toggle.entity';
 import { EssayLoader } from './essay.loader';
+import { Essay, Tag } from '@app/data-base/entities/boomart';
+import { User } from '@app/data-base/entities/boomemory';
 
 @Resolver(() => Essay)
 export class EssayResolver {

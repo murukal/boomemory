@@ -1,4 +1,4 @@
-import { Dictionary } from '@app/data-base/entities';
+import { Dictionary } from '@app/data-base/entities/boomemory';
 import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
 import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';

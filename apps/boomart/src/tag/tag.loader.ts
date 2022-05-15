@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import DataLoader = require('dataloader');
-import { CONNECTION_BOOMART, Tag } from '@app/data-base/entities';
+import { CONNECTION_BOOMART } from '@app/data-base/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DailyHeat } from './dto/top-tag';
+import { Tag } from '@app/data-base/entities/boomart';
 
 @Injectable()
 export class TagLoader {

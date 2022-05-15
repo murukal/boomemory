@@ -1,4 +1,4 @@
-import { Tag } from '@app/data-base/entities';
+import { Tag } from '@app/data-base/entities/boomart';
 import { Field, Int, PickType, ObjectType, ArgsType } from '@nestjs/graphql';
 
 @ObjectType()

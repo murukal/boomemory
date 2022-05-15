@@ -1,4 +1,5 @@
-import { CONNECTION_BOOMEMORY, Tenant } from '@app/data-base/entities';
+import { CONNECTION_BOOMEMORY } from '@app/data-base/entities';
+import { Tenant } from '@app/data-base/entities/boomemory';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

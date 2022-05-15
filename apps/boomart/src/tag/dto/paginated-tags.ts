@@ -1,4 +1,4 @@
-import { Tag } from '@app/data-base/entities';
+import { Tag } from '@app/data-base/entities/boomart';
 import { ObjectType } from '@nestjs/graphql';
 import { Paginated } from 'utils/dto';
 

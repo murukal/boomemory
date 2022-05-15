@@ -5,9 +5,6 @@ import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOpti
  * 统一entity的入口文件
  */
 export * from './core.entity';
-export * from './boomemory';
-export * from './boomart';
-export * from './boomoney';
 
 import * as boomemory from './boomemory';
 import * as boomart from './boomart';

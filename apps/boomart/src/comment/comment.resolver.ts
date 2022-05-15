@@ -1,4 +1,5 @@
-import { Comment, User } from '@app/data-base/entities';
+import { Comment } from '@app/data-base/entities/boomart';
+import { User } from '@app/data-base/entities/boomemory';
 import { UserService } from '@app/user';
 import { UseGuards } from '@nestjs/common';
 import {

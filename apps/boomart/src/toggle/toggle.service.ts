@@ -1,4 +1,4 @@
-import { CONNECTION_BOOMART, Toggle } from '@app/data-base/entities';
+import { CONNECTION_BOOMART } from '@app/data-base/entities';
 import {
   TargetType,
   Type,
@@ -11,6 +11,7 @@ import { CreateToggleInput } from './dto/create-toggle.input';
 import { DailyClout, DailyCloutArgs } from './dto/daily-clout.args';
 import { RemoveToggleInput } from './dto/remove-toggle.input';
 import { TopInput } from './dto/top.input';
+import { Toggle } from '@app/data-base/entities/boomart';
 
 @Injectable()
 export class ToggleService {

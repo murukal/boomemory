@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import DataLoader = require('dataloader');
+import { CONNECTION_BOOMART } from '@app/data-base/entities';
 import { Essay, Tag } from '@app/data-base/entities/boomart';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CONNECTION_BOOMART } from '@app/data-base/entities';
 
 @Injectable()
-export class EssayLoader {
+export class AuthLoader {
   constructor(
     @InjectRepository(Essay, CONNECTION_BOOMART)
     private readonly essayRepository: Repository<Essay>,
@@ -15,7 +15,7 @@ export class EssayLoader {
   /**
    * 根据文章id读取文章对应的标签
    */
-  public readonly getTagsByEssayId = new DataLoader<number, Tag[]>(
+  public readonly getMoneyProfileById = new DataLoader<number, Tag[]>(
     async (essayIds) => {
       const essays = await this.essayRepository
         .createQueryBuilder('essay')

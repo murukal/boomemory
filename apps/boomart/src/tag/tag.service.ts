@@ -1,4 +1,5 @@
-import { CONNECTION_BOOMART, Tag } from '@app/data-base/entities';
+import { CONNECTION_BOOMART } from '@app/data-base/entities';
+import { Tag } from '@app/data-base/entities/boomart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

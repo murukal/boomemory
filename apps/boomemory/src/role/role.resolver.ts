@@ -10,12 +10,12 @@ import {
 import { RoleService } from './role.service';
 import { CreateRoleInput } from './dto/create-role.input';
 import { UpdateRoleInput } from './dto/update-role.input';
-import { Role } from '@app/data-base/entities';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedRole } from './dto/paginated-roles';
 import { Permission } from 'utils/decorator/permission.decorator';
 import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
 import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
+import { Role } from '@app/data-base/entities/boomemory';
 
 @Resolver(() => Role)
 export class RoleResolver {

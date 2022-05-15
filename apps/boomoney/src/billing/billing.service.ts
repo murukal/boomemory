@@ -1,4 +1,5 @@
-import { Billing, CONNECTION_BOOMONEY, Share } from '@app/data-base/entities';
+import { CONNECTION_BOOMONEY } from '@app/data-base/entities';
+import { Billing, Share } from '@app/data-base/entities/boomoney';
 import { TargetType } from '@app/data-base/entities/boomoney/share.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
