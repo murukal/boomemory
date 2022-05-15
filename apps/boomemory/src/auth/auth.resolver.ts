@@ -24,10 +24,15 @@ import { PaginatedUsers } from './dto/paginated-users';
 import { JwtAuthGuard } from './guard';
 import { FilterUserInput } from './dto/filter-user.input';
 import { AuthorizationsArgs } from './dto/authorizations.args';
+import { AuthLoader } from './auth.loader';
+import { MoneyProfile } from './dto/money-profile';
 
 @Resolver(() => User)
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly authLoader: AuthLoader,
+  ) {}
 
   @Mutation(() => String, { description: '登录' })
   login(@Args('loginInput') login: LoginInput): Promise<string> {
@@ -115,5 +120,13 @@ export class AuthResolver {
   })
   setAuthorizations(@Args() args: AuthorizationsArgs) {
     return this.authService.setAuthorizations(args);
+  }
+
+  @ResolveField('moneyProfile', () => MoneyProfile, {
+    description: 'money模块用户信息',
+    nullable: true,
+  })
+  getMoneyProfile(@Parent() user: User) {
+    return this.authLoader.getMoneyProfileById.load(user.id);
   }
 }

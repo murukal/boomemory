@@ -1,10 +1,15 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { ObjectType } from '@nestjs/graphql';
+import { Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Billing } from './billing.entity';
 
+@ObjectType()
 @Entity()
 export class UserProfile {
   @PrimaryColumn()
   userId: number;
 
-  @Column()
-  defaultBillingId: number;
+  @ManyToOne(() => Billing, {
+    nullable: true,
+  })
+  defaultBilling: Billing;
 }

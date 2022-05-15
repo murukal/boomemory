@@ -1,30 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import DataLoader = require('dataloader');
-import { CONNECTION_BOOMART } from '@app/data-base/entities';
-import { Essay, Tag } from '@app/data-base/entities/boomart';
+import { CONNECTION_BOOMONEY } from '@app/data-base/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { MoneyProfile } from './dto/money-profile';
+import { UserProfile } from '@app/data-base/entities/boomoney';
 
 @Injectable()
 export class AuthLoader {
   constructor(
-    @InjectRepository(Essay, CONNECTION_BOOMART)
-    private readonly essayRepository: Repository<Essay>,
+    @InjectRepository(UserProfile, CONNECTION_BOOMONEY)
+    private readonly userProfileRepository: Repository<UserProfile>,
   ) {}
 
   /**
-   * 根据文章id读取文章对应的标签
+   * 根据用户Id获取信息
    */
-  public readonly getMoneyProfileById = new DataLoader<number, Tag[]>(
-    async (essayIds) => {
-      const essays = await this.essayRepository
-        .createQueryBuilder('essay')
-        .innerJoinAndMapMany('essay.tags', 'essay.tags', 'tag')
-        .whereInIds(essayIds)
+  public readonly getMoneyProfileById = new DataLoader<number, MoneyProfile>(
+    async (userIds) => {
+      const profiles = await this.userProfileRepository
+        .createQueryBuilder('profile')
+        .innerJoinAndMapOne(
+          'profile.defaultBilling',
+          'profile.defaultBilling',
+          'billing',
+        )
+        .whereInIds(userIds)
         .getMany();
 
-      return essayIds.map(
-        (essayId) => essays.find((essay) => essay.id === essayId).tags,
+      return userIds.map((userId) =>
+        profiles.find((profile) => profile.userId === userId),
       );
     },
   );
