@@ -12,6 +12,8 @@ export class BillingService {
   constructor(
     @InjectRepository(Billing, CONNECTION_BOOMONEY)
     private readonly billingRepository: Repository<Billing>,
+    @InjectRepository(Share, CONNECTION_BOOMONEY)
+    private readonly shareRepository: Repository<Share>,
   ) {}
 
   /**

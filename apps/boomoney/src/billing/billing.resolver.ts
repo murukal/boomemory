@@ -36,7 +36,7 @@ export class BillingResolver {
   })
   @UseGuards(new JwtAuthGuard(true))
   getBilling(
-    @Args('id', { type: () => Int }) id: number,
+    @Args('id', { type: () => Int, description: '账本ID' }) id: number,
     @CurrentUser() user: User,
   ) {
     return this.billingService.getBilling(id, user.id);
@@ -46,7 +46,7 @@ export class BillingResolver {
     description: '更新账本',
   })
   updateBilling(
-    @Args('id', { type: () => Int }) id: number,
+    @Args('id', { type: () => Int, description: '账本ID' }) id: number,
     @Args('updateBillingInput') updateBillingInput: UpdateBillingInput,
   ) {
     return this.billingService.update(id, updateBillingInput);
@@ -55,7 +55,9 @@ export class BillingResolver {
   @Mutation(() => Boolean, {
     description: '删除账本',
   })
-  removeBilling(@Args('id', { type: () => Int }) id: number) {
+  removeBilling(
+    @Args('id', { type: () => Int, description: '账本ID' }) id: number,
+  ) {
     return this.billingService.remove(id);
   }
 }

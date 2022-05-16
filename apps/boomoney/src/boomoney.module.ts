@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { BoomoneyController } from './boomoney.controller';
 import { BoomoneyService } from './boomoney.service';
 import { BillingModule } from './billing/billing.module';
-import { UserProfileModule } from './user-profile/user-profile.module';
+import { CategoryModule } from './category/category.module';
+import { TransactionModule } from './transaction/transaction.module';
+import { ShareModule } from './share/share.module';
 
 @Module({
-  imports: [BillingModule, UserProfileModule],
+  imports: [BillingModule, CategoryModule, TransactionModule, ShareModule],
   controllers: [BoomoneyController],
   providers: [BoomoneyService],
 })
