@@ -1,16 +1,28 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { BillingService } from './billing.service';
 import { CreateBillingInput } from './dto/create-billing.input';
 import { UpdateBillingInput } from './dto/update-billing.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
-import { Billing } from '@app/data-base/entities/boomoney';
+import { Billing, Share } from '@app/data-base/entities/boomoney';
 import { User } from '@app/data-base/entities/boomemory';
+import { BillingLoader } from './billing.loader';
 
 @Resolver(() => Billing)
 export class BillingResolver {
-  constructor(private readonly billingService: BillingService) {}
+  constructor(
+    private readonly billingService: BillingService,
+    private readonly billingLoader: BillingLoader,
+  ) {}
 
   @Mutation(() => Billing, {
     description: '创建账本',
@@ -59,5 +71,12 @@ export class BillingResolver {
     @Args('id', { type: () => Int, description: '账本ID' }) id: number,
   ) {
     return this.billingService.remove(id);
+  }
+
+  @ResolveField('shares', () => [Share], {
+    description: '分享',
+  })
+  getShares(@Parent() billing: Billing) {
+    return this.billingLoader.getSharesByTargetId.load(billing.id);
   }
 }
