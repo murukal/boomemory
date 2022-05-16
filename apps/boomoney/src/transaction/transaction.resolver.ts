@@ -1,12 +1,12 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { TransactionService } from './transaction.service';
-import { Transaction } from '../../../../libs/data-base/src/entities/boomoney/transaction.entity';
 import { CreateTransactionInput } from './dto/create-transaction.input';
 import { UpdateTransactionInput } from './dto/update-transaction.input';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { User } from '@app/data-base/entities/boomemory';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
+import { Transaction } from '@app/data-base/entities/boomoney';
 
 @Resolver(() => Transaction)
 export class TransactionResolver {

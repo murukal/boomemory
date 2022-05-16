@@ -12,6 +12,9 @@ export class ShareService {
     private readonly shareRepository: Repository<Share>,
   ) {}
 
+  /**
+   * 分享
+   */
   async create(targetId: number, targetType: TargetType, userIds: number[]) {
     const createdShares = await this.shareRepository.save(
       userIds.map((userId) =>
