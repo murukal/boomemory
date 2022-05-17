@@ -10,7 +10,7 @@ export class CommentLoader {
   /**
    * 根据用户id返回用户信息
    */
-  public getUserById = new DataLoader<number, User>(
+  public readonly getUserById = new DataLoader<number, User>(
     async (userIds: number[]) => {
       return await this.userService.getUsers4UserIds(userIds);
     },

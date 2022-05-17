@@ -14,7 +14,7 @@ export class AuthLoader {
   ) {}
 
   /**
-   * 根据用户Id获取信息
+   * 根据用户Id获取money模块信息
    */
   public readonly getMoneyProfileById = new DataLoader<number, MoneyProfile>(
     async (userIds) => {

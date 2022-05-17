@@ -19,7 +19,7 @@ export class TopTagLoader {
   /**
    * 根据标签id获取日发布量
    */
-  public getDailyHeatByTagId = new DataLoader<number, DailyHeat[]>(
+  public readonly getDailyHeatByTagId = new DataLoader<number, DailyHeat[]>(
     async (tagIds) => {
       const qb = this.tagRepository
         .createQueryBuilder('tag')
