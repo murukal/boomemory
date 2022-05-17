@@ -1,13 +1,5 @@
-import {
-  CONNECTION_BOOMART,
-  CONNECTION_BOOMEMORY,
-} from '@app/data-base/entities';
+import { CONNECTION_BOOMART } from '@app/data-base/entities';
 import { Essay, Tag } from '@app/data-base/entities/boomart';
-import {
-  TargetType,
-  Type,
-} from '@app/data-base/entities/boomart/toggle.entity';
-import { User } from '@app/data-base/entities/boomemory';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
@@ -16,17 +8,12 @@ import { paginateQuery } from 'utils';
 import { CreateEssayInput } from './dto/create-essay.input';
 import { FilterEssayInput } from './dto/filter-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
-import { Toggle } from '@app/data-base/entities/boomart';
 
 @Injectable()
 export class EssayService {
   constructor(
     @InjectRepository(Essay, CONNECTION_BOOMART)
     private readonly essayRepository: Repository<Essay>,
-    @InjectRepository(User, CONNECTION_BOOMEMORY)
-    private readonly userRepository: Repository<User>,
-    @InjectRepository(Toggle, CONNECTION_BOOMART)
-    private readonly toggleRepository: Repository<Toggle>,
   ) {}
 
   /**
@@ -146,26 +133,5 @@ export class EssayService {
         .whereInIds(id)
         .execute()
     ).affected;
-  }
-
-  /**
-   * 获取状态
-   */
-  async getIsToggled(
-    createdById: number,
-    filter: {
-      type: Type;
-      targetType: TargetType;
-      targetId: number;
-    },
-  ) {
-    if (!createdById) return false;
-
-    return !!(await this.toggleRepository.count({
-      where: {
-        ...filter,
-        createdById,
-      },
-    }));
   }
 }

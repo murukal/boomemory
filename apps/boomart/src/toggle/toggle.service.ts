@@ -69,35 +69,6 @@ export class ToggleService {
   }
 
   /**
-   * 获取目标流量
-   */
-  getClouts4Targets(
-    type: Type,
-    targetType: TargetType,
-    targetIds: number[],
-  ): Promise<
-    {
-      targetId: number;
-      clout: number;
-    }[]
-  > {
-    return this.toggleRepository
-      .createQueryBuilder()
-      .select('targetId')
-      .addSelect('COUNT(id)', 'clout')
-      .where('type = :type', {
-        type,
-      })
-      .andWhere('targetType = :targetType', {
-        targetType,
-      })
-      .andWhere('targetId IN (:...targetIds)', {
-        targetIds,
-      })
-      .execute();
-  }
-
-  /**
    * 获取榜单ids
    */
   async getTopTargetIds(targetType: TargetType, topInput: TopInput) {

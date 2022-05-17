@@ -20,10 +20,14 @@ import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guard';
 import { Menu, User } from '@app/data-base/entities/boomemory';
+import { MenuLoader } from './menu.loader';
 
 @Resolver(() => Menu)
 export class MenuResolver {
-  constructor(private readonly menuService: MenuService) {}
+  constructor(
+    private readonly menuService: MenuService,
+    private readonly menuLoader: MenuLoader,
+  ) {}
 
   @Mutation(() => Boolean, { description: '创建菜单' })
   @Permission({
@@ -91,8 +95,8 @@ export class MenuResolver {
     name: 'parent',
     nullable: true,
   })
-  getParent(@Parent() parent: Menu) {
-    return parent.parentId && this.menuService.getMenu(parent.parentId);
+  getParent(@Parent() menu: Menu) {
+    return this.menuLoader.getMenuById.load(menu.parentId);
   }
 
   @ResolveField(() => [Menu], {
@@ -100,14 +104,8 @@ export class MenuResolver {
     name: 'children',
     nullable: true,
   })
-  async getChildren(@Parent() parent: Menu) {
-    return (
-      await this.menuService.getMenus({
-        filterInput: {
-          parentId: parent.id,
-        },
-      })
-    ).items;
+  async getChildren(@Parent() menu: Menu) {
+    return this.menuLoader.getChildrenById.load(menu.id);
   }
 
   @ResolveField(() => [AuthorizationResourceCode], {

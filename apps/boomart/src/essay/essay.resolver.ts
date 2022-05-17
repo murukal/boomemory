@@ -12,24 +12,20 @@ import { CreateEssayInput } from './dto/create-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
 import { PaginatedEssays } from './dto/paginated-essays';
 import { PaginateInput } from 'utils/dto';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { FilterEssayInput } from './dto/filter-essay.input';
-import { ToggleService } from '../toggle/toggle.service';
-import {
-  TargetType,
-  Type,
-} from '@app/data-base/entities/boomart/toggle.entity';
+import { Type } from '@app/data-base/entities/boomart/toggle.entity';
 import { EssayLoader } from './essay.loader';
 import { Essay, Tag } from '@app/data-base/entities/boomart';
 import { User } from '@app/data-base/entities/boomemory';
+import { UserInterceptor } from './interceptor/user.interceptor';
 
 @Resolver(() => Essay)
 export class EssayResolver {
   constructor(
     private readonly essayService: EssayService,
-    private readonly toggleService: ToggleService,
     private readonly essayLoader: EssayLoader,
   ) {}
 
@@ -37,6 +33,7 @@ export class EssayResolver {
     description: '创建文章',
   })
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(UserInterceptor)
   createEssay(
     @Args('createEssayInput') essay: CreateEssayInput,
     @CurrentUser() user: User,
@@ -48,6 +45,7 @@ export class EssayResolver {
     name: 'essays',
     description: '查询多个文章',
   })
+  @UseInterceptors(UserInterceptor)
   getEssays(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
     @Args('filterInput', { nullable: true }) filterInput: FilterEssayInput,
@@ -60,6 +58,7 @@ export class EssayResolver {
 
   @Query(() => Essay, { name: 'essay', description: '查询单个文章' })
   @UseGuards(new JwtAuthGuard(true))
+  @UseInterceptors(UserInterceptor)
   getEssay(@Args('id', { type: () => Int }) id: number) {
     return this.essayService.getEssay(id);
   }
@@ -138,23 +137,15 @@ export class EssayResolver {
     name: 'isLiked',
     description: '是否被当前用户点赞',
   })
-  getIsLiked(@CurrentUser() user: User, @Parent() essay: Essay) {
-    return this.essayService.getIsToggled(user.id, {
-      type: Type.Like,
-      targetType: TargetType.Essay,
-      targetId: essay.id,
-    });
+  getIsLiked(@Parent() essay: Essay) {
+    return this.essayLoader.getIsLikedById.load(essay.id);
   }
 
   @ResolveField(() => Boolean, {
     name: 'isCollected',
     description: '是否被当前用户收藏',
   })
-  getIsCollected(@CurrentUser() user: User, @Parent() essay: Essay) {
-    return this.essayService.getIsToggled(user.id, {
-      type: Type.Collect,
-      targetType: TargetType.Essay,
-      targetId: essay.id,
-    });
+  getIsCollected(@Parent() essay: Essay) {
+    return this.essayLoader.getIsCollectedById.load(essay.id);
   }
 }
