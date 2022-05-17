@@ -5,14 +5,10 @@ import { UpdateTagInput } from './dto/update-tag.input';
 import { Tag } from '@app/data-base/entities/boomart/tag.entity';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedTags } from './dto/paginated-tags';
-import { TagLoader } from './tag.loader';
 
 @Resolver()
 export class TagResolver {
-  constructor(
-    private readonly tagService: TagService,
-    private readonly tagLoader: TagLoader,
-  ) {}
+  constructor(private readonly tagService: TagService) {}
 
   @Mutation(() => Tag, {
     description: '创建标签',

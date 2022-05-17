@@ -10,12 +10,13 @@ import {
 import { BillingService } from './billing.service';
 import { CreateBillingInput } from './dto/create-billing.input';
 import { UpdateBillingInput } from './dto/update-billing.input';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { Billing, Share } from '@app/data-base/entities/boomoney';
 import { User } from '@app/data-base/entities/boomemory';
 import { BillingLoader } from './billing.loader';
+import { ShareInterceptor } from './interceptor/share.interceptor';
 
 @Resolver(() => Billing)
 export class BillingResolver {
@@ -28,6 +29,7 @@ export class BillingResolver {
     description: '创建账本',
   })
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(ShareInterceptor)
   createBilling(
     @Args('createBillingInput') createBillingInput: CreateBillingInput,
     @CurrentUser() user: User,
@@ -37,6 +39,7 @@ export class BillingResolver {
 
   @Query(() => [Billing], { name: 'billings', description: '查询多个账本' })
   @UseGuards(new JwtAuthGuard(true))
+  @UseInterceptors(ShareInterceptor)
   getBillings(@CurrentUser() user: User) {
     return this.billingService.getBillings(user.id);
   }
@@ -47,6 +50,7 @@ export class BillingResolver {
     nullable: true,
   })
   @UseGuards(new JwtAuthGuard(true))
+  @UseInterceptors(ShareInterceptor)
   getBilling(
     @Args('id', { type: () => Int, description: '账本ID' }) id: number,
     @CurrentUser() user: User,
@@ -75,6 +79,7 @@ export class BillingResolver {
 
   @ResolveField('shares', () => [Share], {
     description: '分享',
+    nullable: true,
   })
   getShares(@Parent() billing: Billing) {
     return this.billingLoader.getSharesByTargetId.load(billing.id);

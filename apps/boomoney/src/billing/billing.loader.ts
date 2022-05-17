@@ -44,7 +44,10 @@ export class BillingLoader {
     private readonly shareRepository: Repository<Share>,
   ) {}
 
-  public setTargetType(targetType: TargetType) {
+  /**
+   * target type
+   */
+  public setTargetType(targetType?: TargetType) {
     this.targetType = targetType;
   }
 }

@@ -7,15 +7,8 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class ShareLoader {
-  constructor(
-    @InjectRepository(User, CONNECTION_BOOMEMORY)
-    private readonly userRepository: Repository<User>,
-  ) {}
-
   public readonly getUserBySharedById = new DataLoader<number, User>(
     async (sharedByIds) => {
-      console.log('runtime============');
-
       const users = await this.userRepository
         .createQueryBuilder()
         .whereInIds(sharedByIds)
@@ -26,4 +19,9 @@ export class ShareLoader {
       );
     },
   );
+
+  constructor(
+    @InjectRepository(User, CONNECTION_BOOMEMORY)
+    private readonly userRepository: Repository<User>,
+  ) {}
 }
