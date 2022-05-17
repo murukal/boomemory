@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import DataLoader = require('dataloader');
-import { Essay, Tag, Toggle } from '@app/data-base/entities/boomart';
+import { Essay, Tag } from '@app/data-base/entities/boomart';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CONNECTION_BOOMART } from '@app/data-base/entities';
