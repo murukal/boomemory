@@ -149,15 +149,6 @@ export class EssayService {
   }
 
   /**
-   * 查询创作者
-   */
-  async getCreatedBy(id: number) {
-    return this.userRepository.findOneBy({
-      id: (await this.essayRepository.findOneBy({ id })).createdById,
-    });
-  }
-
-  /**
    * 获取状态
    */
   async getIsToggled(

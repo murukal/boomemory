@@ -104,9 +104,10 @@ export class EssayResolver {
 
   @ResolveField('createdBy', () => User, {
     description: '创作者',
+    nullable: true,
   })
   getCreatedBy(@Parent() essay: Essay) {
-    return this.essayService.getCreatedBy(essay.id);
+    return this.essayLoader.getUserById.load(essay.createdById);
   }
 
   @ResolveField(() => Int, {
@@ -114,11 +115,7 @@ export class EssayResolver {
     description: '浏览量',
   })
   getBrowseClout(@Parent() essay: Essay) {
-    return this.toggleService.getClout4Target(
-      Type.Browse,
-      TargetType.Essay,
-      essay.id,
-    );
+    return this.essayLoader.getBrowseCloutById.load(essay.id);
   }
 
   @ResolveField(() => Int, {
@@ -126,11 +123,7 @@ export class EssayResolver {
     description: '点赞量',
   })
   getLikeClout(@Parent() essay: Essay) {
-    return this.toggleService.getClout4Target(
-      Type.Like,
-      TargetType.Essay,
-      essay.id,
-    );
+    return this.essayLoader.getLikeCloutById.load(essay.id);
   }
 
   @ResolveField(() => Int, {
@@ -138,11 +131,7 @@ export class EssayResolver {
     description: '收藏量',
   })
   getCollectClout(@Parent() essay: Essay) {
-    return this.toggleService.getClout4Target(
-      Type.Collect,
-      TargetType.Essay,
-      essay.id,
-    );
+    return this.essayLoader.getCollectCloutById.load(essay.id);
   }
 
   @ResolveField(() => Boolean, {

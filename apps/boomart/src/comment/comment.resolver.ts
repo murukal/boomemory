@@ -1,6 +1,5 @@
 import { Comment } from '@app/data-base/entities/boomart';
 import { User } from '@app/data-base/entities/boomemory';
-import { UserService } from '@app/user';
 import { UseGuards } from '@nestjs/common';
 import {
   Resolver,
@@ -13,6 +12,7 @@ import {
 } from '@nestjs/graphql';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
+import { CommentLoader } from './comment.loader';
 import { CommentService } from './comment.service';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { FilterCommentInput } from './dto/filter-comment.input';
@@ -21,7 +21,7 @@ import { FilterCommentInput } from './dto/filter-comment.input';
 export class CommentResolver {
   constructor(
     private readonly commentService: CommentService,
-    private readonly userService: UserService,
+    private readonly commentLoader: CommentLoader,
   ) {}
 
   @Mutation(() => Boolean, {
@@ -59,6 +59,6 @@ export class CommentResolver {
     description: '评论人',
   })
   getCreatedBy(@Parent() comment: Comment) {
-    return this.userService.getUser(comment.createdById);
+    return this.commentLoader.getUserById.load(comment.createdById);
   }
 }

@@ -10,6 +10,14 @@ import { Repository } from 'typeorm';
 export class BillingLoader {
   private targetType: TargetType;
 
+  constructor(
+    @InjectRepository(Share, CONNECTION_BOOMONEY)
+    private readonly shareRepository: Repository<Share>,
+  ) {}
+
+  /**
+   * 根据账本id获取分享信息
+   */
   public readonly getSharesByTargetId = new DataLoader<number, Share[]>(
     async (targetIds: number[]) => {
       const shares = await this.shareRepository
@@ -38,11 +46,6 @@ export class BillingLoader {
       return targetIds.map((targetId) => groupedShares[targetId]);
     },
   );
-
-  constructor(
-    @InjectRepository(Share, CONNECTION_BOOMONEY)
-    private readonly shareRepository: Repository<Share>,
-  ) {}
 
   /**
    * target type

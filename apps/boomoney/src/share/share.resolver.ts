@@ -38,8 +38,9 @@ export class ShareResolver {
 
   @ResolveField('sharedBy', () => User, {
     description: '分享人员',
+    nullable: true,
   })
   getSharedBy(@Parent() share: Share) {
-    return this.shareLoader.getUserBySharedById.load(share.sharedById);
+    return this.shareLoader.getUserById.load(share.sharedById);
   }
 }

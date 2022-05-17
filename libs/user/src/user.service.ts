@@ -67,4 +67,20 @@ export class UserService {
       },
     });
   }
+
+  /**
+   * 鉴于dataLoader常利用用户ids获取用户信息
+   * 将上述逻辑提供为统一的API
+   */
+  async getUsers4UserIds(userIds: number[]) {
+    const users = (
+      await this.getUsers({
+        filterInput: {
+          ids: userIds,
+        },
+      })
+    ).items;
+
+    return userIds.map((userId) => users.find((user) => user.id === userId));
+  }
 }

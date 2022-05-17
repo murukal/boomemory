@@ -71,19 +71,30 @@ export class ToggleService {
   /**
    * 获取目标流量
    */
-  getClout4Target(type: Type, targetType: TargetType, targetId: number) {
+  getClouts4Targets(
+    type: Type,
+    targetType: TargetType,
+    targetIds: number[],
+  ): Promise<
+    {
+      targetId: number;
+      clout: number;
+    }[]
+  > {
     return this.toggleRepository
       .createQueryBuilder()
+      .select('targetId')
+      .addSelect('COUNT(id)', 'clout')
       .where('type = :type', {
         type,
       })
       .andWhere('targetType = :targetType', {
         targetType,
       })
-      .andWhere('targetId = :targetId', {
-        targetId,
+      .andWhere('targetId IN (:...targetIds)', {
+        targetIds,
       })
-      .getCount();
+      .execute();
   }
 
   /**
