@@ -42,7 +42,7 @@ export class EssayService {
   }
 
   /**
-   * 查询多个文章
+   * 分页查询文章
    */
   async getEssays(query?: QueryParams<FilterEssayInput>) {
     const { paginateInput, filterInput } = query;

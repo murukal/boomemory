@@ -40,7 +40,7 @@ export class MenuResolver {
 
   @Query(() => PaginatedMenus, {
     name: 'menus',
-    description: '查询多个菜单',
+    description: '分页查询菜单',
   })
   @UseGuards(new JwtAuthGuard(true))
   getMenus(

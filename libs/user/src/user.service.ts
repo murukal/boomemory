@@ -51,7 +51,7 @@ export class UserService {
   }
 
   /**
-   * 查询多个用户
+   * 分页查询用户
    */
   getUsers(query?: QueryParams<FilterUserInput>) {
     return paginateQuery(this.userRepository, {

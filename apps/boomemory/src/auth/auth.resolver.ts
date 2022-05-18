@@ -50,7 +50,7 @@ export class AuthResolver {
   }
 
   @Query(() => PaginatedUsers, {
-    description: '查询多个用户',
+    description: '分页查询用户',
     name: 'users',
   })
   getUsers(
@@ -70,7 +70,7 @@ export class AuthResolver {
   }
 
   @Query(() => PaginatedAuthorizations, {
-    description: '查询多个权限',
+    description: '分页查询权限',
     name: 'authorizations',
   })
   getAuthorizations() {

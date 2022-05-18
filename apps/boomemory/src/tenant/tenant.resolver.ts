@@ -33,7 +33,7 @@ export class TenantResolver {
 
   @Query(() => PaginatedTenants, {
     name: 'tenants',
-    description: '查询多个租户',
+    description: '分页查询租户',
   })
   getTenants(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,

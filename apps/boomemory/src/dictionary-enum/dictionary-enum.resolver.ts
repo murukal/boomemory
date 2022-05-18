@@ -29,7 +29,7 @@ export class DictionaryEnumResolver {
 
   @Query(() => PaginatedDictionaryEnum, {
     name: 'dictionaryEnums',
-    description: '查询多个字典枚举',
+    description: '分页查询字典枚举',
   })
   @Permission({
     resource: AuthorizationResourceCode.DictionaryEnum,

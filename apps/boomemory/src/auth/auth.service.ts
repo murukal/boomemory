@@ -130,14 +130,14 @@ export class AuthService {
   }
 
   /**
-   * 查询多个用户
+   * 分页查询用户
    */
   getUsers(query?: QueryParams<FilterUserInput>) {
     return this.userService.getUsers(query);
   }
 
   /**
-   * 查询多个权限
+   * 分页查询权限
    */
   getAuthorizations(query?: QueryParams) {
     return paginateQuery(this.authorizationRepository, query);

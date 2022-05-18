@@ -1,7 +1,9 @@
 import { Category } from '@app/data-base/entities/boomoney';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { PaginateInput } from 'utils/dto';
 import { CategoryService } from './category.service';
 import { CreateCategoryInput } from './dto/create-category.input';
+import { PaginatedCategories } from './dto/paginated-categories';
 import { UpdateCategoryInput } from './dto/update-category.input';
 
 @Resolver(() => Category)
@@ -17,9 +19,16 @@ export class CategoryResolver {
     return this.categoryService.create(createCategoryInput);
   }
 
-  @Query(() => [Category], { name: 'categories', description: '查询多个分类' })
-  getCategories() {
-    return this.categoryService.getCategories();
+  @Query(() => PaginatedCategories, {
+    name: 'categories',
+    description: '分页查询分类',
+  })
+  getCategories(
+    @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
+  ) {
+    return this.categoryService.getCategories({
+      paginateInput,
+    });
   }
 
   @Query(() => Category, { name: 'category', description: '查询单个分类' })
@@ -29,7 +38,7 @@ export class CategoryResolver {
     return this.categoryService.getCategory(id);
   }
 
-  @Mutation(() => Category, {
+  @Mutation(() => Boolean, {
     description: '更新分类',
   })
   updateCategory(
@@ -46,7 +55,7 @@ export class CategoryResolver {
     return this.categoryService.update(id, updateCategoryInput);
   }
 
-  @Mutation(() => Category, {
+  @Mutation(() => Boolean, {
     description: '删除分类',
   })
   removeCategory(

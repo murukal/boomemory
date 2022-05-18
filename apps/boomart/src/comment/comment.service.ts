@@ -37,7 +37,9 @@ export class CommentService {
     ).affected;
   }
 
-  /** 查询多个评论 */
+  /**
+   * 查询多个评论
+   */
   async getComments(filterInput: FilterCommentInput) {
     return await this.commentRepository
       .createQueryBuilder()

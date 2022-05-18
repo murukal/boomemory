@@ -17,7 +17,7 @@ export class TagResolver {
     return this.tagService.create(createTagInput);
   }
 
-  @Query(() => PaginatedTags, { name: 'tags', description: '查询多个标签' })
+  @Query(() => PaginatedTags, { name: 'tags', description: '分页查询标签' })
   getTags(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
   ) {

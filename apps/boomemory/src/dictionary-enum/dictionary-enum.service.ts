@@ -25,7 +25,7 @@ export class DictionaryEnumService {
   }
 
   /**
-   * 查询多个字典枚举
+   * 分页查询字典枚举
    */
   getDictionaryEnums(query?: QueryParams) {
     return paginateQuery(this.dictionaryEnumRepository, query);

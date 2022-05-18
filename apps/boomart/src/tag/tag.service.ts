@@ -23,7 +23,7 @@ export class TagService {
   }
 
   /**
-   * 查询多个标签
+   * 分页查询标签
    */
   getTags(query?: QueryParams) {
     return paginateQuery(this.tagRepository, query);

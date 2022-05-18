@@ -43,7 +43,7 @@ export class EssayResolver {
 
   @Query(() => PaginatedEssays, {
     name: 'essays',
-    description: '查询多个文章',
+    description: '分页查询文章',
   })
   @UseInterceptors(UserInterceptor)
   getEssays(

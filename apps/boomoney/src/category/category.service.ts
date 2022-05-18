@@ -3,6 +3,8 @@ import { Category } from '@app/data-base/entities/boomoney';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { QueryParams } from 'typings';
+import { paginateQuery } from 'utils';
 import { CreateCategoryInput } from './dto/create-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
 
@@ -25,8 +27,8 @@ export class CategoryService {
   /**
    * 查询多个分类
    */
-  getCategories() {
-    return this.categoryRepository.createQueryBuilder().getMany();
+  getCategories(query?: QueryParams) {
+    return paginateQuery(this.categoryRepository, query);
   }
 
   /**

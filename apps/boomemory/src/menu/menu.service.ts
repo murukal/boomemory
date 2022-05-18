@@ -39,7 +39,7 @@ export class MenuService {
   }
 
   /**
-   * 查询多个菜单
+   * 分页查询菜单
    */
   async getMenus(query?: QueryParams<FilterMenuInput>, userId?: number) {
     const { filterInput, ...otherQuery } = query || {};

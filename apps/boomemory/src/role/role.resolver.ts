@@ -34,7 +34,7 @@ export class RoleResolver {
 
   @Query(() => PaginatedRole, {
     name: 'roles',
-    description: '查询多个角色',
+    description: '分页查询角色',
   })
   @Permission({
     resource: AuthorizationResourceCode.Role,

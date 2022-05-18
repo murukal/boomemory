@@ -26,7 +26,7 @@ export class DictionaryResolver {
 
   @Query(() => PaginatedDictionaries, {
     name: 'dictionaries',
-    description: '查询多个字典',
+    description: '分页查询字典',
   })
   @Permission({
     resource: AuthorizationResourceCode.Dictionary,

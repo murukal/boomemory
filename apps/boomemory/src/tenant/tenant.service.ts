@@ -27,7 +27,7 @@ export class TenantService {
   }
 
   /**
-   * 查询多个租户
+   * 分页查询租户
    */
   getTenants(query?: QueryParams) {
     return paginateQuery(this.tenantRepository, query);
