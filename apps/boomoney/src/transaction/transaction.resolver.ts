@@ -9,6 +9,7 @@ import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
 import { Transaction } from '@app/data-base/entities/boomoney';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedTransactions } from './dto/paginated-transactions';
+import { FilterTransactionInput } from './dto/filter-transaction.input';
 
 @Resolver(() => Transaction)
 export class TransactionResolver {
@@ -34,14 +35,15 @@ export class TransactionResolver {
   })
   @UseGuards(JwtAuthGuard)
   getTransactions(
-    @Args('billingId', { type: () => Int, description: '账本id' })
-    billingId: number,
+    @Args('filterInput', {
+      type: () => FilterTransactionInput,
+      description: '查询交易筛选条件',
+    })
+    filterInput: FilterTransactionInput,
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
   ) {
     return this.transactionService.getTransactions({
-      filterInput: {
-        billingId,
-      },
+      filterInput,
       paginateInput,
     });
   }

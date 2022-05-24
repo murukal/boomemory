@@ -1,8 +1,24 @@
-import { ObjectType, Field, Float, Int } from '@nestjs/graphql';
+import {
+  ObjectType,
+  Field,
+  Float,
+  Int,
+  registerEnumType,
+} from '@nestjs/graphql';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { CoreEntity } from '../core.entity';
 import { Billing } from './billing.entity';
 import { Category } from './category.entity';
+
+export enum Direction {
+  In = 'in',
+  Out = 'out',
+}
+
+registerEnumType(Direction, {
+  name: 'TransactionDirection',
+  description: '交易方向',
+});
 
 @ObjectType()
 @Entity()
@@ -35,4 +51,13 @@ export class Transaction extends CoreEntity {
 
   @Column()
   createdById: number;
+
+  @Field(() => Direction, {
+    description: '交易方向',
+  })
+  @Column({
+    type: 'enum',
+    enum: Direction,
+  })
+  direction: Direction;
 }
