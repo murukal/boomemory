@@ -24,7 +24,7 @@ export class DictionaryEnum extends CoreEntity {
   @Column()
   sortBy: number;
 
-  @Field(() => Int, { description: '所属字典ID' })
+  @Field(() => Int, { description: '所属字典id' })
   @Column()
   parentId: number;
 

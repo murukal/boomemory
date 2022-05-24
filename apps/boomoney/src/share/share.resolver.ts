@@ -23,7 +23,7 @@ export class ShareResolver {
     description: '创建分享',
   })
   createShare(
-    @Args('targetId', { type: () => Int, description: '目标ID' })
+    @Args('targetId', { type: () => Int, description: '目标id' })
     targetId: number,
     @Args('targetType', { type: () => TargetType, description: '目标类型' })
     targetType: TargetType,

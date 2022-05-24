@@ -4,7 +4,10 @@ import { TargetType } from '@app/data-base/entities/boomoney/share.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { QueryParams } from 'typings';
+import { paginateQuery } from 'utils';
 import { CreateTransactionInput } from './dto/create-transaction.input';
+import { FilterTransactionInput } from './dto/filter-transaction.input';
 import { UpdateTransactionInput } from './dto/update-transaction.input';
 
 @Injectable()
@@ -29,27 +32,8 @@ export class TransactionService {
   /**
    * 查询多个交易
    */
-  getTransactions(userId: number, billingId: number) {
-    return this.transactionRepository
-      .createQueryBuilder('transaction')
-      .leftJoinAndSelect(
-        Share,
-        'share',
-        'share.targetType = :targetType AND share.targetId = transaction.id',
-        {
-          targetType: TargetType.Transaction,
-        },
-      )
-      .where(
-        '( transaction.createdById = :userId OR share.sharedById = :userId )',
-        {
-          userId,
-        },
-      )
-      .andWhere('transaction.billingId = :billingId', {
-        billingId,
-      })
-      .getMany();
+  getTransactions(query?: QueryParams<FilterTransactionInput>) {
+    return paginateQuery(this.transactionRepository, query);
   }
 
   /**

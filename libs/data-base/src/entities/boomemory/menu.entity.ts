@@ -50,7 +50,7 @@ export class Menu extends CoreEntity {
   @ManyToOne(() => Tenant, (tenant) => tenant.menus)
   tenant: Tenant;
 
-  @Field(() => Int, { nullable: true, description: '上级菜单ID' })
+  @Field(() => Int, { nullable: true, description: '上级菜单id' })
   @Column({ nullable: true })
   parentId?: number;
 

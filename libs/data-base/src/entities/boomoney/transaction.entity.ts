@@ -8,7 +8,7 @@ import { Category } from './category.entity';
 @Entity()
 export class Transaction extends CoreEntity {
   @Field(() => Int, {
-    description: '账本ID',
+    description: '账本id',
   })
   @Column()
   billingId: number;
@@ -17,7 +17,7 @@ export class Transaction extends CoreEntity {
   billing: Billing;
 
   @Field(() => Int, {
-    description: '分类ID',
+    description: '分类id',
   })
   @Column()
   categoryId: number;

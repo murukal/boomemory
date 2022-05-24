@@ -52,7 +52,7 @@ export class BillingResolver {
   @UseGuards(new JwtAuthGuard(true))
   @UseInterceptors(ShareInterceptor)
   getBilling(
-    @Args('id', { type: () => Int, description: '账本ID' }) id: number,
+    @Args('id', { type: () => Int, description: '账本id' }) id: number,
     @CurrentUser() user: User,
   ) {
     return this.billingService.getBilling(id, user.id);
@@ -62,7 +62,7 @@ export class BillingResolver {
     description: '更新账本',
   })
   updateBilling(
-    @Args('id', { type: () => Int, description: '账本ID' }) id: number,
+    @Args('id', { type: () => Int, description: '账本id' }) id: number,
     @Args('updateBillingInput') updateBillingInput: UpdateBillingInput,
   ) {
     return this.billingService.update(id, updateBillingInput);
@@ -72,7 +72,7 @@ export class BillingResolver {
     description: '删除账本',
   })
   removeBilling(
-    @Args('id', { type: () => Int, description: '账本ID' }) id: number,
+    @Args('id', { type: () => Int, description: '账本id' }) id: number,
   ) {
     return this.billingService.remove(id);
   }

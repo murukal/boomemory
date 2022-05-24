@@ -7,6 +7,8 @@ import { User } from '@app/data-base/entities/boomemory';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
 import { Transaction } from '@app/data-base/entities/boomoney';
+import { PaginateInput } from 'utils/dto';
+import { PaginatedTransactions } from './dto/paginated-transactions';
 
 @Resolver(() => Transaction)
 export class TransactionResolver {
@@ -26,18 +28,22 @@ export class TransactionResolver {
     return this.transactionService.create(createTransactionInput, user.id);
   }
 
-  @Query(() => [Transaction], {
+  @Query(() => PaginatedTransactions, {
     name: 'transactions',
-    description: '查询多个交易',
+    description: '分页查询交易',
   })
-  @UseGuards(new JwtAuthGuard(true))
+  @UseGuards(JwtAuthGuard)
   getTransactions(
-    @Args('billingId', { type: () => Int, description: '账本ID' })
+    @Args('billingId', { type: () => Int, description: '账本id' })
     billingId: number,
-    @CurrentUser()
-    user: User,
+    @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
   ) {
-    return this.transactionService.getTransactions(user.id, billingId);
+    return this.transactionService.getTransactions({
+      filterInput: {
+        billingId,
+      },
+      paginateInput,
+    });
   }
 
   @Query(() => Transaction, {
@@ -45,7 +51,7 @@ export class TransactionResolver {
     description: '查询单个交易',
   })
   getTransaction(
-    @Args('id', { type: () => Int, description: '交易ID' }) id: number,
+    @Args('id', { type: () => Int, description: '交易id' }) id: number,
     @CurrentUser() user: User,
   ) {
     return this.transactionService.getTransaction(id, user.id);
@@ -55,7 +61,7 @@ export class TransactionResolver {
     description: '更新交易',
   })
   updateTransaction(
-    @Args('id', { type: () => Int, description: '交易ID' }) id: number,
+    @Args('id', { type: () => Int, description: '交易id' }) id: number,
     @Args('updateTransactionInput', { description: '交易' })
     updateTransactionInput: UpdateTransactionInput,
   ) {

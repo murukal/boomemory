@@ -33,7 +33,7 @@ export class CategoryResolver {
 
   @Query(() => Category, { name: 'category', description: '查询单个分类' })
   getCategory(
-    @Args('id', { type: () => Int, description: '分类ID' }) id: number,
+    @Args('id', { type: () => Int, description: '分类id' }) id: number,
   ) {
     return this.categoryService.getCategory(id);
   }
@@ -44,7 +44,7 @@ export class CategoryResolver {
   updateCategory(
     @Args('id', {
       type: () => Int,
-      description: '分类ID',
+      description: '分类id',
     })
     id: number,
     @Args('updateCategoryInput', {
@@ -59,7 +59,7 @@ export class CategoryResolver {
     description: '删除分类',
   })
   removeCategory(
-    @Args('id', { type: () => Int, description: '分类ID' }) id: number,
+    @Args('id', { type: () => Int, description: '分类id' }) id: number,
   ) {
     return this.categoryService.remove(id);
   }
