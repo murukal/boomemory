@@ -3,7 +3,7 @@ import { Share, Transaction } from '@app/data-base/entities/boomoney';
 import { TargetType } from '@app/data-base/entities/boomoney/share.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { CreateTransactionInput } from './dto/create-transaction.input';
@@ -33,7 +33,16 @@ export class TransactionService {
    * 查询多个交易
    */
   getTransactions(query?: QueryParams<FilterTransactionInput>) {
-    return paginateQuery(this.transactionRepository, query);
+    const { filterInput, ...otherQuery } = query;
+    const { directions, ...otherFilterInpu } = filterInput;
+
+    return paginateQuery(this.transactionRepository, {
+      ...otherQuery,
+      filterInput: {
+        ...otherFilterInpu,
+        direction: In(directions),
+      },
+    });
   }
 
   /**
