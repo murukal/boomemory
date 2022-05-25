@@ -1,4 +1,12 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionInput } from './dto/create-transaction.input';
 import { UpdateTransactionInput } from './dto/update-transaction.input';
@@ -6,14 +14,18 @@ import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { User } from '@app/data-base/entities/boomemory';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
-import { Transaction } from '@app/data-base/entities/boomoney';
+import { Category, Transaction } from '@app/data-base/entities/boomoney';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedTransactions } from './dto/paginated-transactions';
 import { FilterTransactionInput } from './dto/filter-transaction.input';
+import { TransactionLoader } from './transaction.loader';
 
 @Resolver(() => Transaction)
 export class TransactionResolver {
-  constructor(private readonly transactionService: TransactionService) {}
+  constructor(
+    private readonly transactionService: TransactionService,
+    private readonly transactionLoader: TransactionLoader,
+  ) {}
 
   @Mutation(() => Transaction, {
     description: '创建交易',
@@ -73,5 +85,12 @@ export class TransactionResolver {
   @Mutation(() => Boolean)
   removeTransaction(@Args('id', { type: () => Int }) id: number) {
     return this.transactionService.remove(id);
+  }
+
+  @ResolveField('category', () => Category, {
+    description: '分类',
+  })
+  getCategory(@Parent() transaction: Transaction) {
+    return this.transactionLoader.getCategoryById.load(transaction.categoryId);
   }
 }

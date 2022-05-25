@@ -2,10 +2,11 @@ import { CONNECTION_BOOMONEY } from '@app/data-base/entities';
 import { Category } from '@app/data-base/entities/boomoney';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { CreateCategoryInput } from './dto/create-category.input';
+import { FilterCategoryInput } from './dto/filter-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
 
 @Injectable()
@@ -27,8 +28,19 @@ export class CategoryService {
   /**
    * 查询多个分类
    */
-  getCategories(query?: QueryParams) {
-    return paginateQuery(this.categoryRepository, query);
+  getCategories(query?: QueryParams<FilterCategoryInput>) {
+    const { filterInput, ...otherQuery } = query;
+    const { ids, ...otherFilterInput } = filterInput || {};
+
+    return paginateQuery(this.categoryRepository, {
+      ...otherQuery,
+      filterInput: {
+        ...otherFilterInput,
+        ...(ids && {
+          id: In(ids),
+        }),
+      },
+    });
   }
 
   /**

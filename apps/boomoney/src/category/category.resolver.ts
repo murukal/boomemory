@@ -3,6 +3,7 @@ import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { PaginateInput } from 'utils/dto';
 import { CategoryService } from './category.service';
 import { CreateCategoryInput } from './dto/create-category.input';
+import { FilterCategoryInput } from './dto/filter-category.input';
 import { PaginatedCategories } from './dto/paginated-categories';
 import { UpdateCategoryInput } from './dto/update-category.input';
 
@@ -25,9 +26,11 @@ export class CategoryResolver {
   })
   getCategories(
     @Args('paginateInput', { nullable: true }) paginateInput: PaginateInput,
+    @Args('filterInput', { nullable: true }) filterInput: FilterCategoryInput,
   ) {
     return this.categoryService.getCategories({
       paginateInput,
+      filterInput,
     });
   }
 
