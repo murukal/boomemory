@@ -66,7 +66,8 @@ export class EssayLoader {
       );
 
       return essayIds.map(
-        (essayId) => clouts.find((clout) => clout.targetId === essayId).clout,
+        (essayId) =>
+          clouts.find((clout) => clout.targetId === essayId)?.clout || 0,
       );
     },
   );
@@ -83,7 +84,8 @@ export class EssayLoader {
       );
 
       return essayIds.map(
-        (essayId) => clouts.find((clout) => clout.targetId === essayId).clout,
+        (essayId) =>
+          clouts.find((clout) => clout.targetId === essayId)?.clout || 0,
       );
     },
   );
@@ -100,7 +102,8 @@ export class EssayLoader {
       );
 
       return essayIds.map(
-        (essayId) => clouts.find((clout) => clout.targetId === essayId).clout,
+        (essayId) =>
+          clouts.find((clout) => clout.targetId === essayId)?.clout || 0,
       );
     },
   );
@@ -118,7 +121,8 @@ export class EssayLoader {
       );
 
       return essayIds.map(
-        (essayId) => !!clouts.find((clout) => clout.targetId === essayId).clout,
+        (essayId) =>
+          !!clouts.find((clout) => clout.targetId === essayId)?.clout,
       );
     },
   );
@@ -136,7 +140,8 @@ export class EssayLoader {
       );
 
       return essayIds.map(
-        (essayId) => !!clouts.find((clout) => clout.targetId === essayId).clout,
+        (essayId) =>
+          !!clouts.find((clout) => clout.targetId === essayId)?.clout,
       );
     },
   );
