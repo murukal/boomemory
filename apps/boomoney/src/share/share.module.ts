@@ -5,5 +5,6 @@ import { ShareLoader } from './share.loader';
 
 @Module({
   providers: [ShareResolver, ShareService, ShareLoader],
+  exports: [ShareService],
 })
 export class ShareModule {}

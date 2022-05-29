@@ -4,6 +4,7 @@ import { TargetType } from '@app/data-base/entities/boomoney/share.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ShareService } from '../share/share.service';
 import { CreateBillingInput } from './dto/create-billing.input';
 import { UpdateBillingInput } from './dto/update-billing.input';
 
@@ -14,6 +15,8 @@ export class BillingService {
     private readonly billingRepository: Repository<Billing>,
     @InjectRepository(Share, CONNECTION_BOOMONEY)
     private readonly shareRepository: Repository<Share>,
+
+    private readonly shareService: ShareService,
   ) {}
 
   /**
@@ -81,8 +84,29 @@ export class BillingService {
 
   /**
    * 删除账本信息
+   * 操作人为账本所有人，删除账本的所有分享，删除账本
+   * 操作人非账本所有人，仅删除账本的相关分享
    */
-  remove(id: number) {
-    return this.billingRepository.delete(id);
+  async remove(id: number, userId: number): Promise<boolean> {
+    const billing = await this.billingRepository.findOneBy({
+      id,
+    });
+
+    if (!billing) {
+      return true;
+    }
+
+    const isCreator = billing.createdById === userId;
+
+    const isShareRemoved = await this.shareService.remove({
+      targetId: id,
+      targetType: TargetType.Billing,
+      sharedById: isCreator ? undefined : userId,
+    });
+
+    if (!isShareRemoved) return false;
+    if (!isCreator) return true;
+
+    return !!(await this.billingRepository.delete(id)).affected;
   }
 }

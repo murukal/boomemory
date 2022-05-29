@@ -1,4 +1,4 @@
-import { ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Billing } from './billing.entity';
 
@@ -8,6 +8,9 @@ export class UserProfile {
   @PrimaryColumn()
   userId: number;
 
+  @Field(() => Billing, {
+    description: '默认账本',
+  })
   @ManyToOne(() => Billing, {
     nullable: true,
   })

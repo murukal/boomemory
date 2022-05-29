@@ -1,6 +1,8 @@
 import { CONNECTION_BOOMONEY } from '@app/data-base/entities';
+import { User } from '@app/data-base/entities/boomemory';
 import { Share } from '@app/data-base/entities/boomoney';
 import { TargetType } from '@app/data-base/entities/boomoney/share.entity';
+import { UserService } from '@app/user';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import DataLoader = require('dataloader');
@@ -13,6 +15,8 @@ export class BillingLoader {
   constructor(
     @InjectRepository(Share, CONNECTION_BOOMONEY)
     private readonly shareRepository: Repository<Share>,
+
+    private readonly userService: UserService,
   ) {}
 
   /**
@@ -53,4 +57,21 @@ export class BillingLoader {
   public setTargetType(targetType?: TargetType) {
     this.targetType = targetType;
   }
+
+  /**
+   * 根据创建者id获取账本创建人
+   */
+  public getCreatorById = new DataLoader<number, User>(
+    async (ids: number[]) => {
+      const users = (
+        await this.userService.getUsers({
+          filterInput: {
+            ids,
+          },
+        })
+      ).items;
+
+      return ids.map((id) => users.find((user) => user.id === id));
+    },
+  );
 }

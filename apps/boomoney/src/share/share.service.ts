@@ -1,9 +1,10 @@
 import { CONNECTION_BOOMONEY } from '@app/data-base/entities';
 import { Share } from '@app/data-base/entities/boomoney';
-import { TargetType } from '@app/data-base/entities/boomoney/share.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateShareInput } from './dto/create-share.input';
+import { RemoveShareInput } from './dto/remove-share.input';
 
 @Injectable()
 export class ShareService {
@@ -15,17 +16,50 @@ export class ShareService {
   /**
    * 分享
    */
-  async create(targetId: number, targetType: TargetType, userIds: number[]) {
+  async create(createShareInput: CreateShareInput): Promise<boolean> {
+    const isRemoved = await this.remove({
+      targetType: createShareInput.targetType,
+      targetId: createShareInput.targetId,
+    });
+
+    // 删除原来的分享失败，直接返回
+    if (!isRemoved) return false;
+
     const createdShares = await this.shareRepository.save(
-      userIds.map((userId) =>
+      createShareInput.sharedByIds.map((sharedById) =>
         this.shareRepository.create({
-          sharedById: userId,
-          targetId,
-          targetType,
+          sharedById,
+          targetId: createShareInput.targetId,
+          targetType: createShareInput.targetType,
         }),
       ),
     );
 
     return !!createdShares.length;
+  }
+
+  /**
+   * 删除分享
+   */
+  async remove(removeShareInput: RemoveShareInput): Promise<boolean> {
+    const qb = this.shareRepository
+      .createQueryBuilder()
+      .delete()
+      .where('targetId = :targetId', {
+        targetId: removeShareInput.targetId,
+      })
+      .andWhere('targetType = :targetType', {
+        targetType: removeShareInput.targetType,
+      });
+
+    if (removeShareInput.sharedById) {
+      qb.andWhere('sharedById = :sharedById', {
+        sharedById: removeShareInput.sharedById,
+      });
+    }
+
+    const { affected } = await qb.execute();
+
+    return !!affected;
   }
 }

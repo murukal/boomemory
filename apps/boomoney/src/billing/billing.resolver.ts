@@ -71,10 +71,12 @@ export class BillingResolver {
   @Mutation(() => Boolean, {
     description: '删除账本',
   })
+  @UseGuards(JwtAuthGuard)
   removeBilling(
     @Args('id', { type: () => Int, description: '账本id' }) id: number,
+    @CurrentUser() user: User,
   ) {
-    return this.billingService.remove(id);
+    return this.billingService.remove(id, user.id);
   }
 
   @ResolveField('shares', () => [Share], {
@@ -83,5 +85,13 @@ export class BillingResolver {
   })
   getShares(@Parent() billing: Billing) {
     return this.billingLoader.getSharesByTargetId.load(billing.id);
+  }
+
+  @ResolveField('createdBy', () => User, {
+    description: '创建人',
+    nullable: true,
+  })
+  getCreatedBy(@Parent() billing: Billing) {
+    return this.billingLoader.getCreatorById.load(billing.createdById);
   }
 }
