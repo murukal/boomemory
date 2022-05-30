@@ -12,4 +12,10 @@ export class Billing extends CoreEntity {
   @Field(() => Int, { description: '账本创建人id' })
   @Column()
   createdById: number;
+
+  @Column({
+    type: Boolean,
+    default: false,
+  })
+  isDeleted: boolean;
 }

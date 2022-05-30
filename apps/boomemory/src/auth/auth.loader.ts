@@ -20,10 +20,14 @@ export class AuthLoader {
     async (userIds) => {
       const profiles = await this.userProfileRepository
         .createQueryBuilder('profile')
-        .innerJoinAndMapOne(
+        .leftJoinAndMapOne(
           'profile.defaultBilling',
           'profile.defaultBilling',
           'billing',
+          'billing.isDeleted = :isDeleted',
+          {
+            isDeleted: false,
+          },
         )
         .whereInIds(userIds)
         .getMany();

@@ -9,6 +9,7 @@ export class UserProfile {
   userId: number;
 
   @Field(() => Billing, {
+    nullable: true,
     description: '默认账本',
   })
   @ManyToOne(() => Billing, {

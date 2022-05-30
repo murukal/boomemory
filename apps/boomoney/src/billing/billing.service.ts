@@ -13,9 +13,6 @@ export class BillingService {
   constructor(
     @InjectRepository(Billing, CONNECTION_BOOMONEY)
     private readonly billingRepository: Repository<Billing>,
-    @InjectRepository(Share, CONNECTION_BOOMONEY)
-    private readonly shareRepository: Repository<Share>,
-
     private readonly shareService: ShareService,
   ) {}
 
@@ -45,9 +42,15 @@ export class BillingService {
           targetType: TargetType.Billing,
         },
       )
-      .where('billing.createdById = :userId OR share.sharedById = :userId', {
-        userId,
+      .andWhere('isDeleted = :isDeleted', {
+        isDeleted: false,
       })
+      .where(
+        '( billing.createdById = :userId OR share.sharedById = :userId )',
+        {
+          userId,
+        },
+      )
       .getMany();
   }
 
@@ -66,6 +69,9 @@ export class BillingService {
         },
       )
       .whereInIds(billingId)
+      .andWhere('isDeleted = :isDeleted', {
+        isDeleted: false,
+      })
       .andWhere(
         '( billing.createdById = :userId OR share.sharedById = :userId )',
         {
@@ -90,6 +96,7 @@ export class BillingService {
   async remove(id: number, userId: number): Promise<boolean> {
     const billing = await this.billingRepository.findOneBy({
       id,
+      isDeleted: false,
     });
 
     if (!billing) {
@@ -107,6 +114,10 @@ export class BillingService {
     if (!isShareRemoved) return false;
     if (!isCreator) return true;
 
-    return !!(await this.billingRepository.delete(id)).affected;
+    return !!(
+      await this.billingRepository.update(id, {
+        isDeleted: true,
+      })
+    ).affected;
   }
 }
