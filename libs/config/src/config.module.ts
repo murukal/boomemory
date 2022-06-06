@@ -12,7 +12,7 @@ import { ConfigService } from './config.service';
     NativeConfigModule.forRoot({
       isGlobal: true,
       load: [jwtConfig, rsaConfig, portConfig, cosConfig],
-      envFilePath: ['.env.development.local'],
+      envFilePath: ['.env.development.local', '.env.local'],
     }),
   ],
   providers: [ConfigService],
