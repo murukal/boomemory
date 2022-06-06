@@ -73,6 +73,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/config/tsconfig.lib.json"
       }
+    },
+    "bot": {
+      "type": "application",
+      "root": "apps/bot",
+      "entryFile": "main",
+      "sourceRoot": "apps/bot/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/bot/tsconfig.app.json"
+      }
     }
   }
 }
