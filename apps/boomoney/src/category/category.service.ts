@@ -1,10 +1,10 @@
-import { CONNECTION_BOOMONEY } from '@app/data-base/entities';
 import { Category } from '@app/data-base/entities/boomoney';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { AppID } from 'utils/app';
 import { CreateCategoryInput } from './dto/create-category.input';
 import { FilterCategoryInput } from './dto/filter-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
@@ -12,7 +12,7 @@ import { UpdateCategoryInput } from './dto/update-category.input';
 @Injectable()
 export class CategoryService {
   constructor(
-    @InjectRepository(Category, CONNECTION_BOOMONEY)
+    @InjectRepository(Category, AppID.Boomoney)
     private readonly categoryRepository: Repository<Category>,
   ) {}
 

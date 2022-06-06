@@ -1,17 +1,17 @@
-import { CONNECTION_BOOMEMORY } from '@app/data-base/entities';
 import { DictionaryEnum } from '@app/data-base/entities/boomemory/dictionary-enum.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { AppID } from 'utils/app';
 import { CreateDictionaryEnumInput } from './dto/create-dictionary-enum.input';
 import { UpdateDictionaryEnumInput } from './dto/update-dictionary-enum.input';
 
 @Injectable()
 export class DictionaryEnumService {
   constructor(
-    @InjectRepository(DictionaryEnum, CONNECTION_BOOMEMORY)
+    @InjectRepository(DictionaryEnum, AppID.Boomemory)
     private readonly dictionaryEnumRepository: Repository<DictionaryEnum>,
   ) {}
 

@@ -1,15 +1,15 @@
-import { CONNECTION_BOOMEMORY } from '@app/data-base/entities';
 import { Menu } from '@app/data-base/entities/boomemory';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import DataLoader = require('dataloader');
 import { In, Repository } from 'typeorm';
+import { AppID } from 'utils/app';
 import { MenuService } from './menu.service';
 
 @Injectable()
 export class MenuLoader {
   constructor(
-    @InjectRepository(Menu, CONNECTION_BOOMEMORY)
+    @InjectRepository(Menu, AppID.Boomemory)
     private readonly menuRepository: Repository<Menu>,
     private readonly menuService: MenuService,
   ) {}

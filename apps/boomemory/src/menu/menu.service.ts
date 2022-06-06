@@ -1,10 +1,10 @@
-import { CONNECTION_BOOMEMORY } from '@app/data-base/entities';
 import { AuthorizationResource, Menu } from '@app/data-base/entities/boomemory';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Not, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { AppID } from 'utils/app';
 import { RoleService } from '../role/role.service';
 import { CreateMenuInput } from './dto/create-menu.input';
 import { FilterMenuInput } from './dto/filter-menu.input';
@@ -13,7 +13,7 @@ import { UpdateMenuInput } from './dto/update-menu.input';
 @Injectable()
 export class MenuService {
   constructor(
-    @InjectRepository(Menu, CONNECTION_BOOMEMORY)
+    @InjectRepository(Menu, AppID.Boomemory)
     private readonly menuRepository: Repository<Menu>,
     private readonly roleService: RoleService,
   ) {}

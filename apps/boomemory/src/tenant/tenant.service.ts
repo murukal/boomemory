@@ -1,10 +1,10 @@
-import { CONNECTION_BOOMEMORY } from '@app/data-base/entities';
 import { Tenant } from '@app/data-base/entities/boomemory';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { AppID } from 'utils/app';
 import { MenuService } from '../menu/menu.service';
 import { CreateTenantInput } from './dto/create-tenant.input';
 import { UpdateTenantInput } from './dto/update-tenant.input';
@@ -12,7 +12,7 @@ import { UpdateTenantInput } from './dto/update-tenant.input';
 @Injectable()
 export class TenantService {
   constructor(
-    @InjectRepository(Tenant, CONNECTION_BOOMEMORY)
+    @InjectRepository(Tenant, AppID.Boomemory)
     private readonly tenantRepository: Repository<Tenant>,
     private readonly menuService: MenuService,
   ) {}

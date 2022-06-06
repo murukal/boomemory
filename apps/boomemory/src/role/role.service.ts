@@ -1,4 +1,3 @@
-import { CONNECTION_BOOMEMORY } from '@app/data-base/entities';
 import { Authorization, Role, User } from '@app/data-base/entities/boomemory';
 import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
 import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/authorization-resource.entity';
@@ -7,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { AppID } from 'utils/app';
 import { Option } from 'utils/decorator/permission.decorator';
 import { CreateRoleInput } from './dto/create-role.input';
 import { UpdateRoleInput } from './dto/update-role.input';
@@ -14,7 +14,7 @@ import { UpdateRoleInput } from './dto/update-role.input';
 @Injectable()
 export class RoleService {
   constructor(
-    @InjectRepository(Role, CONNECTION_BOOMEMORY)
+    @InjectRepository(Role, AppID.Boomemory)
     private readonly roleRepository: Repository<Role>,
   ) {}
 

@@ -1,4 +1,3 @@
-import { CONNECTION_BOOMONEY } from '@app/data-base/entities';
 import { User } from '@app/data-base/entities/boomemory';
 import { Share } from '@app/data-base/entities/boomoney';
 import { TargetType } from '@app/data-base/entities/boomoney/share.entity';
@@ -7,13 +6,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import DataLoader = require('dataloader');
 import { Repository } from 'typeorm';
+import { AppID } from 'utils/app';
 
 @Injectable()
 export class BillingLoader {
   private targetType: TargetType;
 
   constructor(
-    @InjectRepository(Share, CONNECTION_BOOMONEY)
+    @InjectRepository(Share, AppID.Boomoney)
     private readonly shareRepository: Repository<Share>,
 
     private readonly userService: UserService,

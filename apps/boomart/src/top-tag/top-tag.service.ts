@@ -1,14 +1,14 @@
-import { CONNECTION_BOOMART } from '@app/data-base/entities';
 import { Tag } from '@app/data-base/entities/boomart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { AppID } from 'utils/app';
 import { TopTag, TopTagArgs } from './dto/top-tag';
 
 @Injectable()
 export class TopTagService {
   constructor(
-    @InjectRepository(Tag, CONNECTION_BOOMART)
+    @InjectRepository(Tag, AppID.Boomart)
     private readonly tagRepository: Repository<Tag>,
   ) {}
 

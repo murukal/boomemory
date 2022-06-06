@@ -3,13 +3,13 @@ import DataLoader = require('dataloader');
 import { Essay, Tag, Toggle } from '@app/data-base/entities/boomart';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CONNECTION_BOOMART } from '@app/data-base/entities';
 import { User } from '@app/data-base/entities/boomemory';
 import { UserService } from '@app/user';
 import {
   TargetType,
   Type,
 } from '@app/data-base/entities/boomart/toggle.entity';
+import { AppID } from 'utils/app';
 
 interface cloutProfile {
   targetId: number;
@@ -21,9 +21,9 @@ export class EssayLoader {
   private userId: number;
 
   constructor(
-    @InjectRepository(Essay, CONNECTION_BOOMART)
+    @InjectRepository(Essay, AppID.Boomart)
     private readonly essayRepository: Repository<Essay>,
-    @InjectRepository(Toggle, CONNECTION_BOOMART)
+    @InjectRepository(Toggle, AppID.Boomart)
     private readonly toggleRepository: Repository<Toggle>,
     private readonly userService: UserService,
   ) {}

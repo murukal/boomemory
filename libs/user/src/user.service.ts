@@ -1,4 +1,3 @@
-import { CONNECTION_BOOMEMORY } from '@app/data-base/entities';
 import { User } from '@app/data-base/entities/boomemory';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,11 +6,12 @@ import { RegisterInput } from 'apps/boomemory/src/auth/dto/register.input';
 import { FindOptionsSelect, In, Not, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { AppID } from 'utils/app';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User, CONNECTION_BOOMEMORY)
+    @InjectRepository(User, AppID.Boomemory)
     private readonly userRepository: Repository<User>,
   ) {}
 

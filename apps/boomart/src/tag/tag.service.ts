@@ -1,17 +1,17 @@
-import { CONNECTION_BOOMART } from '@app/data-base/entities';
 import { Tag } from '@app/data-base/entities/boomart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { AppID } from 'utils/app';
 import { CreateTagInput } from './dto/create-tag.input';
 import { UpdateTagInput } from './dto/update-tag.input';
 
 @Injectable()
 export class TagService {
   constructor(
-    @InjectRepository(Tag, CONNECTION_BOOMART)
+    @InjectRepository(Tag, AppID.Boomart)
     private readonly tagRepository: Repository<Tag>,
   ) {}
 

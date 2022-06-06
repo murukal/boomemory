@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import DataLoader = require('dataloader');
-import { CONNECTION_BOOMONEY } from '@app/data-base/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MoneyProfile } from './dto/money-profile';
 import { UserProfile } from '@app/data-base/entities/boomoney';
+import { AppID } from 'utils/app';
 
 @Injectable()
 export class AuthLoader {
   constructor(
-    @InjectRepository(UserProfile, CONNECTION_BOOMONEY)
+    @InjectRepository(UserProfile, AppID.Boomoney)
     private readonly userProfileRepository: Repository<UserProfile>,
   ) {}
 

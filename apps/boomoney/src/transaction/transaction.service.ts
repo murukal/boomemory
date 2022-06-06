@@ -1,4 +1,3 @@
-import { CONNECTION_BOOMONEY } from '@app/data-base/entities';
 import { Share, Transaction } from '@app/data-base/entities/boomoney';
 import { TargetType } from '@app/data-base/entities/boomoney/share.entity';
 import { Injectable } from '@nestjs/common';
@@ -6,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { AppID } from 'utils/app';
 import { CreateTransactionInput } from './dto/create-transaction.input';
 import { FilterTransactionInput } from './dto/filter-transaction.input';
 import { UpdateTransactionInput } from './dto/update-transaction.input';
@@ -13,7 +13,7 @@ import { UpdateTransactionInput } from './dto/update-transaction.input';
 @Injectable()
 export class TransactionService {
   constructor(
-    @InjectRepository(Transaction, CONNECTION_BOOMONEY)
+    @InjectRepository(Transaction, AppID.Boomoney)
     private readonly transactionRepository: Repository<Transaction>,
   ) {}
 

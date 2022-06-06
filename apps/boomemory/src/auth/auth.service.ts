@@ -1,7 +1,3 @@
-import {
-  CONNECTION_BOOMART,
-  CONNECTION_BOOMEMORY,
-} from '@app/data-base/entities';
 import { UserService } from '@app/user';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -24,17 +20,18 @@ import {
   AuthorizationResource,
 } from '@app/data-base/entities/boomemory';
 import { Essay } from '@app/data-base/entities/boomart';
+import { AppID } from 'utils/app';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(Authorization, CONNECTION_BOOMEMORY)
+    @InjectRepository(Authorization, AppID.Boomemory)
     private readonly authorizationRepository: Repository<Authorization>,
-    @InjectRepository(Essay, CONNECTION_BOOMART)
+    @InjectRepository(Essay, AppID.Boomart)
     private readonly essayRepository: Repository<Essay>,
-    @InjectRepository(AuthorizationResource, CONNECTION_BOOMEMORY)
+    @InjectRepository(AuthorizationResource, AppID.Boomemory)
     private readonly authorizationResourceRepository: Repository<AuthorizationResource>,
-    @InjectRepository(AuthorizationAction, CONNECTION_BOOMEMORY)
+    @InjectRepository(AuthorizationAction, AppID.Boomemory)
     private readonly authorizationActionRepository: Repository<AuthorizationAction>,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,

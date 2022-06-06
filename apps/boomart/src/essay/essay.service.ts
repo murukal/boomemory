@@ -1,10 +1,10 @@
-import { CONNECTION_BOOMART } from '@app/data-base/entities';
 import { Essay, Tag } from '@app/data-base/entities/boomart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
+import { AppID } from 'utils/app';
 import { CreateEssayInput } from './dto/create-essay.input';
 import { FilterEssayInput } from './dto/filter-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
@@ -12,7 +12,7 @@ import { UpdateEssayInput } from './dto/update-essay.input';
 @Injectable()
 export class EssayService {
   constructor(
-    @InjectRepository(Essay, CONNECTION_BOOMART)
+    @InjectRepository(Essay, AppID.Boomart)
     private readonly essayRepository: Repository<Essay>,
   ) {}
 
