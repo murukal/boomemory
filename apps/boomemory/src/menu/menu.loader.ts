@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import DataLoader = require('dataloader');
 import { In, Repository } from 'typeorm';
-import { AppID } from 'utils/app';
+import { AppID } from 'utils/app/assets';
 import { MenuService } from './menu.service';
 
 @Injectable()

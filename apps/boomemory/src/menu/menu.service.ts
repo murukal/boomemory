@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Not, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
-import { AppID } from 'utils/app';
+import { AppID } from 'utils/app/assets';
 import { RoleService } from '../role/role.service';
 import { CreateMenuInput } from './dto/create-menu.input';
 import { FilterMenuInput } from './dto/filter-menu.input';

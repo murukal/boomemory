@@ -4,14 +4,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
-import { AppID } from 'utils/app';
+import { AppID } from 'utils/application';
 import { CreateTagInput } from './dto/create-tag.input';
 import { UpdateTagInput } from './dto/update-tag.input';
 
 @Injectable()
 export class TagService {
   constructor(
-    @InjectRepository(Tag, AppID.Boomart)
+    @InjectRepository(Tag, APP_ID_BOOMART)
     private readonly tagRepository: Repository<Tag>,
   ) {}
 

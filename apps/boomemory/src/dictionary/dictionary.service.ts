@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
-import { AppID } from 'utils/app';
+import { AppID } from 'utils/app/assets';
 import { CreateDictionaryInput } from './dto/create-dictionary.input';
 import { UpdateDictionaryInput } from './dto/update-dictionary.input';
 

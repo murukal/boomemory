@@ -2,14 +2,14 @@ import { Comment } from '@app/data-base/entities/boomart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AppID } from 'utils/app';
+import { AppID } from 'utils/application';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { FilterCommentInput } from './dto/filter-comment.input';
 
 @Injectable()
 export class CommentService {
   constructor(
-    @InjectRepository(Comment, AppID.Boomart)
+    @InjectRepository(Comment, APP_ID_BOOMART)
     private readonly commentRepository: Repository<Comment>,
   ) {}
 

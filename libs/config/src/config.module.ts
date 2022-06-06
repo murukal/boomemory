@@ -1,10 +1,9 @@
 import { Global, Module } from '@nestjs/common';
-import {
-  ConfigModule as NativeConfigModule,
-  ConfigService,
-} from '@nestjs/config';
-import { jwtConfig } from './assets';
+import { ConfigModule as NativeConfigModule } from '@nestjs/config';
+import { cosConfig, jwtConfig } from './assets';
+import { portConfig } from './assets/port.config';
 import { rsaConfig } from './assets/rsa.config';
+import { ConfigService } from './config.service';
 
 @Global()
 @Module({
@@ -12,10 +11,11 @@ import { rsaConfig } from './assets/rsa.config';
     // 环境变量配置模块
     NativeConfigModule.forRoot({
       isGlobal: true,
-      load: [jwtConfig, rsaConfig],
+      load: [jwtConfig, rsaConfig, portConfig, cosConfig],
       envFilePath: ['.env.development.local'],
     }),
   ],
   providers: [ConfigService],
+  exports: [ConfigService],
 })
 export class ConfigModule {}

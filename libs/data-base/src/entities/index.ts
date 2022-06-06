@@ -1,15 +1,9 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
-
-/**
- * 统一entity的入口文件
- */
-export * from './core.entity';
-
 import * as boomemory from './boomemory';
 import * as boomart from './boomart';
 import * as boomoney from './boomoney';
-import { AppID } from 'utils/app';
+import { AppID } from 'utils/app/assets';
 
 const boomemoryEntities = Object.values(boomemory);
 const boomartEntities = Object.values(boomart);

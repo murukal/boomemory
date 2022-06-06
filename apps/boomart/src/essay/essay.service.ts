@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
-import { AppID } from 'utils/app';
+import { AppID } from 'utils/application';
 import { CreateEssayInput } from './dto/create-essay.input';
 import { FilterEssayInput } from './dto/filter-essay.input';
 import { UpdateEssayInput } from './dto/update-essay.input';
@@ -12,7 +12,7 @@ import { UpdateEssayInput } from './dto/update-essay.input';
 @Injectable()
 export class EssayService {
   constructor(
-    @InjectRepository(Essay, AppID.Boomart)
+    @InjectRepository(Essay, APP_ID_BOOMART)
     private readonly essayRepository: Repository<Essay>,
   ) {}
 

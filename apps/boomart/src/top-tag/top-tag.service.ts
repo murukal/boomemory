@@ -2,13 +2,13 @@ import { Tag } from '@app/data-base/entities/boomart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AppID } from 'utils/app';
+import { AppID } from 'utils/application';
 import { TopTag, TopTagArgs } from './dto/top-tag';
 
 @Injectable()
 export class TopTagService {
   constructor(
-    @InjectRepository(Tag, AppID.Boomart)
+    @InjectRepository(Tag, APP_ID_BOOMART)
     private readonly tagRepository: Repository<Tag>,
   ) {}
 

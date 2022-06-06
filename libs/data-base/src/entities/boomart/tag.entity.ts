@@ -8,7 +8,7 @@ import {
   Entity,
   ManyToMany,
 } from 'typeorm';
-import { CoreEntity } from '..';
+import { CoreEntity } from '../core.entity';
 import { Essay } from './essay.entity';
 
 @ObjectType()

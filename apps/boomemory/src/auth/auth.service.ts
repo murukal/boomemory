@@ -1,6 +1,5 @@
 import { UserService } from '@app/user';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { constants, privateDecrypt } from 'crypto';
@@ -20,7 +19,8 @@ import {
   AuthorizationResource,
 } from '@app/data-base/entities/boomemory';
 import { Essay } from '@app/data-base/entities/boomart';
-import { AppID } from 'utils/app';
+import { AppID } from 'utils/app/assets';
+import { ConfigService } from '@app/config';
 
 @Injectable()
 export class AuthService {
@@ -55,7 +55,7 @@ export class AuthService {
     const isPasswordValidate = compareSync(
       this.decryptByRsaPrivateKey(
         payload.password,
-        this.configService.get<string>('rsa.privateKey'),
+        this.configService.getRsaPrivateKey(),
       ),
       user.password,
     );
@@ -104,7 +104,7 @@ export class AuthService {
     // 注册密码解密
     register.password = this.decryptByRsaPrivateKey(
       register.password,
-      this.configService.get<string>('rsa.privateKey'),
+      this.configService.getRsaPrivateKey(),
     );
     // 创建用户
     const user = await this.userService.create(register);

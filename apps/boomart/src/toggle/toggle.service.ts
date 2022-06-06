@@ -11,12 +11,12 @@ import { DailyClout, DailyCloutArgs } from './dto/daily-clout.args';
 import { RemoveToggleInput } from './dto/remove-toggle.input';
 import { TopInput } from './dto/top.input';
 import { Toggle } from '@app/data-base/entities/boomart';
-import { AppID } from 'utils/app';
+import { AppID } from 'utils/application';
 
 @Injectable()
 export class ToggleService {
   constructor(
-    @InjectRepository(Toggle, AppID.Boomart)
+    @InjectRepository(Toggle, APP_ID_BOOMART)
     private readonly toggleRepository: Repository<Toggle>,
     private readonly essayService: EssayService,
   ) {}

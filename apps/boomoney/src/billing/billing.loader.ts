@@ -6,14 +6,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import DataLoader = require('dataloader');
 import { Repository } from 'typeorm';
-import { AppID } from 'utils/app';
+import { AppID } from 'utils/application';
 
 @Injectable()
 export class BillingLoader {
   private targetType: TargetType;
 
   constructor(
-    @InjectRepository(Share, AppID.Boomoney)
+    @InjectRepository(Share, APP_ID_BOOMONEY)
     private readonly shareRepository: Repository<Share>,
 
     private readonly userService: UserService,

@@ -3,14 +3,14 @@ import DataLoader = require('dataloader');
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MoneyProfile } from './dto/money-profile';
-import { UserProfile } from '@app/data-base/entities/boomoney';
-import { AppID } from 'utils/app';
+import { UserProfile as UserMoneyProfile } from '@app/data-base/entities/boomoney';
+import { AppID } from 'utils/app/assets';
 
 @Injectable()
 export class AuthLoader {
   constructor(
-    @InjectRepository(UserProfile, AppID.Boomoney)
-    private readonly userProfileRepository: Repository<UserProfile>,
+    @InjectRepository(UserMoneyProfile, AppID.Boomoney)
+    private readonly userMoneyProfileRepository: Repository<UserMoneyProfile>,
   ) {}
 
   /**
@@ -18,7 +18,7 @@ export class AuthLoader {
    */
   public readonly getMoneyProfileById = new DataLoader<number, MoneyProfile>(
     async (userIds) => {
-      const profiles = await this.userProfileRepository
+      const profiles = await this.userMoneyProfileRepository
         .createQueryBuilder('profile')
         .leftJoinAndMapOne(
           'profile.defaultBilling',

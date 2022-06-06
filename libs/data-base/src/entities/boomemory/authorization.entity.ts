@@ -1,7 +1,7 @@
 import { ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne, Unique } from 'typeorm';
 import { Tenant } from '.';
-import { CoreEntity } from '..';
+import { CoreEntity } from '../core.entity';
 import {
   AuthorizationAction,
   AuthorizationActionCode,

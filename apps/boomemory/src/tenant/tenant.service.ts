@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
-import { AppID } from 'utils/app';
+import { AppID } from 'utils/app/assets';
 import { MenuService } from '../menu/menu.service';
 import { CreateTenantInput } from './dto/create-tenant.input';
 import { UpdateTenantInput } from './dto/update-tenant.input';

@@ -6,7 +6,7 @@ import { RegisterInput } from 'apps/boomemory/src/auth/dto/register.input';
 import { FindOptionsSelect, In, Not, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
-import { AppID } from 'utils/app';
+import { AppID } from 'utils/app/assets';
 
 @Injectable()
 export class UserService {

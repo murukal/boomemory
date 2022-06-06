@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
-import { CoreEntity } from '..';
+import { CoreEntity } from '../core.entity';
 import { TargetType } from './toggle.entity';
 
 @ObjectType()

@@ -4,8 +4,8 @@ import { AuthResolver } from './auth.resolver';
 import { JwtStrategy } from './strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthLoader } from './auth.loader';
+import { ConfigModule, ConfigService } from '@app/config';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { AuthLoader } from './auth.loader';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('jwt.secret'),
+        secret: configService.getJwtSecret(),
       }),
     }),
   ],
