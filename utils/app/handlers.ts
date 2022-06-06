@@ -24,9 +24,6 @@ export const initialize = async (app: INestApplication, appId: AppID) => {
   // 使用cookie
   app.use(cookieParser());
 
-  // 设置全局的api路由前缀
-  app.setGlobalPrefix(appId);
-
   // 注册全局管道
   app.useGlobalPipes(new ValidationPipe());
 
@@ -60,7 +57,6 @@ export const initializeCommonModules = (): ModuleMetadata['imports'] => [
   // GraphQL 模块
   GraphQLModule.forRoot<ApolloDriverConfig>({
     autoSchemaFile: true,
-    useGlobalPrefix: true,
     driver: ApolloDriver,
     cors: getDynamicCorsOptions,
   }),
