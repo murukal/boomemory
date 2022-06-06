@@ -8,8 +8,10 @@
   "scripts": {
     "dev": "nest start --watch",
     "dev:boomart": "nest start boomart --watch",
+    "dev:boomoney": "nest start boomoney --watch",
     "build": "nest build",
-    "build:boomart": "nest build boomart"
+    "build:boomart": "nest build boomart",
+    "build:boomoney": "nest build boomoney"
   },
   "dependencies": {
     "@nestjs/apollo": "^10.0.6",

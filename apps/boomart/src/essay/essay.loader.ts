@@ -9,7 +9,7 @@ import {
   TargetType,
   Type,
 } from '@app/data-base/entities/boomart/toggle.entity';
-import { AppID } from 'utils/application';
+import { AppID } from 'utils/app/assets';
 
 interface cloutProfile {
   targetId: number;
@@ -21,9 +21,9 @@ export class EssayLoader {
   private userId: number;
 
   constructor(
-    @InjectRepository(Essay, APP_ID_BOOMART)
+    @InjectRepository(Essay, AppID.Boomart)
     private readonly essayRepository: Repository<Essay>,
-    @InjectRepository(Toggle, APP_ID_BOOMART)
+    @InjectRepository(Toggle, AppID.Boomart)
     private readonly toggleRepository: Repository<Toggle>,
     private readonly userService: UserService,
   ) {}

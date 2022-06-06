@@ -2,14 +2,14 @@ import { Share } from '@app/data-base/entities/boomoney';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AppID } from 'utils/application';
+import { AppID } from 'utils/app/assets';
 import { CreateShareInput } from './dto/create-share.input';
 import { RemoveShareInput } from './dto/remove-share.input';
 
 @Injectable()
 export class ShareService {
   constructor(
-    @InjectRepository(Share, APP_ID_BOOMONEY)
+    @InjectRepository(Share, AppID.Boomoney)
     private readonly shareRepository: Repository<Share>,
   ) {}
 

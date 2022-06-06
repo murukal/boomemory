@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
-import { AppID } from 'utils/application';
+import { AppID } from 'utils/app/assets';
 import { CreateCategoryInput } from './dto/create-category.input';
 import { FilterCategoryInput } from './dto/filter-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
@@ -12,7 +12,7 @@ import { UpdateCategoryInput } from './dto/update-category.input';
 @Injectable()
 export class CategoryService {
   constructor(
-    @InjectRepository(Category, APP_ID_BOOMONEY)
+    @InjectRepository(Category, AppID.Boomoney)
     private readonly categoryRepository: Repository<Category>,
   ) {}
 

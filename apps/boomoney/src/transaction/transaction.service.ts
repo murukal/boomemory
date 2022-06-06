@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
-import { AppID } from 'utils/application';
+import { AppID } from 'utils/app/assets';
 import { CreateTransactionInput } from './dto/create-transaction.input';
 import { FilterTransactionInput } from './dto/filter-transaction.input';
 import { UpdateTransactionInput } from './dto/update-transaction.input';
@@ -13,7 +13,7 @@ import { UpdateTransactionInput } from './dto/update-transaction.input';
 @Injectable()
 export class TransactionService {
   constructor(
-    @InjectRepository(Transaction, APP_ID_BOOMONEY)
+    @InjectRepository(Transaction, AppID.Boomoney)
     private readonly transactionRepository: Repository<Transaction>,
   ) {}
 

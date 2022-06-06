@@ -3,7 +3,7 @@ import { TargetType } from '@app/data-base/entities/boomoney/share.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AppID } from 'utils/application';
+import { AppID } from 'utils/app/assets';
 import { ShareService } from '../share/share.service';
 import { CreateBillingInput } from './dto/create-billing.input';
 import { UpdateBillingInput } from './dto/update-billing.input';
@@ -11,7 +11,7 @@ import { UpdateBillingInput } from './dto/update-billing.input';
 @Injectable()
 export class BillingService {
   constructor(
-    @InjectRepository(Billing, APP_ID_BOOMONEY)
+    @InjectRepository(Billing, AppID.Boomoney)
     private readonly billingRepository: Repository<Billing>,
     private readonly shareService: ShareService,
   ) {}

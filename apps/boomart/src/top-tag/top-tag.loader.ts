@@ -3,13 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import DataLoader = require('dataloader');
 import { Repository } from 'typeorm';
-import { AppID } from 'utils/application';
+import { AppID } from 'utils/app/assets';
 import { DailyHeat } from './dto/top-tag';
 
 @Injectable()
 export class TopTagLoader {
   constructor(
-    @InjectRepository(Tag, APP_ID_BOOMART)
+    @InjectRepository(Tag, AppID.Boomart)
     private readonly tagRepository: Repository<Tag>,
   ) {}
 

@@ -6,16 +6,21 @@ import { CommentModule } from './comment/comment.module';
 import { AlbumModule } from './album/album.module';
 import { CollectionModule } from './collection/collection.module';
 import { TopTagModule } from './top-tag/top-tag.module';
+import { initializeCommonModules } from 'utils/app/handlers';
 
 @Module({
   imports: [
-    // TagModule,
-    // TopTagModule,
-    // EssayModule,
-    // ToggleModule,
-    // CommentModule,
-    // AlbumModule,
-    // CollectionModule,
+    // 公用服务模块
+    ...initializeCommonModules(),
+
+    // 项目服务模块
+    TagModule,
+    TopTagModule,
+    EssayModule,
+    ToggleModule,
+    CommentModule,
+    AlbumModule,
+    CollectionModule,
   ],
 })
 export class BoomartModule {}
