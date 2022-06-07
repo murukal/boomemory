@@ -16,7 +16,7 @@ export class AppController {
   /**
    * 上传文件
    */
-  @Post('api/upload')
+  @Post('upload')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   upload(@UploadedFile() file: Express.Multer.File) {
