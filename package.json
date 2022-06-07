@@ -12,7 +12,12 @@
     "dev:bot": "nest start bot --watch",
     "build": "nest build",
     "build:boomart": "nest build boomart",
-    "build:boomoney": "nest build boomoney"
+    "build:boomoney": "nest build boomoney",
+    "build:bot": "nest build bot",
+    "start": "node dist/apps/boomemory/main",
+    "start:boomart": "node dist/apps/boomart/main",
+    "start:boomoney": "node dist/apps/boomoney/main",
+    "start:bot": "node dist/apps/bot/main"
   },
   "dependencies": {
     "@nestjs/apollo": "^10.0.14",
