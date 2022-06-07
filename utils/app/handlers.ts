@@ -19,7 +19,7 @@ import { AppID } from './assets';
  */
 export const initialize = async (app: INestApplication, appId: AppID) => {
   // 设置允许跨域
-  app.enableCors();
+  app.enableCors(getDynamicCorsOptions);
 
   // 使用cookie
   app.use(cookieParser());
