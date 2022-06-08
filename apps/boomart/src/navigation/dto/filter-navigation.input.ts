@@ -4,7 +4,4 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 export class FilterNavigationInput {
   @Field(() => [Int], { nullable: true, description: '标签ids' })
   tagIds?: number[];
-
-  @Field(() => [Int], { nullable: true, description: '导航ids' })
-  ids?: number[];
 }

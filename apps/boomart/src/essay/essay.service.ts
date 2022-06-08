@@ -14,6 +14,8 @@ export class EssayService {
   constructor(
     @InjectRepository(Essay, AppID.Boomart)
     private readonly essayRepository: Repository<Essay>,
+    @InjectRepository(Tag, AppID.Boomart)
+    private readonly tagRepository: Repository<Tag>,
   ) {}
 
   /**
@@ -49,19 +51,19 @@ export class EssayService {
     // 提取筛选条件
     const { tagIds, ids, ...filter } = filterInput || {};
 
-    // 按照tagId进行筛选
+    // 根据标签id获取标签关联所有的文章id列表
     const tagEssayIds =
       tagIds &&
       (
-        await this.essayRepository
-          .createQueryBuilder('essay')
-          .select('essay.id')
-          .innerJoin('essay.tags', 'tag')
-          .where('tag.id IN (:...tagIds)', {
-            tagIds,
-          })
-          .getMany()
-      ).map((essay) => essay.id);
+        (await this.tagRepository
+          .createQueryBuilder('tag')
+          .innerJoinAndSelect(Essay, 'essay')
+          .whereInIds(tagIds)
+          .select('essay.id', 'essayId')
+          .execute()) as {
+          essayId: number;
+        }[]
+      ).map((essay) => essay.essayId);
 
     // 文章ids
     // 存在取交集
