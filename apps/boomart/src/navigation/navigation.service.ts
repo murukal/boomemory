@@ -41,8 +41,8 @@ export class NavigationService {
         (await this.tagRepository
           .createQueryBuilder('tag')
           .innerJoinAndSelect(Navigation, 'navigation')
-          .whereInIds(tagIds)
           .select('navigation.id', 'navigationId')
+          .whereInIds(tagIds)
           .execute()) as {
           navigationId: number;
         }[]

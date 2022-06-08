@@ -57,9 +57,9 @@ export class EssayService {
       (
         (await this.tagRepository
           .createQueryBuilder('tag')
-          .innerJoinAndSelect(Essay, 'essay')
-          .whereInIds(tagIds)
+          .innerJoinAndSelect('tag.essays', 'essay')
           .select('essay.id', 'essayId')
+          .whereInIds(tagIds)
           .execute()) as {
           essayId: number;
         }[]

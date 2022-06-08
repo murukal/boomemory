@@ -26,7 +26,7 @@ export class Navigation extends CoreEntity {
   @Column()
   createdById: number;
 
-  @ManyToMany(() => Tag, (tag) => tag.essays)
+  @ManyToMany(() => Tag, (tag) => tag.navigations)
   @JoinTable()
   tags: Tag[];
 
