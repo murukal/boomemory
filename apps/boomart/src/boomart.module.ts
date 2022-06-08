@@ -7,6 +7,7 @@ import { AlbumModule } from './album/album.module';
 import { CollectionModule } from './collection/collection.module';
 import { TopTagModule } from './top-tag/top-tag.module';
 import { initializeCommonModules } from 'utils/app/handlers';
+import { NavigationModule } from './navigation/navigation.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { initializeCommonModules } from 'utils/app/handlers';
     CommentModule,
     AlbumModule,
     CollectionModule,
+    NavigationModule,
   ],
 })
 export class BoomartModule {}

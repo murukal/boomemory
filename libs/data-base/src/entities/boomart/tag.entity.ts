@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { CoreEntity } from '../core.entity';
 import { Essay } from './essay.entity';
+import { Navigation } from './navigation.entity';
 
 @ObjectType()
 @Entity()
@@ -30,6 +31,9 @@ export class Tag extends CoreEntity {
 
   @ManyToMany(() => Essay, (essay) => essay.tags)
   essays: Essay[];
+
+  @ManyToMany(() => Navigation, (navigation) => navigation.tags)
+  navigations: Navigation[];
 
   @BeforeInsert()
   @BeforeUpdate()

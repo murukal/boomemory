@@ -29,13 +29,13 @@ export class EssayLoader {
   ) {}
 
   /**
-   * 根据文章id读取文章对应的标签
+   * 根据文章id读取文章对应的标签列表
    */
   public readonly getTagsByEssayId = new DataLoader<number, Tag[]>(
     async (essayIds) => {
       const essays = await this.essayRepository
         .createQueryBuilder('essay')
-        .innerJoinAndMapMany('essay.tags', 'essay.tags', 'tag')
+        .leftJoinAndMapMany('essay.tags', 'essay.tags', 'tag')
         .whereInIds(essayIds)
         .getMany();
 
