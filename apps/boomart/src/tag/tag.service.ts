@@ -1,11 +1,12 @@
 import { Tag } from '@app/data-base/entities/boomart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { AppID } from 'utils/app/assets';
 import { CreateTagInput } from './dto/create-tag.input';
+import { FilterTagInput } from './dto/filter-tag.input';
 import { UpdateTagInput } from './dto/update-tag.input';
 
 @Injectable()
@@ -25,8 +26,19 @@ export class TagService {
   /**
    * 分页查询标签
    */
-  getTags(query?: QueryParams) {
-    return paginateQuery(this.tagRepository, query);
+  getTags(query?: QueryParams<FilterTagInput>) {
+    const { filterInput, ...otherQuery } = query || {};
+    const { ids, ...otherFilterInput } = filterInput || {};
+
+    return paginateQuery(this.tagRepository, {
+      ...otherQuery,
+      filterInput: {
+        ...otherFilterInput,
+        ...(ids && {
+          id: In(ids),
+        }),
+      },
+    });
   }
 
   /**

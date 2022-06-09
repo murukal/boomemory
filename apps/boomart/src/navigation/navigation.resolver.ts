@@ -58,7 +58,7 @@ export class NavigationResolver {
     return this.navigationService.getNavigate(id);
   }
 
-  @Mutation(() => Navigation, {
+  @Mutation(() => Boolean, {
     description: '更新导航',
   })
   @UseGuards(JwtAuthGuard)
@@ -69,7 +69,7 @@ export class NavigationResolver {
     return this.navigationService.update(id, updateNavigationInput);
   }
 
-  @Mutation(() => Navigation, {
+  @Mutation(() => Boolean, {
     description: '删除导航',
   })
   removeNavigation(@Args('id', { type: () => Int }) id: number) {

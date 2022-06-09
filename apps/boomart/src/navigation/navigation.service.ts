@@ -5,6 +5,7 @@ import { In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { AppID } from 'utils/app/assets';
+import { TagService } from '../tag/tag.service';
 import { CreateNavigationInput } from './dto/create-navigation.input';
 import { FilterNavigationInput } from './dto/filter-navigation.input';
 import { UpdateNavigationInput } from './dto/update-navigation.input';
@@ -16,6 +17,7 @@ export class NavigationService {
     private readonly navigationRepository: Repository<Navigation>,
     @InjectRepository(Tag, AppID.Boomart)
     private readonly tagRepository: Repository<Tag>,
+    private readonly tagService: TagService,
   ) {}
 
   /**
@@ -24,11 +26,23 @@ export class NavigationService {
   async create(
     createNavigationInput: CreateNavigationInput,
     createdById: number,
-  ) {
+  ): Promise<boolean> {
+    const { tagIds, ...navigationInput } = createNavigationInput;
+
+    // 获取tags
+    const tags = (
+      await this.tagService.getTags({
+        filterInput: {
+          ids: tagIds,
+        },
+      })
+    ).items;
+
     return !!(await this.navigationRepository.save(
       this.navigationRepository.create({
-        ...createNavigationInput,
+        ...navigationInput,
         createdById,
+        tags,
       }),
     ));
   }
@@ -78,14 +92,34 @@ export class NavigationService {
   /**
    * 更新导航
    */
-  update(id: number, updateNavigationInput: UpdateNavigationInput) {
-    return this.navigationRepository.update(id, updateNavigationInput);
+  async update(
+    id: number,
+    updateNavigationInput: UpdateNavigationInput,
+  ): Promise<boolean> {
+    const { tagIds, ...navigationInput } = updateNavigationInput;
+
+    // 获取tags
+    const tags = (
+      await this.tagService.getTags({
+        filterInput: {
+          ids: tagIds,
+        },
+      })
+    ).items;
+
+    // 覆盖原字段
+    // 启用级联后，更新tags会自动更新关联表
+    return !!(await this.navigationRepository.save({
+      ...(await this.getNavigate(id)),
+      ...navigationInput,
+      tags,
+    }));
   }
 
   /**
    * 删除导航
    */
-  remove(id: number) {
-    return this.navigationRepository.delete(id);
+  async remove(id: number) {
+    return !!(await this.navigationRepository.delete(id)).affected;
   }
 }
