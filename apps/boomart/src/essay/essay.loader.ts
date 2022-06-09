@@ -43,6 +43,9 @@ export class EssayLoader {
         (essayId) => essays.find((essay) => essay.id === essayId).tags,
       );
     },
+    {
+      cache: false,
+    },
   );
 
   /**

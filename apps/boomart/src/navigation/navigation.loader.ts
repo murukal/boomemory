@@ -25,5 +25,8 @@ export class NavigationLoader {
 
       return ids.map((id) => navigations.find((tag) => tag.id === id).tags);
     },
+    {
+      cache: false,
+    },
   );
 }

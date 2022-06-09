@@ -76,8 +76,9 @@ export class NavigationResolver {
     return this.navigationService.remove(id);
   }
 
-  @ResolveField('tags', () => Tag, {
-    description: '标签',
+  @ResolveField('tags', () => [Tag], {
+    description: '导航对应的标签列表',
+    nullable: true,
   })
   getTags(@Parent() navigation: Navigation) {
     return this.navigationLoader.getTagsByNavigationId.load(navigation.id);
