@@ -18,9 +18,9 @@ import { AuthorizationResourceCode } from '@app/data-base/entities/boomemory/aut
 import { AuthorizationActionCode } from '@app/data-base/entities/boomemory/authorization-action.entity';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/guard';
 import { Menu, User } from '@app/data-base/entities/boomemory';
 import { MenuLoader } from './menu.loader';
+import { JwtAuthGuard } from '@app/passport/guard';
 
 @Resolver(() => Menu)
 export class MenuResolver {

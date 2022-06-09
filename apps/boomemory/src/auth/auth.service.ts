@@ -1,6 +1,5 @@
 import { UserService } from '@app/user';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { constants, privateDecrypt } from 'crypto';
 import { Repository } from 'typeorm';
@@ -21,6 +20,7 @@ import {
 import { Essay } from '@app/data-base/entities/boomart';
 import { AppID } from 'utils/app/assets';
 import { ConfigService } from '@app/config';
+import { PassportService } from '@app/passport';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +34,7 @@ export class AuthService {
     @InjectRepository(AuthorizationAction, AppID.Boomemory)
     private readonly authorizationActionRepository: Repository<AuthorizationAction>,
     private readonly userService: UserService,
-    private readonly jwtService: JwtService,
+    private readonly passportService: PassportService,
     private readonly configService: ConfigService,
     private readonly tenantService: TenantService,
   ) {}
@@ -77,15 +77,6 @@ export class AuthService {
   }
 
   /**
-   * jwt加签
-   */
-  sign(id: number) {
-    return this.jwtService.sign({
-      id,
-    });
-  }
-
-  /**
    * 登录
    */
   async login(login: LoginInput) {
@@ -94,7 +85,7 @@ export class AuthService {
     // error: 用户信息不存在
     if (!user) throw new UnauthorizedException();
     // 加密
-    return this.sign(user.id);
+    return this.passportService.sign(user.id);
   }
 
   /**
@@ -109,7 +100,7 @@ export class AuthService {
     // 创建用户
     const user = await this.userService.create(register);
     // 加密
-    return this.sign(user.id);
+    return this.passportService.sign(user.id);
   }
 
   /**

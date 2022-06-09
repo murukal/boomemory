@@ -1,6 +1,7 @@
 import { ConfigModule, ConfigService } from '@app/config';
 import { DataBaseModule } from '@app/data-base';
 import { ObjectStorageModule } from '@app/object-storage';
+import { PassportModule } from '@app/passport';
 import { UserModule } from '@app/user';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import {
@@ -50,6 +51,9 @@ export const initializeCommonModules = (): ModuleMetadata['imports'] => [
 
   // 用户信息模块
   UserModule,
+
+  // 认证模块
+  PassportModule,
 
   // 对象存储模块
   ObjectStorageModule,

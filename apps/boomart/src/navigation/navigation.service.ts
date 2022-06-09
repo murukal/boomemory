@@ -21,10 +21,16 @@ export class NavigationService {
   /**
    * 创建分类
    */
-  create(createNavigationInput: CreateNavigationInput) {
-    return this.navigationRepository.save(
-      this.navigationRepository.create(createNavigationInput),
-    );
+  async create(
+    createNavigationInput: CreateNavigationInput,
+    createdById: number,
+  ) {
+    return !!(await this.navigationRepository.save(
+      this.navigationRepository.create({
+        ...createNavigationInput,
+        createdById,
+      }),
+    ));
   }
 
   /**

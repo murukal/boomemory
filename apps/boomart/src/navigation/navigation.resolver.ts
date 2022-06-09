@@ -12,11 +12,14 @@ import { Navigation } from '../../../../libs/data-base/src/entities/boomart/navi
 import { CreateNavigationInput } from './dto/create-navigation.input';
 import { UpdateNavigationInput } from './dto/update-navigation.input';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
+import { JwtAuthGuard } from '@app/passport/guard';
 import { PaginateInput } from 'utils/dto';
 import { FilterNavigationInput } from './dto/filter-navigation.input';
 import { Tag } from '@app/data-base/entities/boomart';
 import { NavigationLoader } from './navigation.loader';
+import { PaginatedNavigations } from './dto/paginated-navigations';
+import { CurrentUser } from 'utils/decorator/current-user.decorator';
+import { User } from '@app/data-base/entities/boomemory';
 
 @Resolver(() => Navigation)
 export class NavigationResolver {
@@ -25,17 +28,18 @@ export class NavigationResolver {
     private readonly navigationLoader: NavigationLoader,
   ) {}
 
-  @Mutation(() => Navigation, {
+  @Mutation(() => Boolean, {
     description: '创建导航',
   })
   @UseGuards(JwtAuthGuard)
   createNavigation(
     @Args('createNavigationInput') createNavigationInput: CreateNavigationInput,
+    @CurrentUser() user: User,
   ) {
-    return this.navigationService.create(createNavigationInput);
+    return this.navigationService.create(createNavigationInput, user.id);
   }
 
-  @Query(() => [Navigation], {
+  @Query(() => PaginatedNavigations, {
     name: 'navigations',
     description: '分页查询导航',
   })

@@ -2,7 +2,7 @@ import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { ToggleService } from './toggle.service';
 import { CreateToggleInput } from './dto/create-toggle.input';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
+import { JwtAuthGuard } from '@app/passport/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { TopInput } from './dto/top.input';
 import { RemoveToggleInput } from './dto/remove-toggle.input';

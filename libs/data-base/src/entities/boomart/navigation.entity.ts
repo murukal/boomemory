@@ -19,9 +19,11 @@ export class Navigation extends CoreEntity {
   @Column()
   title: string;
 
-  @Field(() => String, { description: '封面地址' })
-  @Column()
-  cover: string;
+  @Field(() => String, { description: '封面地址', nullable: true })
+  @Column({
+    nullable: true,
+  })
+  cover?: string;
 
   @Column()
   createdById: number;

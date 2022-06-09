@@ -101,7 +101,8 @@
       "^@app/data-base(|/.*)$": "<rootDir>/libs/data-base/src/$1",
       "^@app/user(|/.*)$": "<rootDir>/libs/user/src/$1",
       "^@app/object-storage(|/.*)$": "<rootDir>/libs/object-storage/src/$1",
-      "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1"
+      "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1",
+      "^@app/passport(|/.*)$": "<rootDir>/libs/passport/src/$1"
     }
   }
 }

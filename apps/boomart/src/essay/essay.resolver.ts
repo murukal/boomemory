@@ -13,7 +13,7 @@ import { UpdateEssayInput } from './dto/update-essay.input';
 import { PaginatedEssays } from './dto/paginated-essays';
 import { PaginateInput } from 'utils/dto';
 import { UseGuards, UseInterceptors } from '@nestjs/common';
-import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
+import { JwtAuthGuard } from '@app/passport/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { FilterEssayInput } from './dto/filter-essay.input';
 import { Type } from '@app/data-base/entities/boomart/toggle.entity';

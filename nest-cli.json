@@ -82,6 +82,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/bot/tsconfig.app.json"
       }
+    },
+    "passport": {
+      "type": "library",
+      "root": "libs/passport",
+      "entryFile": "index",
+      "sourceRoot": "libs/passport/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/passport/tsconfig.lib.json"
+      }
     }
   }
 }

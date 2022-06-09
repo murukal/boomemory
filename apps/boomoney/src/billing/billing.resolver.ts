@@ -11,7 +11,7 @@ import { BillingService } from './billing.service';
 import { CreateBillingInput } from './dto/create-billing.input';
 import { UpdateBillingInput } from './dto/update-billing.input';
 import { UseGuards, UseInterceptors } from '@nestjs/common';
-import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
+import { JwtAuthGuard } from '@app/passport/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { Billing, Share } from '@app/data-base/entities/boomoney';
 import { User } from '@app/data-base/entities/boomemory';

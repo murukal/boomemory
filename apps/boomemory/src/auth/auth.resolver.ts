@@ -21,11 +21,11 @@ import { AuthorizationNode } from './dto/authorization-node';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 import { PaginatedUsers } from './dto/paginated-users';
-import { JwtAuthGuard } from './guard';
 import { FilterUserInput } from './dto/filter-user.input';
 import { AuthorizationsArgs } from './dto/authorizations.args';
 import { AuthLoader } from './auth.loader';
 import { MoneyProfile } from './dto/money-profile';
+import { JwtAuthGuard } from '@app/passport/guard';
 
 @Resolver(() => User)
 export class AuthResolver {

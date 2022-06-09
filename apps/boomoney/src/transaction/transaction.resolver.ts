@@ -13,7 +13,7 @@ import { UpdateTransactionInput } from './dto/update-transaction.input';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { User } from '@app/data-base/entities/boomemory';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
+import { JwtAuthGuard } from '@app/passport/guard';
 import { Category, Transaction } from '@app/data-base/entities/boomoney';
 import { PaginateInput } from 'utils/dto';
 import { PaginatedTransactions } from './dto/paginated-transactions';

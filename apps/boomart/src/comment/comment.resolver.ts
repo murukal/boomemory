@@ -10,7 +10,7 @@ import {
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
-import { JwtAuthGuard } from 'apps/boomemory/src/auth/guard';
+import { JwtAuthGuard } from '@app/passport/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { CommentLoader } from './comment.loader';
 import { CommentService } from './comment.service';
