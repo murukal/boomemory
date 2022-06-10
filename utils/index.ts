@@ -1,6 +1,9 @@
 import { Repository } from 'typeorm';
 import type { QueryParams } from 'typings';
 
+/**
+ * 对数据库进行分页查询
+ */
 export const paginateQuery = async <T, F>(
   repository: Repository<T>,
   query?: QueryParams<F>,
@@ -36,8 +39,11 @@ export const paginateQuery = async <T, F>(
     : items.length;
 
   // 计算总页数
-  const pageCount =
-    totalCount === limit ? 1 : Math.floor(totalCount / limit) + 1;
+  const pageCount = !totalCount
+    ? 0
+    : totalCount === limit
+    ? 1
+    : Math.floor(totalCount / limit) + 1;
 
   return {
     items,
