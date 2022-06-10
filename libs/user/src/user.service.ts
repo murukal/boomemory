@@ -1,7 +1,7 @@
 import { User } from '@app/data-base/entities/boomemory';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FilterUserInput } from 'apps/boomemory/src/auth/dto/filter-user.input';
+import { FilterUserInput } from '@app/user/dto/filter-user.input';
 import { RegisterInput } from 'apps/boomemory/src/auth/dto/register.input';
 import { FindOptionsSelect, In, Not, Repository } from 'typeorm';
 import { QueryParams } from 'typings';

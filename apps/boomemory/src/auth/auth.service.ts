@@ -8,7 +8,6 @@ import { paginateQuery } from 'utils';
 import { TenantService } from '../tenant/tenant.service';
 import { AuthorizationNode } from './dto/authorization-node';
 import { AuthorizationsArgs } from './dto/authorizations.args';
-import { FilterUserInput } from './dto/filter-user.input';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 import { compareSync } from 'bcrypt';
@@ -118,13 +117,6 @@ export class AuthService {
   }
 
   /**
-   * 分页查询用户
-   */
-  getUsers(query?: QueryParams<FilterUserInput>) {
-    return this.userService.getUsers(query);
-  }
-
-  /**
    * 分页查询权限
    */
   getAuthorizations(query?: QueryParams) {
@@ -193,16 +185,6 @@ export class AuthService {
         children: [],
       })),
     );
-  }
-
-  /**
-   * 获取作品个数
-   */
-  getCreationCount(createdById: number) {
-    return this.essayRepository
-      .createQueryBuilder()
-      .where('createdById = :createdById', { createdById })
-      .getCount();
   }
 
   /**

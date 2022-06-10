@@ -4,7 +4,7 @@ import { InputType, Int, Field, PickType } from '@nestjs/graphql';
 @InputType()
 export class CreateNavigationInput extends PickType(
   Navigation,
-  ['title', 'cover', 'createdById'],
+  ['title', 'cover', 'createdById', 'link', 'subtitle'],
   InputType,
 ) {
   @Field(() => [Int], {

@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { ObjectType, Field } from '@nestjs/graphql';
-import { isURL } from 'class-validator';
+import { IsNotEmpty, isURL } from 'class-validator';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -19,6 +19,10 @@ export class Navigation extends CoreEntity {
   @Column()
   title: string;
 
+  @Field(() => String, { description: '副标题' })
+  @Column()
+  subtitle: string;
+
   @Field(() => String, { description: '封面地址', nullable: true })
   @Column({
     nullable: true,
@@ -34,11 +38,26 @@ export class Navigation extends CoreEntity {
   @JoinTable()
   tags: Tag[];
 
+  @Field(() => String, {
+    description: '外链',
+  })
+  @Column({
+    type: 'longtext',
+  })
+  @IsNotEmpty()
+  link: string;
+
   @BeforeInsert()
   @BeforeUpdate()
   private validateCover() {
     if (!this.cover) return;
     if (!isURL(this.cover))
       throw new BadRequestException('cover must be an url');
+  }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  private validateLink() {
+    if (!isURL(this.link)) throw new BadRequestException('link must be an url');
   }
 }
