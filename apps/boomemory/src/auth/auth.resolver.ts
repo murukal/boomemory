@@ -1,18 +1,14 @@
 import {
   AuthorizationAction,
   AuthorizationResource,
-  User,
 } from '@app/data-base/entities/boomemory';
-import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { AuthService } from './auth.service';
 import { PaginatedAuthorizations } from './dto/paginated-authorizations';
 import { AuthorizationNode } from './dto/authorization-node';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 import { AuthorizationsArgs } from './dto/authorizations.args';
-import { JwtAuthGuard } from '@app/passport/guard';
 
 @Resolver()
 export class AuthResolver {
@@ -26,17 +22,6 @@ export class AuthResolver {
   @Mutation(() => String, { description: '注册' })
   register(@Args('registerInput') register: RegisterInput): Promise<string> {
     return this.authService.register(register);
-  }
-
-  @Mutation(() => User, { description: '获取验证用户' })
-  authorize(@Args('loginInput') login: LoginInput): Promise<User> {
-    return this.authService.authorize(login);
-  }
-
-  @Query(() => User, { description: '用户认证' })
-  @UseGuards(JwtAuthGuard)
-  whoAmI(@CurrentUser() user: User) {
-    return user;
   }
 
   @Query(() => PaginatedAuthorizations, {

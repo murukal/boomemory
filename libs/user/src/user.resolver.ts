@@ -1,5 +1,12 @@
 import { User } from '@app/data-base/entities/boomemory';
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { MoneyProfile } from '@app/user/dto/money-profile';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { PaginatedUsers } from '@app/user/dto/paginated-users';
@@ -8,6 +15,9 @@ import { FilterUserInput } from './dto/filter-user.input';
 import { UserService } from './user.service';
 import { UserLoader } from './user.loader';
 import { MartProfile } from './dto/mart-profile';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '@app/passport/guard';
+import { LoginInput } from 'apps/boomemory/src/auth/dto/login.input';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -28,6 +38,17 @@ export class UserResolver {
       paginateInput,
       filterInput,
     });
+  }
+
+  @Query(() => User, { description: '用户认证' })
+  @UseGuards(JwtAuthGuard)
+  whoAmI(@CurrentUser() user: User) {
+    return user;
+  }
+
+  @Mutation(() => User, { description: '获取验证用户' })
+  authorize(@Args('loginInput') login: LoginInput): Promise<User> {
+    return this.userService.authorize(login);
   }
 
   @ResolveField('isSelf', () => Boolean, {

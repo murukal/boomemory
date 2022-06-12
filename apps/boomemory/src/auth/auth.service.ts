@@ -1,7 +1,7 @@
 import { UserService } from '@app/user';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { constants, privateDecrypt } from 'crypto';
+
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
@@ -10,13 +10,12 @@ import { AuthorizationNode } from './dto/authorization-node';
 import { AuthorizationsArgs } from './dto/authorizations.args';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
-import { compareSync } from 'bcrypt';
+
 import {
   Authorization,
   AuthorizationAction,
   AuthorizationResource,
 } from '@app/data-base/entities/boomemory';
-import { Essay } from '@app/data-base/entities/boomart';
 import { AppID } from 'utils/app/assets';
 import { ConfigService } from '@app/config';
 import { PassportService } from '@app/passport';
@@ -26,8 +25,6 @@ export class AuthService {
   constructor(
     @InjectRepository(Authorization, AppID.Boomemory)
     private readonly authorizationRepository: Repository<Authorization>,
-    @InjectRepository(Essay, AppID.Boomart)
-    private readonly essayRepository: Repository<Essay>,
     @InjectRepository(AuthorizationResource, AppID.Boomemory)
     private readonly authorizationResourceRepository: Repository<AuthorizationResource>,
     @InjectRepository(AuthorizationAction, AppID.Boomemory)
@@ -39,48 +36,11 @@ export class AuthService {
   ) {}
 
   /**
-   * 验证用户名/密码
-   */
-  async getValidatedUser(payload: LoginInput) {
-    // 根据关键字获取用户
-    const user = await this.userService.getUser(payload.keyword, {
-      id: true,
-      password: true,
-    });
-
-    if (!user) throw new UnauthorizedException('用户名或者密码错误！');
-
-    // 校验密码
-    const isPasswordValidate = compareSync(
-      this.decryptByRsaPrivateKey(
-        payload.password,
-        this.configService.getRsaPrivateKey(),
-      ),
-      user.password,
-    );
-
-    if (!isPasswordValidate)
-      throw new UnauthorizedException('用户名或者密码错误！');
-
-    return user;
-  }
-
-  /**
-   * 对登录信息进行认证
-   */
-  async authorize(payload: LoginInput) {
-    // 认证
-    const { id } = await this.getValidatedUser(payload);
-    // 用户信息
-    return await this.userService.getUser(id);
-  }
-
-  /**
    * 登录
    */
   async login(login: LoginInput) {
     // 匹配用户信息
-    const user = await this.getValidatedUser(login);
+    const user = await this.userService.getValidatedUser(login);
     // error: 用户信息不存在
     if (!user) throw new UnauthorizedException();
     // 加密
@@ -92,7 +52,7 @@ export class AuthService {
    */
   async register(register: RegisterInput) {
     // 注册密码解密
-    register.password = this.decryptByRsaPrivateKey(
+    register.password = this.userService.decryptByRsaPrivateKey(
       register.password,
       this.configService.getRsaPrivateKey(),
     );
@@ -100,20 +60,6 @@ export class AuthService {
     const user = await this.userService.create(register);
     // 加密
     return this.passportService.sign(user.id);
-  }
-
-  /**
-   * 利用RSA公钥私钥解密前端传输过来的密文密码
-   */
-  decryptByRsaPrivateKey(encoding: string, privateKey: string): string {
-    try {
-      return privateDecrypt(
-        { key: privateKey, padding: constants.RSA_PKCS1_PADDING },
-        Buffer.from(encoding, 'base64'),
-      ).toString();
-    } catch (e) {
-      return encoding;
-    }
   }
 
   /**

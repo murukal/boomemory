@@ -1,5 +1,5 @@
 import { User } from '@app/data-base/entities/boomemory';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilterUserInput } from '@app/user/dto/filter-user.input';
 import { RegisterInput } from 'apps/boomemory/src/auth/dto/register.input';
@@ -7,12 +7,17 @@ import { FindOptionsSelect, In, Not, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { AppID } from 'utils/app/assets';
+import { LoginInput } from 'apps/boomemory/src/auth/dto/login.input';
+import { compareSync } from 'bcrypt';
+import { constants, privateDecrypt } from 'crypto';
+import { ConfigService } from '@app/config';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User, AppID.Boomemory)
     private readonly userRepository: Repository<User>,
+    private readonly configService: ConfigService,
   ) {}
 
   /**
@@ -82,5 +87,57 @@ export class UserService {
     ).items;
 
     return userIds.map((userId) => users.find((user) => user.id === userId));
+  }
+
+  /**
+   * 对登录信息进行认证
+   * 与login接口区别：不返回token，直接返回用户信息
+   */
+  async authorize(payload: LoginInput) {
+    // 认证
+    const { id } = await this.getValidatedUser(payload);
+    // 用户信息
+    return await this.getUser(id);
+  }
+
+  /**
+   * 验证用户名/密码
+   */
+  async getValidatedUser(payload: LoginInput) {
+    // 根据关键字获取用户
+    const user = await this.getUser(payload.keyword, {
+      id: true,
+      password: true,
+    });
+
+    if (!user) throw new UnauthorizedException('用户名或者密码错误！');
+
+    // 校验密码
+    const isPasswordValidate = compareSync(
+      this.decryptByRsaPrivateKey(
+        payload.password,
+        this.configService.getRsaPrivateKey(),
+      ),
+      user.password,
+    );
+
+    if (!isPasswordValidate)
+      throw new UnauthorizedException('用户名或者密码错误！');
+
+    return user;
+  }
+
+  /**
+   * 利用RSA公钥私钥解密前端传输过来的密文密码
+   */
+  decryptByRsaPrivateKey(encoding: string, privateKey: string): string {
+    try {
+      return privateDecrypt(
+        { key: privateKey, padding: constants.RSA_PKCS1_PADDING },
+        Buffer.from(encoding, 'base64'),
+      ).toString();
+    } catch (e) {
+      return encoding;
+    }
   }
 }
