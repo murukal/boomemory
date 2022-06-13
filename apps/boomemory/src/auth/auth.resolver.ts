@@ -9,17 +9,18 @@ import { AuthorizationNode } from './dto/authorization-node';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 import { AuthorizationsArgs } from './dto/authorizations.args';
+import { AuthenticatedProfile } from './dto/authenticated-profile';
 
 @Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => String, { description: '登录' })
-  login(@Args('loginInput') login: LoginInput): Promise<string> {
+  @Mutation(() => AuthenticatedProfile, { description: '登录' })
+  login(@Args('loginInput') login: LoginInput) {
     return this.authService.login(login);
   }
 
-  @Mutation(() => String, { description: '注册' })
+  @Mutation(() => AuthenticatedProfile, { description: '注册' })
   register(@Args('registerInput') register: RegisterInput) {
     return this.authService.register(register);
   }

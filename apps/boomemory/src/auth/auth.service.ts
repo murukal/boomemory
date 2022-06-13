@@ -19,6 +19,7 @@ import {
 import { AppID } from 'utils/app/assets';
 import { ConfigService } from '@app/config';
 import { PassportService } from '@app/passport';
+import { AuthenticatedProfile } from './dto/authenticated-profile';
 
 @Injectable()
 export class AuthService {
@@ -38,28 +39,38 @@ export class AuthService {
   /**
    * 登录
    */
-  async login(login: LoginInput) {
+  async login(login: LoginInput): Promise<AuthenticatedProfile> {
     // 匹配用户信息
     const user = await this.userService.getValidatedUser(login);
+
     // error: 用户信息不存在
     if (!user) throw new UnauthorizedException();
-    // 加密
-    return this.passportService.sign(user.id);
+
+    // 加密生成token
+    return {
+      token: user.isVerified ? this.passportService.sign(user.id) : null,
+      isVerified: user.isVerified,
+    };
   }
 
   /**
    * 注册
    */
-  async register(register: RegisterInput) {
+  async register(register: RegisterInput): Promise<AuthenticatedProfile> {
     // 注册密码解密
     register.password = this.userService.decryptByRsaPrivateKey(
       register.password,
       this.configService.getRsaPrivateKey(),
     );
+
     // 创建用户
     const user = await this.userService.create(register);
-    // 加密
-    return this.passportService.sign(user.id);
+
+    // 加密生成token
+    return {
+      token: user.isVerified ? this.passportService.sign(user.id) : null,
+      isVerified: user.isVerified,
+    };
   }
 
   /**

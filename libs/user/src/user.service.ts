@@ -108,6 +108,7 @@ export class UserService {
     const user = await this.getUser(payload.keyword, {
       id: true,
       password: true,
+      isVerified: true,
     });
 
     if (!user) throw new UnauthorizedException('用户名或者密码错误！');
