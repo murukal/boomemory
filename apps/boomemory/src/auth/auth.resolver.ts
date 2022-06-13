@@ -20,7 +20,7 @@ export class AuthResolver {
   }
 
   @Mutation(() => String, { description: '注册' })
-  register(@Args('registerInput') register: RegisterInput): Promise<string> {
+  register(@Args('registerInput') register: RegisterInput) {
     return this.authService.register(register);
   }
 

@@ -26,7 +26,7 @@ export class User extends CoreEntity {
   username: string;
 
   @Field(() => String, {
-    description: '邮箱',
+    description: '电子邮箱地址',
   })
   @Column({
     unique: true,
@@ -34,7 +34,10 @@ export class User extends CoreEntity {
   @IsEmail()
   email: string;
 
-  @Field(() => String, { nullable: true, description: '头像' })
+  @Field(() => String, {
+    nullable: true,
+    description: '头像',
+  })
   @Column({
     nullable: true,
   })
@@ -49,6 +52,23 @@ export class User extends CoreEntity {
 
   @ManyToMany(() => Role, (role) => role.users)
   roles?: Role[];
+
+  @Field(() => String, {
+    description: '验证码',
+  })
+  @Column({
+    default: () => parseInt((Math.random() * 10000).toString()).toString(),
+  })
+  captcha: string;
+
+  @Field(() => Boolean, {
+    description: '是否验证',
+  })
+  @Column({
+    type: Boolean,
+    default: false,
+  })
+  isVerified: boolean;
 
   @BeforeInsert()
   @BeforeUpdate()
