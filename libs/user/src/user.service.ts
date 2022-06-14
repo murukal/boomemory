@@ -3,7 +3,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilterUserInput } from '@app/user/dto/filter-user.input';
 import { RegisterInput } from 'apps/boomemory/src/auth/dto/register.input';
-import { FindOptionsSelect, In, Not, Repository } from 'typeorm';
+import { FindOneOptions, In, Not, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { AppID } from 'utils/app/assets';
@@ -23,7 +23,10 @@ export class UserService {
   /**
    * 获取单个用户
    */
-  async getUser(keyword: number | string, select?: FindOptionsSelect<User>) {
+  async getUser(
+    keyword: number | string,
+    options?: Pick<FindOneOptions<User>, 'relations' | 'select'>,
+  ) {
     // keyword 为空：抛出异常
     if (!keyword) {
       throw new Error('用户关键字不能为初始值！');
@@ -31,7 +34,7 @@ export class UserService {
 
     // 查询指定用户
     const user = await this.userRepository.findOne({
-      select: select,
+      ...options,
       where: [
         {
           id: keyword as number,
@@ -40,7 +43,7 @@ export class UserService {
           username: keyword as string,
         },
         {
-          email: keyword as string,
+          emailAddress: keyword as string,
         },
       ],
     });
@@ -51,8 +54,25 @@ export class UserService {
   /**
    * 创建用户
    */
-  create(register: RegisterInput) {
-    return this.userRepository.save(this.userRepository.create(register));
+  create(registerInput: RegisterInput) {
+    const { password, emailAddress, ...register } = registerInput;
+
+    // 注册密码解密
+    const decryptedPassword = this.decryptByRsaPrivateKey(
+      password,
+      this.configService.getRsaPrivateKey(),
+    );
+
+    return this.userRepository.save(
+      this.userRepository.create({
+        ...register,
+        password: decryptedPassword,
+        emailAddress,
+        email: {
+          address: emailAddress,
+        },
+      }),
+    );
   }
 
   /**
@@ -103,12 +123,17 @@ export class UserService {
   /**
    * 验证用户名/密码
    */
-  async getValidatedUser(payload: LoginInput) {
+  async getValidatedUser(
+    payload: LoginInput,
+    options?: Pick<FindOneOptions<User>, 'relations'>,
+  ) {
     // 根据关键字获取用户
     const user = await this.getUser(payload.keyword, {
-      id: true,
-      password: true,
-      isVerified: true,
+      ...options,
+      select: {
+        id: true,
+        password: true,
+      },
     });
 
     if (!user) throw new UnauthorizedException('用户名或者密码错误！');

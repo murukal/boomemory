@@ -48,28 +48,22 @@ export class AuthService {
 
     // 加密生成token
     return {
-      token: user.isVerified ? this.passportService.sign(user.id) : null,
-      isVerified: user.isVerified,
+      token: user.email.isVerified ? this.passportService.sign(user.id) : null,
+      isVerified: user.email.isVerified,
     };
   }
 
   /**
    * 注册
    */
-  async register(register: RegisterInput): Promise<AuthenticatedProfile> {
-    // 注册密码解密
-    register.password = this.userService.decryptByRsaPrivateKey(
-      register.password,
-      this.configService.getRsaPrivateKey(),
-    );
-
+  async register(registerInput: RegisterInput): Promise<AuthenticatedProfile> {
     // 创建用户
-    const user = await this.userService.create(register);
+    const user = await this.userService.create(registerInput);
 
     // 加密生成token
     return {
-      token: user.isVerified ? this.passportService.sign(user.id) : null,
-      isVerified: user.isVerified,
+      token: user.email.isVerified ? this.passportService.sign(user.id) : null,
+      isVerified: user.email.isVerified,
     };
   }
 

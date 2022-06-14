@@ -4,7 +4,7 @@ import { Field, InputType, PickType } from '@nestjs/graphql';
 @InputType()
 export class RegisterInput extends PickType(
   User,
-  ['avatar', 'email', 'username'],
+  ['avatar', 'emailAddress', 'username'],
   InputType,
 ) {
   @Field(() => String, {

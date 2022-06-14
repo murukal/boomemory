@@ -5,12 +5,14 @@ import {
   Column,
   Entity,
   ManyToMany,
+  OneToOne,
 } from 'typeorm';
 import { CoreEntity } from '../core.entity';
 import { hashSync } from 'bcrypt';
 import { IsEmail, MaxLength, MinLength, isURL } from 'class-validator';
 import { BadRequestException } from '@nestjs/common';
 import { Role } from './role.entity';
+import { UserEmail } from './user-email.entity';
 
 @InputType({ isAbstract: true })
 @ObjectType()
@@ -25,14 +27,19 @@ export class User extends CoreEntity {
   @MaxLength(20)
   username: string;
 
+  @OneToOne(() => UserEmail, {
+    cascade: true,
+  })
+  email: UserEmail;
+
   @Field(() => String, {
-    description: '电子邮箱地址',
+    description: '邮箱地址',
   })
   @Column({
     unique: true,
   })
   @IsEmail()
-  email: string;
+  emailAddress: string;
 
   @Field(() => String, {
     nullable: true,
@@ -52,23 +59,6 @@ export class User extends CoreEntity {
 
   @ManyToMany(() => Role, (role) => role.users)
   roles?: Role[];
-
-  @Field(() => String, {
-    description: '验证码',
-  })
-  @Column({
-    default: () => parseInt((Math.random() * 10000).toString()).toString(),
-  })
-  captcha: string;
-
-  @Field(() => Boolean, {
-    description: '是否验证',
-  })
-  @Column({
-    type: Boolean,
-    default: false,
-  })
-  isVerified: boolean;
 
   @BeforeInsert()
   @BeforeUpdate()
