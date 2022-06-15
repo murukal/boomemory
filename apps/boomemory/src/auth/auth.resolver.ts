@@ -9,18 +9,17 @@ import { AuthorizationNode } from './dto/authorization-node';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 import { AuthorizationsArgs } from './dto/authorizations.args';
-import { AuthenticatedProfile } from './dto/authenticated-profile';
 
 @Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => AuthenticatedProfile, { description: '登录' })
+  @Mutation(() => String, { description: '登录' })
   login(@Args('loginInput') login: LoginInput) {
     return this.authService.login(login);
   }
 
-  @Mutation(() => AuthenticatedProfile, { description: '注册' })
+  @Mutation(() => String, { description: '注册' })
   register(@Args('registerInput') register: RegisterInput) {
     return this.authService.register(register);
   }
@@ -62,5 +61,12 @@ export class AuthResolver {
   })
   setAuthorizations(@Args() args: AuthorizationsArgs) {
     return this.authService.setAuthorizations(args);
+  }
+
+  @Mutation(() => Boolean, {
+    description: '发送验证码',
+  })
+  sendCaptcha() {
+    return this.authService.sendCaptcha('tutu@fantufantu.com');
   }
 }

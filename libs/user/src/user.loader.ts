@@ -7,10 +7,13 @@ import { UserProfile as UserMoneyProfile } from '@app/data-base/entities/boomone
 import { AppID } from 'utils/app/assets';
 import { MartProfile } from './dto/mart-profile';
 import { Essay } from '@app/data-base/entities/boomart';
+import { User } from '@app/data-base/entities/boomemory';
 
 @Injectable()
 export class UserLoader {
   constructor(
+    @InjectRepository(User, AppID.Boomemory)
+    private readonly userRepository: Repository<User>,
     @InjectRepository(UserMoneyProfile, AppID.Boomoney)
     private readonly userMoneyProfileRepository: Repository<UserMoneyProfile>,
     @InjectRepository(Essay, AppID.Boomart)
@@ -64,6 +67,30 @@ export class UserLoader {
         creationCount:
           creationCounts.find((item) => item.createdById === userId).count || 0,
       }));
+    },
+  );
+
+  /**
+   * 根据用户id获取用户是否完成验证
+   */
+  public readonly getIsVerifiedById = new DataLoader<number, boolean>(
+    async (userIds) => {
+      const userProfiles = (await this.userRepository
+        .createQueryBuilder('user')
+        .innerJoinAndSelect('user.email', 'email')
+        .select('user.id', 'userId')
+        .addSelect('email.isVerified', 'isVerified')
+        .whereInIds(userIds)
+        .execute()) as {
+        userId: number;
+        isVerified: boolean;
+      }[];
+
+      return userIds.map(
+        (userId) =>
+          userProfiles.find((userProfile) => userProfile.userId === userId)
+            .isVerified || false,
+      );
     },
   );
 }

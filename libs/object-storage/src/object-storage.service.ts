@@ -17,8 +17,8 @@ export class ObjectStorageService {
   constructor(private readonly configService: ConfigService) {
     // 初始化对象存储
     this.cos = new COS({
-      SecretId: this.configService.getCosSecretId(),
-      SecretKey: this.configService.getCosSecretKey(),
+      SecretId: this.configService.getTencentCloudSecretId(),
+      SecretKey: this.configService.getTencentCloudSecretKey(),
     });
   }
 
@@ -27,8 +27,8 @@ export class ObjectStorageService {
    */
   async upload2COS(fileProfile: FileProfile) {
     const res = await this.cos.putObject({
-      Bucket: this.configService.getCosBucket(),
-      Region: this.configService.getCosRegion(),
+      Bucket: this.configService.getTencentCloudBucket(),
+      Region: this.configService.getTencentCloudRegion(),
       Key: fileProfile.filename || v4(),
       ContentType: fileProfile.mimetype,
       Body: fileProfile.body,

@@ -72,4 +72,11 @@ export class UserResolver {
   getMoneyProfile(@Parent() user: User) {
     return this.userLoader.getMoneyProfileById.load(user.id);
   }
+
+  @ResolveField('isVerified', () => Boolean, {
+    description: '用户是否已验证',
+  })
+  getIsVerified(@Parent() user: User) {
+    return this.userLoader.getIsVerifiedById.load(user.id);
+  }
 }

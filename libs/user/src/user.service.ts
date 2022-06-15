@@ -25,7 +25,7 @@ export class UserService {
    */
   async getUser(
     keyword: number | string,
-    options?: Pick<FindOneOptions<User>, 'relations' | 'select'>,
+    options?: Pick<FindOneOptions<User>, 'select'>,
   ) {
     // keyword 为空：抛出异常
     if (!keyword) {
@@ -123,19 +123,12 @@ export class UserService {
   /**
    * 验证用户名/密码
    */
-  async getValidatedUser(
-    payload: LoginInput,
-    options?: Pick<FindOneOptions<User>, 'relations'>,
-  ) {
+  async getValidatedUser(payload: LoginInput) {
     // 根据关键字获取用户
     const user = await this.getUser(payload.keyword, {
-      ...options,
       select: {
         id: true,
         password: true,
-        email: {
-          isVerified: true,
-        },
       },
     });
 

@@ -1,7 +1,6 @@
 import { UserService } from '@app/user';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-
 import { Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
@@ -10,7 +9,6 @@ import { AuthorizationNode } from './dto/authorization-node';
 import { AuthorizationsArgs } from './dto/authorizations.args';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
-
 import {
   Authorization,
   AuthorizationAction,
@@ -19,10 +17,13 @@ import {
 import { AppID } from 'utils/app/assets';
 import { ConfigService } from '@app/config';
 import { PassportService } from '@app/passport';
-import { AuthenticatedProfile } from './dto/authenticated-profile';
+import { ClientConfig } from 'tencentcloud-sdk-nodejs/tencentcloud/common/interface';
+import { Client as SesClient } from 'tencentcloud-sdk-nodejs/tencentcloud/services/ses/v20201002/ses_client';
 
 @Injectable()
 export class AuthService {
+  private sesClient: SesClient;
+
   constructor(
     @InjectRepository(Authorization, AppID.Boomemory)
     private readonly authorizationRepository: Repository<Authorization>,
@@ -34,41 +35,46 @@ export class AuthService {
     private readonly passportService: PassportService,
     private readonly configService: ConfigService,
     private readonly tenantService: TenantService,
-  ) {}
+  ) {
+    const clientConfig: ClientConfig = {
+      credential: {
+        secretId: this.configService.getTencentCloudSecretId(),
+        secretKey: this.configService.getTencentCloudSecretKey(),
+      },
+      region: 'ap-hongkong',
+      profile: {
+        httpProfile: {
+          endpoint: 'ses.tencentcloudapi.com',
+        },
+      },
+    };
+
+    this.sesClient = new SesClient(clientConfig);
+  }
 
   /**
    * 登录
    */
-  async login(login: LoginInput): Promise<AuthenticatedProfile> {
+  async login(login: LoginInput): Promise<string> {
     // 匹配用户信息
-    const user = await this.userService.getValidatedUser(login, {
-      relations: {
-        email: true,
-      },
-    });
+    const user = await this.userService.getValidatedUser(login);
 
     // error: 用户信息不存在
     if (!user) throw new UnauthorizedException();
 
     // 加密生成token
-    return {
-      token: user.email.isVerified ? this.passportService.sign(user.id) : null,
-      isVerified: user.email.isVerified,
-    };
+    return this.passportService.sign(user.id);
   }
 
   /**
    * 注册
    */
-  async register(registerInput: RegisterInput): Promise<AuthenticatedProfile> {
+  async register(registerInput: RegisterInput): Promise<string> {
     // 创建用户
     const user = await this.userService.create(registerInput);
 
     // 加密生成token
-    return {
-      token: user.email.isVerified ? this.passportService.sign(user.id) : null,
-      isVerified: user.email.isVerified,
-    };
+    return this.passportService.sign(user.id);
   }
 
   /**
@@ -196,5 +202,25 @@ export class AuthService {
     });
 
     return !!(await this.authorizationRepository.save(authorizeds)).length;
+  }
+
+  /**
+   * 发送验证码
+   */
+  async sendCaptcha(emailAddress: string) {
+    // 请求参数
+    const params = {
+      FromEmailAddress: 'no-replay@account.fantufantu.com',
+      Destination: [emailAddress],
+      Subject: '通过邮件确认身份',
+      Template: {
+        TemplateID: 28764,
+        TemplateData: '',
+      },
+    };
+
+    const res = await this.sesClient.SendEmail(params).catch((error) => error);
+
+    return true;
   }
 }

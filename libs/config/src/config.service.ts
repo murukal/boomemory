@@ -35,30 +35,30 @@ export class ConfigService {
   }
 
   /**
-   * 获取cos桶
+   * 获取对象存储桶名称
    */
-  getCosBucket() {
-    return this.nativeConfigService.get<string>('cos.bucket');
+  getTencentCloudBucket() {
+    return this.nativeConfigService.get<string>('tencentCloud.bucket');
   }
 
   /**
-   * 获取cos源
+   * 获取地区源
    */
-  getCosRegion() {
-    return this.nativeConfigService.get<string>('cos.region');
+  getTencentCloudRegion() {
+    return this.nativeConfigService.get<string>('tencentCloud.region');
   }
 
   /**
    * 获取cos秘钥id
    */
-  getCosSecretId() {
-    return this.nativeConfigService.get<string>('cos.secretId');
+  getTencentCloudSecretId() {
+    return this.nativeConfigService.get<string>('tencentCloud.secretId');
   }
 
   /**
    * 获取cos秘钥key
    */
-  getCosSecretKey() {
-    return this.nativeConfigService.get<string>('cos.secretKey');
+  getTencentCloudSecretKey() {
+    return this.nativeConfigService.get<string>('tencentCloud.secretKey');
   }
 }
