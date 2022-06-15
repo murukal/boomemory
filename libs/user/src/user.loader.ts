@@ -92,5 +92,8 @@ export class UserLoader {
             .isVerified || false,
       );
     },
+    {
+      cache: false,
+    },
   );
 }
