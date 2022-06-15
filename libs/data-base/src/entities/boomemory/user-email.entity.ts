@@ -1,11 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  PrimaryColumn,
-} from 'typeorm';
+import dayjs = require('dayjs');
+import { BeforeInsert, Column, Entity, PrimaryColumn } from 'typeorm';
 
 @ObjectType()
 @Entity()
@@ -20,12 +15,9 @@ export class UserEmail {
     description: '验证码',
   })
   @Column({
-    zerofill: true,
-    type: 'decimal',
-    precision: 4,
-    scale: 0,
+    length: 6,
   })
-  captcha: number;
+  captcha: string;
 
   @Field(() => Date, {
     description: '有效截止时间',
@@ -43,9 +35,8 @@ export class UserEmail {
   isVerified: boolean;
 
   @BeforeInsert()
-  @BeforeUpdate()
-  private generateCaptcha() {
-    this.captcha = parseInt((Math.random() * 10000).toString());
-    this.validTo = new Date(new Date().getTime() + 2 * 60 * 60 * 1000);
+  generateCaptcha() {
+    this.captcha = ('000000' + Math.floor(Math.random() * 1000000)).slice(-6);
+    this.validTo = dayjs().add(2, 'h').toDate();
   }
 }

@@ -9,6 +9,7 @@ import { AuthorizationNode } from './dto/authorization-node';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 import { AuthorizationsArgs } from './dto/authorizations.args';
+import { SendCaptchaArgs } from './dto/send-captcha.args';
 
 @Resolver()
 export class AuthResolver {
@@ -66,7 +67,7 @@ export class AuthResolver {
   @Mutation(() => Boolean, {
     description: '发送验证码',
   })
-  sendCaptcha() {
-    return this.authService.sendCaptcha('tutu@fantufantu.com');
+  sendCaptcha(@Args() args: SendCaptchaArgs) {
+    return this.authService.sendCaptcha(args);
   }
 }

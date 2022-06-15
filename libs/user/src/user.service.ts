@@ -1,4 +1,4 @@
-import { User } from '@app/data-base/entities/boomemory';
+import { User, UserEmail } from '@app/data-base/entities/boomemory';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FilterUserInput } from '@app/user/dto/filter-user.input';
@@ -11,12 +11,15 @@ import { LoginInput } from 'apps/boomemory/src/auth/dto/login.input';
 import { compareSync } from 'bcrypt';
 import { constants, privateDecrypt } from 'crypto';
 import { ConfigService } from '@app/config';
+import dayjs = require('dayjs');
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User, AppID.Boomemory)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(UserEmail, AppID.Boomemory)
+    private readonly userEmailRepository: Repository<UserEmail>,
     private readonly configService: ConfigService,
   ) {}
 
@@ -160,6 +163,33 @@ export class UserService {
       ).toString();
     } catch (e) {
       return encoding;
+    }
+  }
+
+  /**
+   * 获取验证码
+   * 验证码过期时，自动生成新的验证码
+   */
+  async getOrGenerateCaptcha(keyword: string) {
+    const existedProfile = await this.userEmailRepository.findOneBy({
+      address: keyword,
+    });
+
+    if (dayjs().isAfter(dayjs(existedProfile.validTo))) {
+      const userEmail = this.userEmailRepository.create({
+        address: keyword,
+      });
+
+      userEmail.generateCaptcha();
+
+      await this.userEmailRepository.update(keyword, {
+        captcha: userEmail.captcha,
+        validTo: userEmail.validTo,
+      });
+
+      return userEmail.captcha;
+    } else {
+      return existedProfile.captcha;
     }
   }
 }

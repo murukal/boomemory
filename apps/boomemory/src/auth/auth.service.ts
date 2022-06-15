@@ -19,6 +19,7 @@ import { ConfigService } from '@app/config';
 import { PassportService } from '@app/passport';
 import { ClientConfig } from 'tencentcloud-sdk-nodejs/tencentcloud/common/interface';
 import { Client as SesClient } from 'tencentcloud-sdk-nodejs/tencentcloud/services/ses/v20201002/ses_client';
+import { SendCaptchaArgs } from './dto/send-captcha.args';
 
 @Injectable()
 export class AuthService {
@@ -42,11 +43,6 @@ export class AuthService {
         secretKey: this.configService.getTencentCloudSecretKey(),
       },
       region: 'ap-hongkong',
-      profile: {
-        httpProfile: {
-          endpoint: 'ses.tencentcloudapi.com',
-        },
-      },
     };
 
     this.sesClient = new SesClient(clientConfig);
@@ -207,19 +203,26 @@ export class AuthService {
   /**
    * 发送验证码
    */
-  async sendCaptcha(emailAddress: string) {
+  async sendCaptcha(args: SendCaptchaArgs) {
+    // 获取验证码
+    const captcha = await this.userService.getOrGenerateCaptcha(
+      args.emailAddress,
+    );
+
     // 请求参数
     const params = {
       FromEmailAddress: 'no-replay@account.fantufantu.com',
-      Destination: [emailAddress],
+      Destination: [args.emailAddress],
       Subject: '通过邮件确认身份',
       Template: {
         TemplateID: 28764,
-        TemplateData: '',
+        TemplateData: JSON.stringify({
+          captcha,
+        }),
       },
     };
 
-    const res = await this.sesClient.SendEmail(params).catch((error) => error);
+    await this.sesClient.SendEmail(params);
 
     return true;
   }
