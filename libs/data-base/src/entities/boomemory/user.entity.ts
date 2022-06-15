@@ -4,6 +4,7 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  JoinColumn,
   ManyToMany,
   OneToOne,
 } from 'typeorm';
@@ -27,9 +28,10 @@ export class User extends CoreEntity {
   @MaxLength(20)
   username: string;
 
-  @OneToOne(() => UserEmail, {
+  @OneToOne(() => UserEmail, 'emailAddress', {
     cascade: true,
   })
+  @JoinColumn()
   email: UserEmail;
 
   @Field(() => String, {

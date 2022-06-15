@@ -41,7 +41,11 @@ export class AuthService {
    */
   async login(login: LoginInput): Promise<AuthenticatedProfile> {
     // 匹配用户信息
-    const user = await this.userService.getValidatedUser(login);
+    const user = await this.userService.getValidatedUser(login, {
+      relations: {
+        email: true,
+      },
+    });
 
     // error: 用户信息不存在
     if (!user) throw new UnauthorizedException();

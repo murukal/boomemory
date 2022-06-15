@@ -133,6 +133,9 @@ export class UserService {
       select: {
         id: true,
         password: true,
+        email: {
+          isVerified: true,
+        },
       },
     });
 
