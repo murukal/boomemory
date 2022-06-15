@@ -13,6 +13,7 @@ import {
   Authorization,
   AuthorizationAction,
   AuthorizationResource,
+  UserEmail,
 } from '@app/data-base/entities/boomemory';
 import { AppID } from 'utils/app/assets';
 import { ConfigService } from '@app/config';
@@ -20,6 +21,7 @@ import { PassportService } from '@app/passport';
 import { ClientConfig } from 'tencentcloud-sdk-nodejs/tencentcloud/common/interface';
 import { Client as SesClient } from 'tencentcloud-sdk-nodejs/tencentcloud/services/ses/v20201002/ses_client';
 import { SendCaptchaArgs } from './dto/send-captcha.args';
+import { VerifyInput } from './dto/verify.input';
 
 @Injectable()
 export class AuthService {
@@ -32,6 +34,8 @@ export class AuthService {
     private readonly authorizationResourceRepository: Repository<AuthorizationResource>,
     @InjectRepository(AuthorizationAction, AppID.Boomemory)
     private readonly authorizationActionRepository: Repository<AuthorizationAction>,
+    @InjectRepository(UserEmail, AppID.Boomemory)
+    private readonly userEmailRepository: Repository<UserEmail>,
     private readonly userService: UserService,
     private readonly passportService: PassportService,
     private readonly configService: ConfigService,
@@ -225,5 +229,26 @@ export class AuthService {
     await this.sesClient.SendEmail(params);
 
     return true;
+  }
+
+  /**
+   * 验证
+   */
+  async verify(verifyInput: VerifyInput, emailAddress: string) {
+    return !!(
+      await this.userEmailRepository
+        .createQueryBuilder()
+        .update()
+        .set({
+          isVerified: true,
+        })
+        .where('address = :emailAddress', {
+          emailAddress,
+        })
+        .andWhere('captcha = :captcha', {
+          captcha: verifyInput.captcha,
+        })
+        .execute()
+    ).affected;
   }
 }

@@ -170,19 +170,19 @@ export class UserService {
    * 获取验证码
    * 验证码过期时，自动生成新的验证码
    */
-  async getOrGenerateCaptcha(keyword: string) {
+  async getOrGenerateCaptcha(emailAddress: string) {
     const existedProfile = await this.userEmailRepository.findOneBy({
-      address: keyword,
+      address: emailAddress,
     });
 
     if (dayjs().isAfter(dayjs(existedProfile.validTo))) {
       const userEmail = this.userEmailRepository.create({
-        address: keyword,
+        address: emailAddress,
       });
 
       userEmail.generateCaptcha();
 
-      await this.userEmailRepository.update(keyword, {
+      await this.userEmailRepository.update(emailAddress, {
         captcha: userEmail.captcha,
         validTo: userEmail.validTo,
       });
