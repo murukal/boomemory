@@ -20,7 +20,6 @@ import { ConfigService } from '@app/config';
 import { PassportService } from '@app/passport';
 import { ClientConfig } from 'tencentcloud-sdk-nodejs/tencentcloud/common/interface';
 import { Client as SesClient } from 'tencentcloud-sdk-nodejs/tencentcloud/services/ses/v20201002/ses_client';
-import { SendCaptchaArgs } from './dto/send-captcha.args';
 import { VerifyInput } from './dto/verify.input';
 
 @Injectable()
@@ -207,16 +206,14 @@ export class AuthService {
   /**
    * 发送验证码
    */
-  async sendCaptcha(args: SendCaptchaArgs) {
+  async sendCaptcha(emailAddress: string) {
     // 获取验证码
-    const captcha = await this.userService.getOrGenerateCaptcha(
-      args.emailAddress,
-    );
+    const captcha = await this.userService.getOrGenerateCaptcha(emailAddress);
 
     // 请求参数
     const params = {
       FromEmailAddress: 'no-replay@account.fantufantu.com',
-      Destination: [args.emailAddress],
+      Destination: [emailAddress],
       Subject: '通过邮件确认身份',
       Template: {
         TemplateID: 28764,

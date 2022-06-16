@@ -10,7 +10,6 @@ import { AuthorizationNode } from './dto/authorization-node';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 import { AuthorizationsArgs } from './dto/authorizations.args';
-import { SendCaptchaArgs } from './dto/send-captcha.args';
 import { VerifyInput } from './dto/verify.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '@app/passport/guard';
@@ -72,8 +71,9 @@ export class AuthResolver {
   @Mutation(() => Boolean, {
     description: '发送验证码',
   })
-  sendCaptcha(@Args() args: SendCaptchaArgs) {
-    return this.authService.sendCaptcha(args);
+  @UseGuards(JwtAuthGuard)
+  sendCaptcha(@CurrentUser() user: User) {
+    return this.authService.sendCaptcha(user.emailAddress);
   }
 
   @Mutation(() => Boolean, {
