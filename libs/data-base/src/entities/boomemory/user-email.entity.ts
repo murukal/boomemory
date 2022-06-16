@@ -34,6 +34,11 @@ export class UserEmail {
   })
   isVerified: boolean;
 
+  @Column({
+    nullable: true,
+  })
+  sentAt: Date;
+
   @BeforeInsert()
   generateCaptcha() {
     this.captcha = ('000000' + Math.floor(Math.random() * 1000000)).slice(-6);

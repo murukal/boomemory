@@ -28,7 +28,7 @@ export class UserService {
    */
   async getUser(
     keyword: number | string,
-    options?: Pick<FindOneOptions<User>, 'select'>,
+    options?: Pick<FindOneOptions<User>, 'select' | 'relations'>,
   ) {
     // keyword 为空：抛出异常
     if (!keyword) {

@@ -21,6 +21,7 @@ import { PassportService } from '@app/passport';
 import { ClientConfig } from 'tencentcloud-sdk-nodejs/tencentcloud/common/interface';
 import { Client as SesClient } from 'tencentcloud-sdk-nodejs/tencentcloud/services/ses/v20201002/ses_client';
 import { VerifyInput } from './dto/verify.input';
+import dayjs = require('dayjs');
 
 @Injectable()
 export class AuthService {
@@ -207,6 +208,18 @@ export class AuthService {
    * 发送验证码
    */
   async sendCaptcha(emailAddress: string) {
+    // 每10分钟仅可发送一次
+    const sentAt = (
+      await this.userEmailRepository.findOneBy({
+        address: emailAddress,
+      })
+    ).sentAt;
+
+    // 上次发送在10分钟之内，不重复发送
+    if (sentAt && dayjs(sentAt).add(10, 'minute').isAfter(dayjs())) {
+      return false;
+    }
+
     // 获取验证码
     const captcha = await this.userService.getOrGenerateCaptcha(emailAddress);
 
@@ -216,14 +229,21 @@ export class AuthService {
       Destination: [emailAddress],
       Subject: '通过邮件确认身份',
       Template: {
-        TemplateID: 28764,
+        TemplateID: 28985,
         TemplateData: JSON.stringify({
           captcha,
         }),
       },
     };
 
-    await this.sesClient.SendEmail(params);
+    const res = await this.sesClient.SendEmail(params);
+
+    // 发送成功，更新上次发送事件
+    if (res.RequestId) {
+      await this.userEmailRepository.update(emailAddress, {
+        sentAt: dayjs().toDate(),
+      });
+    }
 
     return true;
   }
