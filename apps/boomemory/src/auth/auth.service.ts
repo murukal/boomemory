@@ -22,6 +22,7 @@ import { ClientConfig } from 'tencentcloud-sdk-nodejs/tencentcloud/common/interf
 import { Client as SesClient } from 'tencentcloud-sdk-nodejs/tencentcloud/services/ses/v20201002/ses_client';
 import { VerifyInput } from './dto/verify.input';
 import dayjs = require('dayjs');
+import { SendCaptchaArgs } from './dto/send-captcha.args';
 
 @Injectable()
 export class AuthService {
@@ -207,45 +208,45 @@ export class AuthService {
   /**
    * 发送验证码
    */
-  async sendCaptcha(emailAddress: string) {
-    // 每10分钟仅可发送一次
-    const sentAt = (
-      await this.userEmailRepository.findOneBy({
-        address: emailAddress,
-      })
-    ).sentAt;
+  async sendCaptcha(sendCaptchaArgs: SendCaptchaArgs): Promise<Date> {
+    // 获取userEmail对象
+    // 不存在则创建，存在则获取
+    const userEmail = await this.userService.getOrGenerateUserEmail(
+      sendCaptchaArgs.emailAddress,
+    );
 
-    // 上次发送在10分钟之内，不重复发送
-    if (sentAt && dayjs(sentAt).add(10, 'minute').isAfter(dayjs())) {
-      return false;
+    // 每1分钟仅可发送一次
+    if (
+      userEmail.sentAt &&
+      dayjs().subtract(1, 'minute').isBefore(userEmail.sentAt)
+    ) {
+      throw new Error('验证码发送太频繁，请稍后再试');
     }
 
-    // 获取验证码
-    const captcha = await this.userService.getOrGenerateCaptcha(emailAddress);
-
-    // 请求参数
+    // 执行发送邮件
     const params = {
       FromEmailAddress: 'no-replay@account.fantufantu.com',
-      Destination: [emailAddress],
+      Destination: [sendCaptchaArgs.emailAddress],
       Subject: '通过邮件确认身份',
       Template: {
         TemplateID: 28985,
         TemplateData: JSON.stringify({
-          captcha,
+          captcha: userEmail.captcha,
         }),
       },
     };
 
-    const res = await this.sesClient.SendEmail(params);
+    const currentSentAt = dayjs().toDate();
+    await this.sesClient.SendEmail(params);
 
-    // 发送成功，更新上次发送事件
-    if (res.RequestId) {
-      await this.userEmailRepository.update(emailAddress, {
-        sentAt: dayjs().toDate(),
-      });
-    }
+    // 发送失败会直接抛出异常
+    // 执行到这 = 发送成功
+    // 更新上次发送时间
+    await this.userEmailRepository.update(sendCaptchaArgs.emailAddress, {
+      sentAt: dayjs().toDate(),
+    });
 
-    return true;
+    return currentSentAt;
   }
 
   /**

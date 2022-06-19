@@ -36,12 +36,13 @@ export class UserEmail {
 
   @Column({
     nullable: true,
+    default: null,
   })
   sentAt: Date;
 
   @BeforeInsert()
   generateCaptcha() {
     this.captcha = ('000000' + Math.floor(Math.random() * 1000000)).slice(-6);
-    this.validTo = dayjs().add(2, 'h').toDate();
+    this.validTo = dayjs().add(24, 'h').toDate();
   }
 }

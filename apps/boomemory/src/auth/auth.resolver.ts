@@ -14,6 +14,7 @@ import { VerifyInput } from './dto/verify.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '@app/passport/guard';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
+import { SendCaptchaArgs } from './dto/send-captcha.args';
 
 @Resolver()
 export class AuthResolver {
@@ -68,12 +69,12 @@ export class AuthResolver {
     return this.authService.setAuthorizations(args);
   }
 
-  @Mutation(() => Boolean, {
+  @Mutation(() => Date, {
     description: '发送验证码',
+    nullable: true,
   })
-  @UseGuards(JwtAuthGuard)
-  sendCaptcha(@CurrentUser() user: User) {
-    return this.authService.sendCaptcha(user.emailAddress);
+  sendCaptcha(@Args() sendCaptchaArgs: SendCaptchaArgs) {
+    return this.authService.sendCaptcha(sendCaptchaArgs);
   }
 
   @Mutation(() => Boolean, {

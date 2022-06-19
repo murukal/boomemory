@@ -167,29 +167,31 @@ export class UserService {
   }
 
   /**
-   * 获取验证码
-   * 验证码过期时，自动生成新的验证码
+   * 获取userEmail对象
+   * 不存在则创建
    */
-  async getOrGenerateCaptcha(emailAddress: string) {
-    const existedProfile = await this.userEmailRepository.findOneBy({
+  async getOrGenerateUserEmail(emailAddress: string): Promise<UserEmail> {
+    // 获取已经存在的
+    const existed = await this.userEmailRepository.findOneBy({
       address: emailAddress,
     });
 
-    if (dayjs().isAfter(dayjs(existedProfile.validTo))) {
-      const userEmail = this.userEmailRepository.create({
-        address: emailAddress,
-      });
-
-      userEmail.generateCaptcha();
-
-      await this.userEmailRepository.update(emailAddress, {
-        captcha: userEmail.captcha,
-        validTo: userEmail.validTo,
-      });
-
-      return userEmail.captcha;
-    } else {
-      return existedProfile.captcha;
+    // 不存在，生成新的userEmail
+    if (!existed) {
+      return await this.userEmailRepository.save(
+        this.userEmailRepository.create({
+          address: emailAddress,
+        }),
+      );
     }
+
+    // 验证码存在有效期，验证码失效时，需要重新生成验证码
+    if (dayjs().isAfter(existed.validTo)) {
+      existed.generateCaptcha();
+      existed.sentAt = null;
+      this.userEmailRepository.save(existed);
+    }
+
+    return existed;
   }
 }
