@@ -1,7 +1,6 @@
 import {
   AuthorizationAction,
   AuthorizationResource,
-  User,
 } from '@app/data-base/entities/boomemory';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
@@ -10,10 +9,6 @@ import { AuthorizationNode } from './dto/authorization-node';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 import { AuthorizationsArgs } from './dto/authorizations.args';
-import { VerifyInput } from './dto/verify.input';
-import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@app/passport/guard';
-import { CurrentUser } from 'utils/decorator/current-user.decorator';
 import { SendCaptchaArgs } from './dto/send-captcha.args';
 
 @Resolver()
@@ -75,19 +70,5 @@ export class AuthResolver {
   })
   sendCaptcha(@Args() sendCaptchaArgs: SendCaptchaArgs) {
     return this.authService.sendCaptcha(sendCaptchaArgs);
-  }
-
-  @Mutation(() => Boolean, {
-    description: '验证用户',
-  })
-  @UseGuards(JwtAuthGuard)
-  verify(
-    @Args('verifyInput', {
-      description: '验证信息',
-    })
-    verifyInput: VerifyInput,
-    @CurrentUser() user: User,
-  ) {
-    return this.authService.verify(verifyInput, user.emailAddress);
   }
 }

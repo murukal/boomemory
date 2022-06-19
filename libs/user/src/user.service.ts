@@ -58,7 +58,7 @@ export class UserService {
    * 创建用户
    */
   create(registerInput: RegisterInput) {
-    const { password, emailAddress, ...register } = registerInput;
+    const { password, ...register } = registerInput;
 
     // 注册密码解密
     const decryptedPassword = this.decryptByRsaPrivateKey(
@@ -70,10 +70,6 @@ export class UserService {
       this.userRepository.create({
         ...register,
         password: decryptedPassword,
-        emailAddress,
-        email: {
-          address: emailAddress,
-        },
       }),
     );
   }
@@ -193,5 +189,29 @@ export class UserService {
     }
 
     return existed;
+  }
+
+  /**
+   * 验证用户邮箱
+   */
+  async verifyUserEmail(verifyInput: {
+    emailAddress: string;
+    captcha: string;
+  }) {
+    return !!(
+      await this.userEmailRepository
+        .createQueryBuilder()
+        .update()
+        .set({
+          isVerified: true,
+        })
+        .where('address = :address', {
+          address: verifyInput.emailAddress,
+        })
+        .andWhere('captcha = :captcha', {
+          captcha: verifyInput.captcha,
+        })
+        .execute()
+    ).affected;
   }
 }

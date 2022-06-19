@@ -20,7 +20,6 @@ import { ConfigService } from '@app/config';
 import { PassportService } from '@app/passport';
 import { ClientConfig } from 'tencentcloud-sdk-nodejs/tencentcloud/common/interface';
 import { Client as SesClient } from 'tencentcloud-sdk-nodejs/tencentcloud/services/ses/v20201002/ses_client';
-import { VerifyInput } from './dto/verify.input';
 import dayjs = require('dayjs');
 import { SendCaptchaArgs } from './dto/send-captcha.args';
 
@@ -71,7 +70,17 @@ export class AuthService {
    * 注册
    */
   async register(registerInput: RegisterInput): Promise<string> {
-    // 创建用户
+    // 验证邮箱有效性
+    const isVerified = await this.userService.verifyUserEmail({
+      emailAddress: registerInput.emailAddress,
+      captcha: registerInput.captcha,
+    });
+
+    if (!isVerified) {
+      throw new Error('邮箱验证失败，请检查验证码');
+    }
+
+    // 用户注册
     const user = await this.userService.create(registerInput);
 
     // 加密生成token
@@ -247,26 +256,5 @@ export class AuthService {
     });
 
     return currentSentAt;
-  }
-
-  /**
-   * 验证
-   */
-  async verify(verifyInput: VerifyInput, emailAddress: string) {
-    return !!(
-      await this.userEmailRepository
-        .createQueryBuilder()
-        .update()
-        .set({
-          isVerified: true,
-        })
-        .where('address = :emailAddress', {
-          emailAddress,
-        })
-        .andWhere('captcha = :captcha', {
-          captcha: verifyInput.captcha,
-        })
-        .execute()
-    ).affected;
   }
 }
