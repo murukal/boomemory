@@ -17,7 +17,8 @@
     "start": "node dist/apps/boomemory/main",
     "start:boomart": "node dist/apps/boomart/main",
     "start:boomoney": "node dist/apps/boomoney/main",
-    "start:bot": "node dist/apps/bot/main"
+    "start:bot": "node dist/apps/bot/main",
+    "build:all": "nest build && nest build boomart && nest build boomoney"
   },
   "dependencies": {
     "@nestjs/apollo": "^10.0.14",
