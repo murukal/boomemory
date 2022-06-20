@@ -1,6 +1,7 @@
 import { registerAs } from '@nestjs/config';
-import { v4 } from 'uuid';
 
-export const jwtConfig = registerAs('jwt', () => ({
-  secret: process.env.JWT_SECRET || v4(),
-}));
+export const jwtConfig = registerAs('jwt', () => {
+  return {
+    secret: process.env.JWT_SECRET,
+  };
+});
