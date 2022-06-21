@@ -17,4 +17,4 @@ import { initializeCommonModules } from 'utils/app/handlers';
     ShareModule,
   ],
 })
-export class BoomoneyModule {}
+export class AppModule {}
