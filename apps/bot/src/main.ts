@@ -1,10 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppID } from 'utils/app/assets';
 import { initialize } from 'utils/app/handlers';
-import { BotModule } from './bot.module';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(BotModule);
+  const app = await NestFactory.create(AppModule);
   await initialize(app, AppID.Bot);
 }
 

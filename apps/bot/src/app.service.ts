@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import child_process = require('child_process');
 
 @Injectable()
-export class BotService {
+export class AppService {
   /**
    * 利用git webhook执行服务器脚本
    */
