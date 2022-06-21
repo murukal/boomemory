@@ -25,4 +25,4 @@ import { NavigationModule } from './navigation/navigation.module';
     NavigationModule,
   ],
 })
-export class BoomartModule {}
+export class AppModule {}
