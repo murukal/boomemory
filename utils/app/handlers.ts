@@ -3,7 +3,10 @@ import { DataBaseModule } from '@app/data-base';
 import { ObjectStorageModule } from '@app/object-storage';
 import { PassportModule } from '@app/passport';
 import { UserModule } from '@app/user';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import {
+  ApolloFederationDriver,
+  ApolloFederationDriverConfig,
+} from '@nestjs/apollo';
 import {
   INestApplication,
   ModuleMetadata,
@@ -59,9 +62,9 @@ export const initializeCommonModules = (): ModuleMetadata['imports'] => [
   ObjectStorageModule,
 
   // GraphQL 模块
-  GraphQLModule.forRoot<ApolloDriverConfig>({
+  GraphQLModule.forRoot<ApolloFederationDriverConfig>({
     autoSchemaFile: true,
-    driver: ApolloDriver,
+    driver: ApolloFederationDriver,
     cors: getDynamicCorsOptions,
   }),
 ];

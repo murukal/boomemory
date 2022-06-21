@@ -1,16 +1,25 @@
 {
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/boomemory/src",
+  "sourceRoot": "apps/gateway/src",
   "generateOptions": {
     "spec": false
   },
   "monorepo": true,
-  "root": "apps/boomemory",
+  "root": "apps/gateway",
   "compilerOptions": {
     "webpack": true,
-    "tsConfigPath": "apps/boomemory/tsconfig.app.json"
+    "tsConfigPath": "apps/gateway/tsconfig.app.json"
   },
   "projects": {
+    "gateway": {
+      "type": "application",
+      "root": "apps/gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/gateway/tsconfig.app.json"
+      }
+    },
     "boomemory": {
       "type": "application",
       "root": "apps/boomemory",

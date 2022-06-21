@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Directive, Field, Int, ObjectType } from '@nestjs/graphql';
 import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
@@ -10,6 +10,7 @@ export class CoreEntity {
   @Field(() => Int, {
     description: 'id唯一键',
   })
+  @Directive('@external')
   @PrimaryGeneratedColumn()
   id: number;
 
