@@ -43,6 +43,7 @@ export class UserLoader {
         profiles.find((profile) => profile.userId === userId),
       );
     },
+    { cache: false },
   );
 
   /**
