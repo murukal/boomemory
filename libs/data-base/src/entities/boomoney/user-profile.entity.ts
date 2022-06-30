@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Billing } from './billing.entity';
 
 @ObjectType()
@@ -8,6 +8,11 @@ export class UserProfile {
   @PrimaryColumn()
   userId: number;
 
+  @Column({
+    nullable: true,
+  })
+  defaultBillingId?: number;
+
   @Field(() => Billing, {
     nullable: true,
     description: '默认账本',
@@ -15,5 +20,5 @@ export class UserProfile {
   @ManyToOne(() => Billing, {
     nullable: true,
   })
-  defaultBilling: Billing;
+  defaultBilling?: Billing;
 }

@@ -46,7 +46,7 @@ export class UserResolver {
     return user;
   }
 
-  @Mutation(() => User, { description: '获取验证用户' })
+  @Mutation(() => User, { description: '获取认证通过的用户信息' })
   authorize(@Args('loginInput') login: LoginInput): Promise<User> {
     return this.userService.authorize(login);
   }

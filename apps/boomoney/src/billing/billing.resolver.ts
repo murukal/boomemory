@@ -17,6 +17,7 @@ import { Billing, Share } from '@app/data-base/entities/boomoney';
 import { User } from '@app/data-base/entities/boomemory';
 import { BillingLoader } from './billing.loader';
 import { ShareInterceptor } from './interceptor/share.interceptor';
+import { SwitchDefaultArgs } from './dto/switch-default.args';
 
 @Resolver(() => Billing)
 export class BillingResolver {
@@ -77,6 +78,17 @@ export class BillingResolver {
     @CurrentUser() user: User,
   ) {
     return this.billingService.remove(id, user.id);
+  }
+
+  @Mutation(() => Boolean, {
+    description: '设置账本为默认账本',
+  })
+  @UseGuards(JwtAuthGuard)
+  switchDefault(
+    @Args() switchDefaultArgs: SwitchDefaultArgs,
+    @CurrentUser() user: User,
+  ) {
+    return this.billingService.switchDefault(switchDefaultArgs, user.id);
   }
 
   @ResolveField('shares', () => [Share], {

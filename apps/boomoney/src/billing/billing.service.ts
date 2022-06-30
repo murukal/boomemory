@@ -1,4 +1,4 @@
-import { Billing, Share } from '@app/data-base/entities/boomoney';
+import { Billing, Share, UserProfile } from '@app/data-base/entities/boomoney';
 import { TargetType } from '@app/data-base/entities/boomoney/share.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { AppID } from 'utils/app/assets';
 import { ShareService } from '../share/share.service';
 import { CreateBillingInput } from './dto/create-billing.input';
+import { SwitchDefaultArgs } from './dto/switch-default.args';
 import { UpdateBillingInput } from './dto/update-billing.input';
 
 @Injectable()
@@ -13,6 +14,8 @@ export class BillingService {
   constructor(
     @InjectRepository(Billing, AppID.Boomoney)
     private readonly billingRepository: Repository<Billing>,
+    @InjectRepository(UserProfile, AppID.Boomoney)
+    private readonly userProfileRepository: Repository<UserProfile>,
     private readonly shareService: ShareService,
   ) {}
 
@@ -119,5 +122,37 @@ export class BillingService {
         isDeleted: true,
       })
     ).affected;
+  }
+
+  /**
+   * 切换默认账本
+   * 切换账本是否默认
+   */
+  async switchDefault(switchDefaultArgs: SwitchDefaultArgs, userId: number) {
+    let existed = await this.userProfileRepository.findOneBy({
+      userId,
+    });
+
+    // 不存在用户信息则创建
+    if (!existed) {
+      existed = await this.userProfileRepository.save(
+        this.userProfileRepository.create({
+          userId,
+        }),
+      );
+    }
+
+    // 更新用户信息
+    const isUpdated = !!(
+      await this.userProfileRepository.update(userId, {
+        defaultBillingId: switchDefaultArgs.isDefault
+          ? switchDefaultArgs.id
+          : null,
+      })
+    ).affected;
+
+    // 返回默认的账本信息
+
+    return isUpdated;
   }
 }
