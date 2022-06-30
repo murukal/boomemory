@@ -14,6 +14,7 @@ import { IsEmail, MaxLength, MinLength, isURL } from 'class-validator';
 import { BadRequestException } from '@nestjs/common';
 import { Role } from './role.entity';
 import { UserEmail } from './user-email.entity';
+import { v4 } from 'uuid';
 
 @InputType({ isAbstract: true })
 @ObjectType()
@@ -89,5 +90,11 @@ export class User extends CoreEntity {
     if (!this.avatar) return;
     if (!isURL(this.avatar))
       throw new BadRequestException('avatar must be an URL address');
+  }
+
+  @BeforeInsert()
+  private generateUsername() {
+    if (this.username) return;
+    this.username = v4();
   }
 }

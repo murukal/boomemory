@@ -37,7 +37,7 @@ export const initialize = async (app: INestApplication, appId: AppID) => {
   await app.listen(port);
 
   // 输出地址
-  console.log(`http://localhost:${port}`);
+  console.log(`http://localhost:${port}/graphql`);
 };
 
 /**
