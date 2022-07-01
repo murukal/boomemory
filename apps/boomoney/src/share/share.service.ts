@@ -17,14 +17,13 @@ export class ShareService {
    * 分享
    */
   async create(createShareInput: CreateShareInput): Promise<boolean> {
-    const isRemoved = await this.remove({
+    // 删除已经存在的分享
+    await this.remove({
       targetType: createShareInput.targetType,
       targetId: createShareInput.targetId,
     });
 
-    // 删除原来的分享失败，直接返回
-    if (!isRemoved) return false;
-
+    // 新的分享名单覆盖原来的
     const createdShares = await this.shareRepository.save(
       createShareInput.sharedByIds.map((sharedById) =>
         this.shareRepository.create({
