@@ -1,5 +1,4 @@
-import { Share, Transaction } from '@app/data-base/entities/boomoney';
-import { TargetType } from '@app/data-base/entities/boomoney/share.entity';
+import { Transaction } from '@app/data-base/entities/boomoney';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
@@ -48,24 +47,10 @@ export class TransactionService {
   /**
    * 查询单个交易
    */
-  getTransaction(id: number, userId: number) {
+  getTransaction(id: number) {
     return this.transactionRepository
       .createQueryBuilder('transaction')
-      .leftJoinAndSelect(
-        Share,
-        'share',
-        'share.targetType = :targetType AND share.targetId = transaction.id',
-        {
-          targetType: TargetType.Transaction,
-        },
-      )
       .whereInIds(id)
-      .andWhere(
-        '( transaction.createdById = :userId OR share.sharedById = :userId )',
-        {
-          userId,
-        },
-      )
       .getOne();
   }
 

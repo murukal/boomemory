@@ -64,11 +64,11 @@ export class TransactionResolver {
     name: 'transaction',
     description: '查询单个交易',
   })
+  @UseGuards(JwtAuthGuard)
   getTransaction(
     @Args('id', { type: () => Int, description: '交易id' }) id: number,
-    @CurrentUser() user: User,
   ) {
-    return this.transactionService.getTransaction(id, user.id);
+    return this.transactionService.getTransaction(id);
   }
 
   @Mutation(() => Boolean, {
