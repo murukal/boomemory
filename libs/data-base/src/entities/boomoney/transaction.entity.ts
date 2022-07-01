@@ -60,4 +60,14 @@ export class Transaction extends CoreEntity {
     enum: Direction,
   })
   direction: Direction;
+
+  @Field(() => String, {
+    description: '备注',
+    nullable: true,
+  })
+  @Column({
+    nullable: true,
+    type: 'longtext',
+  })
+  remark: string;
 }
