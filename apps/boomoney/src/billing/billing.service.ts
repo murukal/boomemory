@@ -45,10 +45,10 @@ export class BillingService {
           targetType: TargetType.Billing,
         },
       )
-      .andWhere('isDeleted = :isDeleted', {
+      .where('isDeleted = :isDeleted', {
         isDeleted: false,
       })
-      .where(
+      .andWhere(
         '( billing.createdById = :userId OR share.sharedById = :userId )',
         {
           userId,
