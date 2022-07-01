@@ -24,7 +24,7 @@ export class ShareService {
     });
 
     // 新的分享名单覆盖原来的
-    const createdShares = await this.shareRepository.save(
+    await this.shareRepository.save(
       createShareInput.sharedByIds.map((sharedById) =>
         this.shareRepository.create({
           sharedById,
@@ -34,7 +34,7 @@ export class ShareService {
       ),
     );
 
-    return !!createdShares.length;
+    return true;
   }
 
   /**
