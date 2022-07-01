@@ -49,6 +49,9 @@ export class BillingLoader {
 
       return targetIds.map((targetId) => groupedShares[targetId]);
     },
+    {
+      cache: false,
+    },
   );
 
   /**
