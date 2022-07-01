@@ -108,13 +108,15 @@ export class BillingService {
 
     const isCreator = billing.createdById === userId;
 
-    const isShareRemoved = await this.shareService.remove({
+    // 删除分享
+    // 账本创建人，删除当前账本的全部分享 -> 删除账本
+    // 非账本创建人，仅删除当前账本的被分享条目即可
+    await this.shareService.remove({
       targetId: id,
       targetType: TargetType.Billing,
       sharedById: isCreator ? undefined : userId,
     });
 
-    if (!isShareRemoved) return false;
     if (!isCreator) return true;
 
     return !!(
