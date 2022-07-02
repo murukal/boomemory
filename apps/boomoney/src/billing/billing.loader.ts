@@ -64,17 +64,15 @@ export class BillingLoader {
   /**
    * 根据创建者id获取账本创建人
    */
-  public getCreatorById = new DataLoader<number, User>(
-    async (ids: number[]) => {
-      const users = (
-        await this.userService.getUsers({
-          filterInput: {
-            ids,
-          },
-        })
-      ).items;
+  public getUserById = new DataLoader<number, User>(async (ids: number[]) => {
+    const users = (
+      await this.userService.getUsers({
+        filterInput: {
+          ids,
+        },
+      })
+    ).items;
 
-      return ids.map((id) => users.find((user) => user.id === id));
-    },
-  );
+    return ids.map((id) => users.find((user) => user.id === id));
+  });
 }

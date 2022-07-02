@@ -93,4 +93,11 @@ export class TransactionResolver {
   getCategory(@Parent() transaction: Transaction) {
     return this.transactionLoader.getCategoryById.load(transaction.categoryId);
   }
+
+  @ResolveField('createdBy', () => User, {
+    description: '交易创建人',
+  })
+  getCreatedBy(@Parent() transaction: Transaction) {
+    return this.transactionLoader.getUserById.load(transaction.createdById);
+  }
 }

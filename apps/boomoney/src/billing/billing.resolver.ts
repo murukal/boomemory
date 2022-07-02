@@ -104,6 +104,6 @@ export class BillingResolver {
     nullable: true,
   })
   getCreatedBy(@Parent() billing: Billing) {
-    return this.billingLoader.getCreatorById.load(billing.createdById);
+    return this.billingLoader.getUserById.load(billing.createdById);
   }
 }

@@ -41,6 +41,9 @@ export class TransactionService {
         ...otherFilterInpu,
         direction: In(directions),
       },
+      sortInput: {
+        createdAt: 'DESC',
+      },
     });
   }
 
