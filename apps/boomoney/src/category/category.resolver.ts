@@ -1,6 +1,16 @@
 import { Category } from '@app/data-base/entities/boomoney';
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { PaginateInput } from 'utils/dto';
+import { TimeRangeInput } from 'utils/dto/time-range.input';
+import { CategoryLoader } from './category.loader';
 import { CategoryService } from './category.service';
 import { CreateCategoryInput } from './dto/create-category.input';
 import { FilterCategoryInput } from './dto/filter-category.input';
@@ -9,7 +19,10 @@ import { UpdateCategoryInput } from './dto/update-category.input';
 
 @Resolver(() => Category)
 export class CategoryResolver {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(
+    private readonly categoryService: CategoryService,
+    private readonly categoryLoader: CategoryLoader,
+  ) {}
 
   @Mutation(() => Category, {
     description: '创建分类',
@@ -65,5 +78,18 @@ export class CategoryResolver {
     @Args('id', { type: () => Int, description: '分类id' }) id: number,
   ) {
     return this.categoryService.remove(id);
+  }
+
+  @ResolveField('totalExpense', () => Int, {
+    description: '支出合计',
+  })
+  getTotalExpense(
+    @Parent() category: Category,
+    @Args('timeRangeInput') timeRangeInput: TimeRangeInput,
+  ) {
+    return this.categoryLoader.getTotalExpense.load({
+      id: category.id,
+      ...timeRangeInput,
+    });
   }
 }
