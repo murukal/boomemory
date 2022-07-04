@@ -7,6 +7,7 @@ import {
   Int,
   ResolveField,
   Parent,
+  Float,
 } from '@nestjs/graphql';
 import { PaginateInput } from 'utils/dto';
 import { TimeRangeInput } from 'utils/dto/time-range.input';
@@ -80,7 +81,7 @@ export class CategoryResolver {
     return this.categoryService.remove(id);
   }
 
-  @ResolveField('totalExpense', () => Int, {
+  @ResolveField('totalExpense', () => Float, {
     description: '支出合计',
   })
   getTotalExpense(
