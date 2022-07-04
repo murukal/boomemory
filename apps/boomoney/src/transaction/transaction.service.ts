@@ -1,7 +1,7 @@
 import { Transaction } from '@app/data-base/entities/boomoney';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Between, In, Repository } from 'typeorm';
 import { QueryParams } from 'typings';
 import { paginateQuery } from 'utils';
 import { AppID } from 'utils/app/assets';
@@ -33,13 +33,17 @@ export class TransactionService {
    */
   getTransactions(query?: QueryParams<FilterTransactionInput>) {
     const { filterInput, ...otherQuery } = query;
-    const { directions, ...otherFilterInpu } = filterInput;
+    const { directions, from, to, ...otherFilterInpu } = filterInput;
+
+    const currentFrom = from ?? new Date(0);
+    const currentTo = to ?? new Date();
 
     return paginateQuery(this.transactionRepository, {
       ...otherQuery,
       filterInput: {
         ...otherFilterInpu,
         direction: In(directions),
+        createdAt: Between(currentFrom, currentTo),
       },
       sortInput: {
         createdAt: 'DESC',
