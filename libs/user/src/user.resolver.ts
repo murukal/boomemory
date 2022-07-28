@@ -6,6 +6,7 @@ import {
   Query,
   ResolveField,
   Resolver,
+  ResolveReference,
 } from '@nestjs/graphql';
 import { MoneyProfile } from '@app/user/dto/money-profile';
 import { CurrentUser } from 'utils/decorator/current-user.decorator';
@@ -78,5 +79,13 @@ export class UserResolver {
   })
   getIsVerified(@Parent() user: User) {
     return this.userLoader.getIsVerifiedById.load(user.id);
+  }
+
+  @ResolveReference()
+  resolveReference(reference: {
+    __typename: string;
+    id: number;
+  }): Promise<User> {
+    return this.userService.getUser(reference.id);
   }
 }

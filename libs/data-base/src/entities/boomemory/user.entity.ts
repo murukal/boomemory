@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { Directive, Field, InputType, ObjectType } from '@nestjs/graphql';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -18,6 +18,7 @@ import { v4 } from 'uuid';
 
 @InputType({ isAbstract: true })
 @ObjectType()
+@Directive('@key(fields: "id")')
 @Entity()
 export class User extends CoreEntity {
   @Field(() => String, {
